@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ကဗျာများ - စာပေဥယျာဉ်</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts - Padauk -->
+  <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Padauk', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+  <!-- Navigation Bar -->
+  <nav class="bg-indigo-900 text-white p-4 shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex flex-wrap justify-between items-center gap-4">
+      <h1 class="text-2xl font-bold tracking-wide">စာပေဥယျာဉ်</h1>
+      <div class="flex items-center space-x-6 text-sm md:text-base">
+        <a href="Mainpage.html" class="hover:text-amber-400 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-house"></i> ပင်မစာမျက်နှာ
+        </a>
+        <a href="novels.html" class="hover:text-amber-400 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-book"></i> ဘာသာပြန်ဝတ္ထုများ
+        </a>
+        <a href="poems.html" class="text-amber-400 font-bold flex items-center gap-1.5">
+          <i class="fa-solid fa-feather"></i> ကဗျာများ
+        </a>
+        <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-black px-4 py-1.5 rounded-full font-bold transition shadow-sm flex items-center gap-1.5">
+          <i class="fa-solid fa-plus"></i> စာမူသစ်တင်ရန်
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header Section -->
+  <header class="bg-indigo-800 text-white py-10 px-4 text-center shadow-inner">
+    <h2 class="text-3xl font-bold mb-2"><i class="fa-solid fa-feather-pointed text-amber-400 mr-2"></i>ကဗျာများ စုစည်းမှု</h2>
+    <p class="text-gray-200">စိတ်ကူးယဉ် အနုပညာ အထိအတွေ့နှင့် ခံစားမှု ရသစုံ ကဗျာများ</p>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="container mx-auto my-8 px-4 flex-grow">
+    <!-- Poems Grid Container -->
+    <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="col-span-full text-center py-12 text-gray-500">
+        <i class="fa-solid fa-spinner fa-spin text-3xl mb-3 text-indigo-600"></i>
+        <p>ကဗျာများကို ရယူနေပါသည်...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal for Full Reading -->
+  <div id="poemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-5 border-b flex justify-between items-center bg-indigo-50">
+        <div>
+          <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full font-bold">
+            <i class="fa-solid fa-feather text-xs mr-1"></i> ကဗျာ
+          </span>
+          <h3 id="modalTitle" class="text-2xl font-bold text-gray-800 mt-2"></h3>
+          <p id="modalAuthor" class="text-xs text-gray-600 font-semibold mt-1"></p>
+        </div>
+        <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 text-2xl font-bold p-2">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto flex-grow">
+        <p id="modalContent" class="text-gray-700 text-base whitespace-pre-line leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100 text-center"></p>
+      </div>
+      <div class="p-4 border-t text-right bg-gray-50">
+        <button id="closeModalBtn2" class="px-5 py-2 bg-indigo-900 text-white rounded-lg font-bold hover:bg-indigo-800 transition">
+          ပိတ်မည်
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-indigo-950 text-gray-400 py-6 text-center text-sm mt-auto">
+    <p>© 2026 စာပေဥယျာဉ်။ မူပိုင်ခွင့်များအားလုံး လက်ဝယ်ရှိသည်။</p>
+  </footer>
+
+  <!-- Firebase Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
+      authDomain: "my-new-projects-e2d79.firebaseapp.com",
+      databaseURL: "https://my-new-projects-e2d79-default-rtdb.firebaseio.com",
+      projectId: "my-new-projects-e2d79",
+      storageBucket: "my-new-projects-e2d79.firebasestorage.app",
+      messagingSenderId: "544924460381",
+      appId: "1:544924460381:web:711d1427a2caaaaaf6b4b4",
+      measurementId: "G-6EZH4B2W5S"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    const container = document.getElementById('postsContainer');
+    const poemsRef = ref(database, 'poems');
+    let currentPoems = [];
+
+    onValue(poemsRef, (snapshot) => {
+      container.innerHTML = '';
+      const data = snapshot.val();
+
+      if (data) {
+        currentPoems = Object.values(data).reverse();
+        currentPoems.forEach((poem, index) => {
+          container.innerHTML += `
+            <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition border border-gray-100 p-6 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-center mb-3">
+                  <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full font-bold">
+                    <i class="fa-solid fa-feather text-xs mr-1"></i> ကဗျာ
+                  </span>
+                  <span class="text-xs text-gray-400">${poem.date || ''}</span>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-800 mb-1">${poem.title}</h3>
+                <p class="text-xs text-indigo-600 font-semibold mb-4">ကလောင် - ${poem.author}</p>
+
+                <p class="text-gray-600 text-sm whitespace-pre-line line-clamp-4 leading-relaxed">
+                  ${poem.content}
+                </p>
+              </div>
+
+              <div class="mt-6 pt-3 border-t border-gray-100 text-right">
+                <button onclick="openModal(${index})" class="text-indigo-900 font-bold text-sm hover:text-amber-600 transition inline-flex items-center gap-1">
+                  အပြည့်အစုံ ဖတ်ရန် <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
+            <i class="fa-solid fa-feather text-gray-300 text-5xl mb-3"></i>
+            <p class="text-gray-500 text-lg">တင်ထားသော ကဗျာများ မရှိသေးပါ။</p>
+            <a href="submit.html" class="inline-block mt-4 text-indigo-600 font-semibold hover:underline">
+              + ပထမဆုံး ကဗျာ စတင်တင်သွင်းရန်
+            </a>
+          </div>
+        `;
+      }
+    }, (error) => {
+      console.error("Firebase Error:", error);
+      container.innerHTML = `<div class="col-span-full text-center py-12 text-red-500">အချက်အလက်များ ရယူရာတွင် အမှားအယွင်း ရှိနေပါသည် - ${error.message}</div>`;
+    });
+
+    window.openModal = function(index) {
+      const poem = currentPoems[index];
+      if (poem) {
+        document.getElementById('modalTitle').innerText = poem.title;
+        document.getElementById('modalAuthor').innerText = 'ကလောင် - ' + poem.author;
+        document.getElementById('modalContent').innerText = poem.content;
+        document.getElementById('poemModal').classList.remove('hidden');
+      }
+    };
+
+    document.getElementById('closeModalBtn').onclick = () => document.getElementById('poemModal').classList.add('hidden');
+    document.getElementById('closeModalBtn2').onclick = () => document.getElementById('poemModal').classList.add('hidden');
+  </script>
+</body>
+</html>

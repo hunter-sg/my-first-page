@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>စာမူ ပေးပို့ရန် - စာပေဥယျာဉ်</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts - Padauk -->
+  <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Padauk', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+  <!-- Navigation Bar -->
+  <nav class="bg-indigo-900 text-white p-4 shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex flex-wrap justify-between items-center gap-4">
+      <h1 class="text-2xl font-bold tracking-wide">စာပေဥယျာဉ်</h1>
+      <div class="flex items-center space-x-6 text-sm md:text-base">
+        <a href="index.html" class="hover:text-amber-400 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-house"></i> ပင်မစာမျက်နှာ
+        </a>
+        <a href="novels.html" class="hover:text-amber-400 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-book"></i> ဘာသာပြန်ဝတ္ထုများ
+        </a>
+        <a href="poems.html" class="hover:text-amber-400 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-feather"></i> ကဗျာများ
+        </a>
+        <a href="submit.html" class="bg-amber-500 text-black px-4 py-1.5 rounded-full font-bold transition shadow-sm flex items-center gap-1.5">
+          <i class="fa-solid fa-plus"></i> စာမူသစ်တင်ရန်
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="container mx-auto my-8 px-4 flex-grow max-w-2xl">
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-8">
+      
+      <div class="text-center mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-indigo-950 mb-2">
+          <i class="fa-solid fa-pen-nib text-amber-500 mr-2"></i>စာမူ / ကဗျာ ပေးပို့ရန်
+        </h2>
+        <p class="text-gray-500 text-sm">သင့်၏ ရေးသားဖန်တီးမှုများကို စာပေဥယျာဉ်သို့ မျှဝေလိုက်ပါ</p>
+      </div>
+
+      <form id="submitForm" class="space-y-5">
+        
+        <div>
+          <label class="block font-bold text-gray-700 mb-2">အမျိုးအစား ရွေးပါ -</label>
+          <select id="type" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-gray-50">
+            <option value="novels">ဝတ္ထု</option>
+            <option value="poems">ကဗျာ</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-gray-700 mb-2">ခေါင်းစဉ် -</label>
+          <input type="text" id="title" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="ခေါင်းစဉ် ရိုက်ထည့်ပါ" required>
+        </div>
+
+        <div>
+          <label class="block font-bold text-gray-700 mb-2">ကလောင်အမည် -</label>
+          <input type="text" id="author" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="သင့်ကလောင်အမည်" required>
+        </div>
+
+        <div>
+          <label class="block font-bold text-gray-700 mb-2">စာမူအကြောင်းအရာ -</label>
+          <textarea id="content" rows="8" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="ဒီနေရာမှာ စာမူ ရေးပါ..." required></textarea>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white font-bold py-3.5 rounded-lg shadow-md transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i> စာမူ တင်မည်
+        </button>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-indigo-950 text-gray-400 py-6 text-center text-sm mt-auto">
+    <p>© 2026 စာပေဥယျာဉ်။ မူပိုင်ခွင့်များအားလုံး လက်ဝယ်ရှိသည်။</p>
+  </footer>
+
+  <!-- Firebase Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
+      authDomain: "my-new-projects-e2d79.firebaseapp.com",
+      databaseURL: "https://my-new-projects-e2d79-default-rtdb.firebaseio.com",
+      projectId: "my-new-projects-e2d79",
+      storageBucket: "my-new-projects-e2d79.firebasestorage.app",
+      messagingSenderId: "544924460381",
+      appId: "1:544924460381:web:711d1427a2caaaaaf6b4b4",
+      measurementId: "G-6EZH4B2W5S"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    document.getElementById('submitForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ခဏစောင့်ပါ...';
+
+      const type = document.getElementById('type').value;
+      const title = document.getElementById('title').value;
+      const author = document.getElementById('author').value;
+      const content = document.getElementById('content').value;
+
+      push(ref(database, type), {
+        title: title,
+        author: author,
+        content: content,
+        date: new Date().toLocaleDateString('my-MM')
+      }).then(() => {
+        alert("စာမူ အောင်မြင်စွာ တင်ပြီးပါပြီ။");
+        document.getElementById('submitForm').reset();
+        
+        // စာမူ တင်ပြီးသည်နှင့် သက်ဆိုင်ရာ စာမျက်နှာသို့ တိုက်ရိုက် လမ်းကြောင်းပြောင်းပေးခြင်း
+        if (type === 'novels') {
+          window.location.href = 'novels.html';
+        } else {
+          window.location.href = 'poems.html';
+        }
+      }).catch((error) => {
+        alert("အမှားအယွင်း ရှိနေပါသည် - " + error.message);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> စာမူ တင်မည်';
+      });
+    });
+  </script>
+</body>
+</html>
