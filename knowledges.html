@@ -3,146 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>အထွေထွေသုတရသများ - စာပေဥယျာဉ်</title>
+  <title>သုတရသ - စာပေဥယျာဉ်</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap" rel="stylesheet">
-  <style> body { font-family: 'Padauk', sans-serif; } </style>
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col justify-between">
 
-  <!-- Navigation Bar -->
-  <nav class="bg-indigo-900 text-white py-3 px-4 shadow-md sticky top-0 z-50">
-    <div class="container mx-auto flex justify-between items-center">
-      <!-- Website Logo / Title -->
-      <a href="index.html" class="text-lg font-bold tracking-wide hover:text-amber-400 transition">စာပေဥယျာဉ်</a>
-      
-      <!-- Hamburger Menu Toggle Button -->
-      <button id="menuBtn" class="text-white hover:text-amber-400 focus:outline-none text-xl p-1">
-        <i class="fa-solid fa-bars" id="menuIcon"></i>
+  <!-- Header Navigation -->
+  <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold tracking-wide flex items-center gap-2">
+        <i class="fa-solid fa-book-open text-amber-400"></i> စာပေဥယျာဉ်
+      </a>
+      <button id="menuBtn" class="text-white text-lg focus:outline-none md:hidden">
+        <i id="menuIcon" class="fa-solid fa-bars"></i>
       </button>
+      <nav id="menuList" class="hidden md:flex space-x-6 text-xs font-semibold">
+        <a href="index.html" class="hover:text-indigo-200">ပင်မ</a>
+        <a href="knowledges.html" class="text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5">သုတရသ</a>
+        <a href="newnovels.html" class="hover:text-indigo-200">ဝတ္ထု</a>
+        <a href="sports.html" class="hover:text-indigo-200">အားကစား</a>
+        <a href="poems.html" class="hover:text-indigo-200">ကဗျာ</a>
+      </nav>
     </div>
-
-    <!-- Collapsible Menu List -->
-    <div id="menuList" class="hidden container mx-auto mt-3 pt-3 border-t border-indigo-800 flex flex-col space-y-2.5 text-xs pb-2 transition-all">
-      <a href="index.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
-        <i class="fa-solid fa-house"></i> ပင်မစာမျက်နှာ
-      </a>
-      <a href="knowledges.html" class="text-amber-400 font-bold flex items-center gap-2 py-1">
-        <i class="fa-solid fa-book-open"></i> အထွေထွေသုတရသများ
-      </a>
-      <a href="newnovels.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
-        <i class="fa-solid fa-book"></i> ဝတ္ထုတို/ရှည်များ
-      </a>
-      <a href="sports.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
-        <i class="fa-solid fa-futbol"></i> နိုင်ငံတကာ အားကစားသတင်းများ
-      </a>
-      <a href="poems.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
-        <i class="fa-solid fa-feather"></i> ကဗျာများ
-      </a>
-      <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-black px-3 py-1.5 rounded-full font-bold transition shadow-sm inline-flex items-center gap-1 w-fit mt-1">
-        <i class="fa-solid fa-plus"></i> စာမူသစ်တင်ရန်
-      </a>
-    </div>
-  </nav>
-
-  <!-- Header Section -->
-  <header class="bg-indigo-800 text-white py-8 px-4 text-center shadow-inner">
-    <h2 class="text-2xl md:text-3xl font-bold mb-2">
-      <i class="fa-solid fa-book-open text-amber-400 mr-2"></i>အထွေထွေသုတရသများ
-    </h2>
-    <p class="text-gray-200 text-xs md:text-sm">ဗဟုသုတရဖွယ်ရာ ဆောင်းပါးနှင့် သုတရသစာပေများကို ဖတ်ရှုနိုင်ပါသည်။</p>
   </header>
 
-  <!-- Main Content (Firebase Data Cards Container) -->
-  <main class="container mx-auto my-8 px-4 flex-grow">
-    <div id="knowledgeContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="col-span-full text-center py-12 text-gray-500">
-        <i class="fa-solid fa-spinner fa-spin text-3xl mb-3 text-indigo-600"></i>
-        <p>အချက်အလက်များကို ရယူနေပါသည်...</p>
+  <!-- Main Content -->
+  <main class="container mx-auto my-6 px-4 flex-grow max-w-4xl">
+    <div class="bg-white rounded-2xl p-4 md:p-5 shadow-sm border border-gray-100 mb-6 flex items-center justify-between">
+      <div>
+        <h2 class="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2">
+          <span class="p-2 bg-amber-100 text-amber-800 rounded-lg text-sm"><i class="fa-solid fa-brain"></i></span>
+          သုတရသ ဆောင်းပါးများ
+        </h2>
+        <p class="text-xs text-gray-500 mt-1">ဗဟုသုတနှင့် ရသစုံလင်သော ဆောင်းပါးများ</p>
+      </div>
+      <a href="submit.html" class="hidden sm:inline-flex items-center gap-1.5 bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-3.5 py-2 rounded-lg font-bold transition">
+        <i class="fa-solid fa-pen-to-square"></i> စာမူတင်ရန်
+      </a>
+    </div>
+
+    <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="col-span-full text-center py-10 text-gray-400 text-xs">
+        <i class="fa-solid fa-spinner fa-spin text-lg mr-2"></i> စာမူများကို ရယူနေပါသည်...
       </div>
     </div>
   </main>
 
-  <!-- Modal Component for Reading Full Content, Views, Likes & Comments -->
-  <div id="knowledgeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-      
-      <!-- Modal Header -->
-      <div class="p-5 border-b flex justify-between items-center bg-indigo-50">
-        <div>
-          <span class="bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-bold">သုတရသ</span>
-          <h3 id="modalTitle" class="text-2xl font-bold text-gray-800 mt-2"></h3>
-          <p id="modalAuthor" class="text-xs text-indigo-600 font-semibold mt-1"></p>
-        </div>
-        <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 text-2xl font-bold p-2">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <!-- Modal Body -->
-      <div class="p-6 overflow-y-auto flex-grow space-y-6">
-        <p id="modalContent" class="text-gray-700 text-base whitespace-pre-line leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100"></p>
-
-        <!-- Views, Likes and Action Controls -->
-        <div class="flex justify-between items-center pt-4 border-t border-gray-200">
-          <div class="flex items-center gap-4 text-sm text-gray-600">
-            <span><i class="fa-solid fa-eye text-indigo-600 mr-1"></i> <span id="modalViews">0</span> ကြိမ်ဖတ်ရှုခဲ့သည်</span>
-            <span><i class="fa-solid fa-heart text-red-500 mr-1"></i> <span id="modalLikesCount">0</span> ခု</span>
-          </div>
-          <button id="likeBtn" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-4 py-1.5 rounded-full font-bold text-sm transition flex items-center gap-2">
-            <i class="fa-solid fa-heart"></i> Like ပေးမည်
-          </button>
-        </div>
-
-        <!-- Comments Section -->
-        <div class="pt-4 border-t border-gray-200">
-          <h4 class="font-bold text-gray-800 text-base mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-comments text-indigo-600"></i> မှတ်ချက်များ (Comments)
-          </h4>
-
-          <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 space-y-3">
-            <div id="userInfo" class="flex justify-between items-center bg-white p-2.5 rounded-lg border border-gray-200 text-xs">
-              <span id="userNameDisplay" class="font-bold text-indigo-900 flex items-center gap-2">
-                <i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ထားပါ
-              </span>
-              <button id="googleAuthBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5 text-xs">
-                <i class="fa-brands fa-google"></i> Google Login ဝင်မည်
-              </button>
-            </div>
-
-            <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးသားရန်..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-            
-            <div class="text-right">
-              <button id="submitCommentBtn" class="bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition">
-                မှတ်ချက်ပေးမည်
-              </button>
-            </div>
-          </div>
-
-          <div id="commentsList" class="space-y-3">
-            <p class="text-xs text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="p-3 border-t text-right bg-gray-50">
-        <button id="closeModalBtn2" class="px-5 py-2 bg-indigo-900 text-white rounded-lg font-bold hover:bg-indigo-800 transition text-sm">ပိတ်မည်</button>
-      </div>
-    </div>
+  <!-- Detail Modal -->
+  <div id="postModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div id="modalContent" class="w-full flex justify-center"></div>
   </div>
 
-  <!-- Footer -->
-  <footer class="bg-indigo-950 text-gray-400 py-4 text-center text-xs mt-auto">
-    <p>© 2026 စာပေဥယျာဉ်။ မူပိုင်ခွင့်များအားလုံး လက်ဝယ်ရှိသည်။</p>
+  <footer class="bg-indigo-950 text-indigo-200 py-4 text-center text-xs mt-10">
+    <p>© 2026 စာပေဥယျာဉ်. All rights reserved.</p>
   </footer>
 
-  <!-- Firebase Script & App Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -156,183 +75,164 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+    const postsContainer = document.getElementById('postsContainer');
 
-    let currentUser = null;
-    const container = document.getElementById('knowledgeContainer');
-    const knowledgeRef = ref(database, 'knowledges');
-    let currentData = {};
-    let activeKey = null;
-
-    // Hamburger Menu Script
+    // Menu Mobile Toggle
     const menuBtn = document.getElementById('menuBtn');
     const menuList = document.getElementById('menuList');
     const menuIcon = document.getElementById('menuIcon');
+    if (menuBtn) {
+      menuBtn.onclick = () => {
+        menuList.classList.toggle('hidden');
+        menuIcon.className = menuList.classList.contains('hidden') ? "fa-solid fa-bars" : "fa-solid fa-xmark";
+      };
+    }
 
-    menuBtn.onclick = () => {
-      menuList.classList.toggle('hidden');
-      if (menuList.classList.contains('hidden')) {
-        menuIcon.className = "fa-solid fa-bars";
-      } else {
-        menuIcon.className = "fa-solid fa-xmark";
-      }
-    };
+    let allPosts = [];
 
-    // Firebase Auth Observer
-    onAuthStateChanged(auth, (user) => {
-      const nameDisplay = document.getElementById('userNameDisplay');
-      const authBtn = document.getElementById('googleAuthBtn');
+    // Load Knowledge Data
+    onValue(ref(database, 'knowledges'), (snapshot) => {
+      const data = snapshot.val();
+      postsContainer.innerHTML = '';
+      allPosts = [];
 
-      if (user) {
-        currentUser = user;
-        nameDisplay.innerHTML = `<img src="${user.photoURL}" class="w-5 h-5 rounded-full border inline mr-1"> <span class="text-indigo-900">${user.displayName}</span>`;
-        authBtn.innerText = 'ထွက်မည်';
-        authBtn.className = "bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-md font-bold transition text-xs";
-        authBtn.onclick = () => signOut(auth);
-      } else {
-        currentUser = null;
-        nameDisplay.innerHTML = `<i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ထားပါ`;
-        authBtn.innerHTML = `<i class="fa-brands fa-google"></i> Google Login`;
-        authBtn.className = "bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5 text-xs";
-        authBtn.onclick = () => signInWithPopup(auth, provider);
-      }
-    });
-
-    // Realtime Database Fetch
-    onValue(knowledgeRef, (snapshot) => {
-      container.innerHTML = '';
-      currentData = snapshot.val() || {};
-      const keys = Object.keys(currentData).reverse();
-
-      if (keys.length > 0) {
-        keys.forEach((key) => {
-          const item = currentData[key];
-          container.innerHTML += `
-            <div class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-between border border-gray-100 hover:shadow-lg transition">
-              <div>
-                <div class="flex justify-between items-center mb-3">
-                  <span class="bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-bold">သုတရသ</span>
-                  <span class="text-xs text-gray-400">${item.date || ''}</span>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-1">${item.title || 'ခေါင်းစဉ်မရှိ'}</h3>
-                <p class="text-xs text-indigo-600 font-semibold mb-4">ရေးသားသူ - ${item.author || 'မသိရပါ'}</p>
-                <p class="text-gray-600 text-sm whitespace-pre-line line-clamp-4 leading-relaxed">${item.content || ''}</p>
-              </div>
-
-              <div class="mt-6 pt-3 border-t border-gray-100 flex justify-between items-center text-xs text-gray-500">
-                <div class="flex items-center gap-3">
-                  <span><i class="fa-solid fa-eye text-indigo-600"></i> ${item.views || 0}</span>
-                  <span><i class="fa-solid fa-heart text-red-500"></i> ${item.likes || 0}</span>
-                </div>
-                <button onclick="openModal('${key}')" class="text-indigo-900 font-bold text-sm hover:text-amber-600 transition inline-flex items-center gap-1">
-                  အပြည့်အစုံ ဖတ်ရန် <i class="fa-solid fa-arrow-right text-xs"></i>
-                </button>
-              </div>
-            </div>
-          `;
-        });
-      } else {
-        container.innerHTML = `
-          <div class="col-span-full text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
-            <i class="fa-solid fa-book-open text-gray-300 text-5xl mb-3"></i>
-            <p class="text-gray-500">အချက်အလက်များ မရှိသေးပါ။</p>
-          </div>
-        `;
-      }
-    });
-
-    // Open Modal Function
-    window.openModal = function(key) {
-      activeKey = key;
-      const item = currentData[key];
-      if (!item) return;
-
-      runTransaction(ref(database, `knowledges/${key}/views`), (currentViews) => (currentViews || 0) + 1);
-
-      document.getElementById('modalTitle').innerText = item.title || '';
-      document.getElementById('modalAuthor').innerText = 'ရေးသားသူ - ' + (item.author || '');
-      document.getElementById('modalContent').innerText = item.content || '';
-      document.getElementById('modalViews').innerText = (item.views || 0) + 1;
-      document.getElementById('modalLikesCount').innerText = item.likes || 0;
-
-      loadComments(item.comments);
-      document.getElementById('knowledgeModal').classList.remove('hidden');
-    };
-
-    // Like Button Action
-    document.getElementById('likeBtn').onclick = () => {
-      if (!activeKey) return;
-      runTransaction(ref(database, `knowledges/${activeKey}/likes`), (currentLikes) => (currentLikes || 0) + 1);
-      const countElem = document.getElementById('modalLikesCount');
-      countElem.innerText = parseInt(countElem.innerText) + 1;
-    };
-
-    // Submit Comment Action
-    document.getElementById('submitCommentBtn').onclick = () => {
-      if (!activeKey) return;
-      
-      if (!currentUser) {
-        alert("မှတ်ချက်ပေးရန်အတွက် ကျေးဇူးပြု၍ Google Account ဖြင့် Login ဝင်ပေးပါ။");
-        signInWithPopup(auth, provider);
+      if (!data) {
+        postsContainer.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-xs">သုတရသ စာမူများ မရှိသေးပါ။</div>`;
         return;
       }
 
-      const text = document.getElementById('commentText').value.trim();
-      if (!text) { 
-        alert('ကျေးဇူးပြု၍ မှတ်ချက် ရေးသားပါ။'); 
-        return; 
-      }
-
-      let authorName = currentUser.displayName;
-      if (!authorName && currentUser.email) {
-        authorName = currentUser.email.split('@')[0];
-      }
-      if (!authorName) {
-        authorName = 'Google အသုံးပြုသူ';
-      }
-
-      push(ref(database, `knowledges/${activeKey}/comments`), {
-        name: authorName,
-        photo: currentUser.photoURL || '',
-        text: text,
-        date: new Date().toLocaleDateString('my-MM')
-      }).then(() => {
-        document.getElementById('commentText').value = '';
-        onValue(ref(database, `knowledges/${activeKey}/comments`), (snapshot) => {
-          loadComments(snapshot.val());
-        }, { onlyOnce: true });
-      }).catch((error) => {
-        console.error("Error adding comment: ", error);
-        alert("မှတ်ချက်တင်ရာတွင် အမှားအယွင်း ရှိသွားပါသည်။");
+      Object.entries(data).forEach(([key, val]) => {
+        allPosts.push({
+          id: key,
+          title: val.title || 'ခေါင်းစဉ်မရှိ',
+          author: val.author || 'မသိရပါ',
+          content: val.content || '',
+          date: val.date || '',
+          image: val.image || val.imageUrl || val.img || '',
+          comments: val.comments || {}
+        });
       });
-    };
 
-    // Render Comments
-    function loadComments(commentsData) {
-      const commentsList = document.getElementById('commentsList');
-      commentsList.innerHTML = '';
-      if (commentsData) {
-        Object.values(commentsData).reverse().forEach(c => {
-          const userImg = c.photo ? `<img src="${c.photo}" class="w-4 h-4 rounded-full inline mr-1 border">` : `<i class="fa-solid fa-user-circle mr-1"></i>`;
-          commentsList.innerHTML += `
-            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 text-xs">
-              <div class="flex justify-between font-bold text-indigo-900 mb-1">
-                <span class="flex items-center gap-1">${userImg} ${c.name || 'Google အသုံးပြုသူ'}</span>
-                <span class="text-gray-400 font-normal">${c.date || ''}</span>
+      allPosts.sort((a, b) => b.id.localeCompare(a.id));
+
+      allPosts.forEach(post => {
+        const imageMarkup = post.image 
+          ? `<img src="${post.image}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-gray-100" />`
+          : `<div class="w-20 h-20 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 flex-shrink-0 border border-amber-100"><i class="fa-solid fa-lightbulb text-xl"></i></div>`;
+
+        postsContainer.innerHTML += `
+          <div onclick="openModal('${post.id}')" class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition cursor-pointer flex gap-3.5 items-center">
+            ${imageMarkup}
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 bg-amber-100 text-amber-800 font-bold rounded">သုတရသ</span>
+                <span class="text-[11px] text-gray-400">${post.date}</span>
               </div>
-              <p class="text-gray-700 leading-relaxed">${c.text}</p>
+              <h3 class="text-xs font-bold text-gray-800 truncate mb-1">${post.title}</h3>
+              <p class="text-[11px] text-gray-500 truncate mb-1">${post.content}</p>
+              <span class="text-[10px] text-indigo-600 font-semibold">ရေးသားသူ - ${post.author}</span>
+            </div>
+          </div>
+        `;
+      });
+    });
+
+    // Modal Logic
+    window.openModal = function(postId) {
+      const post = allPosts.find(p => p.id === postId);
+      if (!post) return;
+
+      const modalContainer = document.getElementById('postModal');
+      const modalContent = document.getElementById('modalContent');
+
+      const imageHtml = post.image 
+        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm"><img src="${post.image}" class="w-full h-auto max-h-64 object-cover" /></div>`
+        : '';
+
+      let commentsHtml = '';
+      if (post.comments && Object.keys(post.comments).length > 0) {
+        Object.values(post.comments).forEach(c => {
+          commentsHtml += `
+            <div class="bg-gray-100/70 p-2.5 rounded-lg text-xs space-y-0.5">
+              <div class="flex justify-between font-bold text-indigo-950 text-[11px]">
+                <span>${c.name || 'ဧည့်သည်'}</span>
+                <span class="text-gray-400 text-[10px] font-normal">${c.date || ''}</span>
+              </div>
+              <p class="text-gray-700">${c.text}</p>
             </div>
           `;
         });
       } else {
-        commentsList.innerHTML = `<p class="text-xs text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
+        commentsHtml = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
       }
-    }
 
-    // Modal Close Action
-    document.getElementById('closeModalBtn').onclick = () => document.getElementById('knowledgeModal').classList.add('hidden');
-    document.getElementById('closeModalBtn2').onclick = () => document.getElementById('knowledgeModal').classList.add('hidden');
+      modalContent.innerHTML = `
+        <div class="bg-white rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[90vh]">
+          <div class="bg-indigo-50/70 px-4 py-3 border-b border-indigo-100 flex justify-between items-start flex-shrink-0">
+            <div class="pr-2">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 bg-amber-100 text-amber-800 font-bold rounded">သုတရသ</span>
+                <span class="text-[11px] text-gray-500 font-medium">ရေးသားသူ - ${post.author}</span>
+                <span class="text-[11px] text-gray-400">• ${post.date}</span>
+              </div>
+              <h2 class="text-sm md:text-base font-bold text-gray-800 leading-snug">${post.title}</h2>
+            </div>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-lg p-1 transition flex-shrink-0"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+          <div class="p-4 md:p-5 overflow-y-auto max-h-[70vh] space-y-4">
+            ${imageHtml}
+            <div class="bg-gray-50/70 p-4 rounded-xl border border-gray-100 text-xs md:text-sm text-gray-700 leading-relaxed space-y-3">
+              <p class="whitespace-pre-line">${post.content}</p>
+            </div>
+
+            <div class="border-t border-gray-100 pt-3 space-y-3">
+              <h4 class="text-xs font-bold text-gray-800 flex items-center gap-1.5"><i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ</h4>
+              <div class="space-y-2 bg-indigo-50/40 p-3 rounded-xl border border-indigo-50">
+                <input type="text" id="commentName" placeholder="သင့်နာမည် ရေးပါ..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500">
+                <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးရန်..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                <button onclick="addComment('${post.id}')" class="bg-indigo-900 text-white text-xs px-3.5 py-1.5 rounded-lg font-semibold hover:bg-indigo-800 transition float-right">မှတ်ချက် ပို့မည်</button>
+                <div class="clear-both"></div>
+              </div>
+              <div class="space-y-2 mt-2">${commentsHtml}</div>
+            </div>
+          </div>
+
+          <div class="px-4 py-2.5 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0">
+            <button onclick="closeModal()" class="bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-5 py-2 rounded-lg font-bold transition">ပိတ်မည်</button>
+          </div>
+        </div>
+      `;
+
+      modalContainer.classList.remove('hidden');
+      modalContainer.classList.add('flex');
+    };
+
+    window.addComment = async function(postId) {
+      const nameInput = document.getElementById('commentName');
+      const textInput = document.getElementById('commentText');
+      if (!textInput.value.trim()) return alert("မှတ်ချက် စာသား ရေးပေးပါ!");
+
+      try {
+        await push(ref(database, `knowledges/${postId}/comments`), {
+          name: nameInput.value.trim() || 'ဧည့်သည်',
+          text: textInput.value.trim(),
+          date: new Date().toLocaleDateString('en-GB')
+        });
+        alert("မှတ်ချက် တင်ပြီးပါပြီ!");
+        closeModal();
+      } catch (err) {
+        alert("မှတ်ချက် တင်၍ မရပါ: " + err.message);
+      }
+    };
+
+    window.closeModal = function() {
+      const modalContainer = document.getElementById('postModal');
+      if (modalContainer) {
+        modalContainer.classList.add('hidden');
+        modalContainer.classList.remove('flex');
+      }
+    };
   </script>
 </body>
 </html>
