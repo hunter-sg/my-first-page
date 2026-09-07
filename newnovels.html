@@ -41,9 +41,9 @@
   <!-- Header -->
   <header class="bg-indigo-800 text-white py-8 px-4 text-center shadow-inner">
     <h2 class="text-2xl md:text-3xl font-bold mb-2">
-      <i class="fa-solid fa-book text-amber-400 mr-2"></i>ဝတ္ထုတို/ရှည် စာမူများ
+      <i class="fa-solid fa-book text-amber-400 mr-2"></i>ဝတ္ထုတို နှင့် ဝတ္ထုရှည်များ
     </h2>
-    <p class="text-gray-200 text-sm">စိတ်ဝင်စားဖွယ် ဝတ္ထုတို/ရှည်များကို တစ်နေရာတည်းတွင် ဖတ်ရှုနိုင်ပါသည်။</p>
+    <p class="text-gray-200 text-sm">စိတ်ဝင်စားဖွယ် ဝတ္ထုလက်ရာကောင်းများကို ဖတ်ရှုခံစားနိုင်ပါသည်။</p>
   </header>
 
   <!-- Main Content -->
@@ -51,7 +51,7 @@
     <div id="novelContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="col-span-full text-center py-12 text-gray-500">
         <i class="fa-solid fa-spinner fa-spin text-3xl mb-3 text-indigo-600"></i>
-        <p>စာမူများကို ရယူနေပါသည်...</p>
+        <p>ဝတ္ထုများကို ရယူနေပါသည်...</p>
       </div>
     </div>
   </main>
@@ -72,10 +72,8 @@
         </button>
       </div>
 
-      <!-- Modal Body (Content, Like, Comment) -->
+      <!-- Modal Body -->
       <div class="p-6 overflow-y-auto flex-grow space-y-6">
-        
-        <!-- Article Content -->
         <p id="modalContent" class="text-gray-700 text-base whitespace-pre-line leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100"></p>
 
         <!-- Stats Bar & Like Button -->
@@ -95,10 +93,19 @@
             <i class="fa-solid fa-comments text-indigo-600"></i> မှတ်ချက်များ (Comments)
           </h4>
 
-          <!-- Comment Input Form -->
+          <!-- Comment Input Form (Google Login Integrated) -->
           <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 space-y-3">
-            <input type="text" id="commenterName" placeholder="သင့်အမည်" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <div id="userInfo" class="flex justify-between items-center bg-white p-2.5 rounded-lg border border-gray-200 text-xs">
+              <span id="userNameDisplay" class="font-bold text-indigo-900 flex items-center gap-2">
+                <i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ထားပါ
+              </span>
+              <button id="googleAuthBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5">
+                <i class="fa-brands fa-google"></i> Google Login ဝင်မည်
+              </button>
+            </div>
+
             <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးသားရန်..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            
             <div class="text-right">
               <button id="submitCommentBtn" class="bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition">
                 မှတ်ချက်ပေးမည်
@@ -106,12 +113,10 @@
             </div>
           </div>
 
-          <!-- Comments List -->
           <div id="commentsList" class="space-y-3">
             <p class="text-xs text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>
           </div>
         </div>
-
       </div>
 
       <!-- Modal Footer -->
@@ -130,6 +135,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -143,13 +149,34 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUser = null;
     const container = document.getElementById('novelContainer');
-    
     const novelsRef = ref(database, 'novels');
     let currentData = {};
     let activeKey = null;
 
-    // Load Articles
+    onAuthStateChanged(auth, (user) => {
+      const nameDisplay = document.getElementById('userNameDisplay');
+      const authBtn = document.getElementById('googleAuthBtn');
+
+      if (user) {
+        currentUser = user;
+        nameDisplay.innerHTML = `<img src="${user.photoURL}" class="w-5 h-5 rounded-full border"> <span class="text-indigo-900">${user.displayName}</span>`;
+        authBtn.innerText = 'ထွက်မည်';
+        authBtn.className = "bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-md font-bold transition text-xs";
+        authBtn.onclick = () => signOut(auth);
+      } else {
+        currentUser = null;
+        nameDisplay.innerHTML = `<i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ထားပါ`;
+        authBtn.innerHTML = `<i class="fa-brands fa-google"></i> Google Login`;
+        authBtn.className = "bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5 text-xs";
+        authBtn.onclick = () => signInWithPopup(auth, provider);
+      }
+    });
+
     onValue(novelsRef, (snapshot) => {
       container.innerHTML = '';
       currentData = snapshot.val() || {};
@@ -158,16 +185,11 @@
       if (keys.length > 0) {
         keys.forEach((key) => {
           const item = currentData[key];
-          const views = item.views || 0;
-          const likes = item.likes || 0;
-
           container.innerHTML += `
             <div class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-between border border-gray-100 hover:shadow-lg transition">
               <div>
                 <div class="flex justify-between items-center mb-3">
-                  <span class="bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-bold">
-                    <i class="fa-solid fa-book mr-1"></i> ဝတ္ထု
-                  </span>
+                  <span class="bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-bold">ဝတ္ထု</span>
                   <span class="text-xs text-gray-400">${item.date || ''}</span>
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-1">${item.title || 'ခေါင်းစဉ်မရှိ'}</h3>
@@ -177,8 +199,8 @@
 
               <div class="mt-6 pt-3 border-t border-gray-100 flex justify-between items-center text-xs text-gray-500">
                 <div class="flex items-center gap-3">
-                  <span><i class="fa-solid fa-eye text-indigo-600"></i> ${views}</span>
-                  <span><i class="fa-solid fa-heart text-red-500"></i> ${likes}</span>
+                  <span><i class="fa-solid fa-eye text-indigo-600"></i> ${item.views || 0}</span>
+                  <span><i class="fa-solid fa-heart text-red-500"></i> ${item.likes || 0}</span>
                 </div>
                 <button onclick="openModal('${key}')" class="text-indigo-900 font-bold text-sm hover:text-amber-600 transition inline-flex items-center gap-1">
                   အပြည့်အစုံ ဖတ်ရန် <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -191,81 +213,67 @@
         container.innerHTML = `
           <div class="col-span-full text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
             <i class="fa-solid fa-book text-gray-300 text-5xl mb-3"></i>
-            <p class="text-gray-500">ဝတ္ထုစာမူများ မရှိသေးပါ။</p>
+            <p class="text-gray-500">ဝတ္ထုများ မရှိသေးပါ။</p>
           </div>
         `;
       }
     });
 
-    // Open Modal and Increment View Count
     window.openModal = function(key) {
       activeKey = key;
       const item = currentData[key];
       if (!item) return;
 
-      // Update Views
-      runTransaction(ref(database, `novels/${key}/views`), (currentViews) => {
-        return (currentViews || 0) + 1;
-      });
+      runTransaction(ref(database, `novels/${key}/views`), (currentViews) => (currentViews || 0) + 1);
 
-      // Display Data
       document.getElementById('modalTitle').innerText = item.title || '';
       document.getElementById('modalAuthor').innerText = 'ရေးသားသူ - ' + (item.author || '');
       document.getElementById('modalContent').innerText = item.content || '';
       document.getElementById('modalViews').innerText = (item.views || 0) + 1;
       document.getElementById('modalLikesCount').innerText = item.likes || 0;
 
-      // Load Comments
       loadComments(item.comments);
-
       document.getElementById('novelModal').classList.remove('hidden');
     };
 
-    // Like Button Logic
     document.getElementById('likeBtn').onclick = () => {
       if (!activeKey) return;
-      runTransaction(ref(database, `novels/${activeKey}/likes`), (currentLikes) => {
-        return (currentLikes || 0) + 1;
-      });
+      runTransaction(ref(database, `novels/${activeKey}/likes`), (currentLikes) => (currentLikes || 0) + 1);
       const countElem = document.getElementById('modalLikesCount');
       countElem.innerText = parseInt(countElem.innerText) + 1;
     };
 
-    // Comment Logic
     document.getElementById('submitCommentBtn').onclick = () => {
       if (!activeKey) return;
-      const name = document.getElementById('commenterName').value.trim() || 'ဧည့်သည်';
-      const text = document.getElementById('commentText').value.trim();
-
-      if (!text) {
-        alert('ကျေးဇူးပြု၍ မှတ်ချက် ရေးသားပါ။');
+      if (!currentUser) {
+        alert("မှတ်ချက်ပေးရန်အတွက် ကျေးဇူးပြု၍ Google Account ဖြင့် Login ဝင်ပေးပါ။");
+        signInWithPopup(auth, provider);
         return;
       }
+      const text = document.getElementById('commentText').value.trim();
+      if (!text) { alert('ကျေးဇူးပြု၍ မှတ်ချက် ရေးသားပါ။'); return; }
 
-      const commentsRef = ref(database, `novels/${activeKey}/comments`);
-      push(commentsRef, {
-        name: name,
+      push(ref(database, `novels/${activeKey}/comments`), {
+        name: currentUser.displayName || 'Google အသုံးပြုသူ',
+        photo: currentUser.photoURL || '',
         text: text,
         date: new Date().toLocaleDateString('my-MM')
       }).then(() => {
         document.getElementById('commentText').value = '';
-        onValue(ref(database, `novels/${activeKey}/comments`), (snapshot) => {
-          loadComments(snapshot.val());
-        }, { onlyOnce: true });
+        onValue(ref(database, `novels/${activeKey}/comments`), (snapshot) => loadComments(snapshot.val()), { onlyOnce: true });
       });
     };
 
     function loadComments(commentsData) {
       const commentsList = document.getElementById('commentsList');
       commentsList.innerHTML = '';
-
       if (commentsData) {
-        const commentsArr = Object.values(commentsData).reverse();
-        commentsArr.forEach(c => {
+        Object.values(commentsData).reverse().forEach(c => {
+          const userImg = c.photo ? `<img src="${c.photo}" class="w-4 h-4 rounded-full inline mr-1">` : `<i class="fa-solid fa-user-circle mr-1"></i>`;
           commentsList.innerHTML += `
             <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 text-xs">
               <div class="flex justify-between font-bold text-indigo-900 mb-1">
-                <span><i class="fa-solid fa-user-circle mr-1"></i>${c.name}</span>
+                <span class="flex items-center gap-1">${userImg} ${c.name}</span>
                 <span class="text-gray-400 font-normal">${c.date || ''}</span>
               </div>
               <p class="text-gray-700 leading-relaxed">${c.text}</p>
@@ -277,7 +285,6 @@
       }
     }
 
-    // Close Modal
     document.getElementById('closeModalBtn').onclick = () => document.getElementById('novelModal').classList.add('hidden');
     document.getElementById('closeModalBtn2').onclick = () => document.getElementById('novelModal').classList.add('hidden');
   </script>
