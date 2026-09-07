@@ -14,7 +14,8 @@
   <!-- Navigation Bar -->
   <nav class="bg-indigo-900 text-white py-3 px-4 shadow-md sticky top-0 z-50">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-lg font-bold tracking-wide">စာပေဥယျာဉ်</h1>
+      <!-- Website Logo / Title -->
+      <a href="index.html" class="text-lg font-bold tracking-wide hover:text-amber-400 transition">စာပေဥယျာဉ်</a>
       
       <!-- Hamburger Menu Toggle Button -->
       <button id="menuBtn" class="text-white hover:text-amber-400 focus:outline-none text-xl p-1">
@@ -45,15 +46,15 @@
     </div>
   </nav>
 
-  <!-- Header -->
+  <!-- Header Section -->
   <header class="bg-indigo-800 text-white py-8 px-4 text-center shadow-inner">
     <h2 class="text-2xl md:text-3xl font-bold mb-2">
       <i class="fa-solid fa-book-open text-amber-400 mr-2"></i>အထွေထွေသုတရသများ
     </h2>
-    <p class="text-gray-200 text-sm">ဗဟုသုတရဖွယ်ရာ ဆောင်းပါးနှင့် သုတရသစာပေများကို ဖတ်ရှုနိုင်ပါသည်။</p>
+    <p class="text-gray-200 text-xs md:text-sm">ဗဟုသုတရဖွယ်ရာ ဆောင်းပါးနှင့် သုတရသစာပေများကို ဖတ်ရှုနိုင်ပါသည်။</p>
   </header>
 
-  <!-- Main Content (Firebase Data Container) -->
+  <!-- Main Content (Firebase Data Cards Container) -->
   <main class="container mx-auto my-8 px-4 flex-grow">
     <div id="knowledgeContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="col-span-full text-center py-12 text-gray-500">
@@ -63,7 +64,7 @@
     </div>
   </main>
 
-  <!-- Modal for Full Reading, Likes and Comments -->
+  <!-- Modal Component for Reading Full Content, Views, Likes & Comments -->
   <div id="knowledgeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       
@@ -83,7 +84,7 @@
       <div class="p-6 overflow-y-auto flex-grow space-y-6">
         <p id="modalContent" class="text-gray-700 text-base whitespace-pre-line leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100"></p>
 
-        <!-- Stats Bar & Like Button -->
+        <!-- Views, Likes and Action Controls -->
         <div class="flex justify-between items-center pt-4 border-t border-gray-200">
           <div class="flex items-center gap-4 text-sm text-gray-600">
             <span><i class="fa-solid fa-eye text-indigo-600 mr-1"></i> <span id="modalViews">0</span> ကြိမ်ဖတ်ရှုခဲ့သည်</span>
@@ -137,7 +138,7 @@
     <p>© 2026 စာပေဥယျာဉ်။ မူပိုင်ခွင့်များအားလုံး လက်ဝယ်ရှိသည်။</p>
   </footer>
 
-  <!-- Firebase Script & Menu Toggle Script -->
+  <!-- Firebase Script & App Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -164,7 +165,7 @@
     let currentData = {};
     let activeKey = null;
 
-    // Mobile Menu Toggle Script
+    // Hamburger Menu Script
     const menuBtn = document.getElementById('menuBtn');
     const menuList = document.getElementById('menuList');
     const menuIcon = document.getElementById('menuIcon');
@@ -178,6 +179,7 @@
       }
     };
 
+    // Firebase Auth Observer
     onAuthStateChanged(auth, (user) => {
       const nameDisplay = document.getElementById('userNameDisplay');
       const authBtn = document.getElementById('googleAuthBtn');
@@ -197,6 +199,7 @@
       }
     });
 
+    // Realtime Database Fetch
     onValue(knowledgeRef, (snapshot) => {
       container.innerHTML = '';
       currentData = snapshot.val() || {};
@@ -239,6 +242,7 @@
       }
     });
 
+    // Open Modal Function
     window.openModal = function(key) {
       activeKey = key;
       const item = currentData[key];
@@ -256,6 +260,7 @@
       document.getElementById('knowledgeModal').classList.remove('hidden');
     };
 
+    // Like Button Action
     document.getElementById('likeBtn').onclick = () => {
       if (!activeKey) return;
       runTransaction(ref(database, `knowledges/${activeKey}/likes`), (currentLikes) => (currentLikes || 0) + 1);
@@ -263,6 +268,7 @@
       countElem.innerText = parseInt(countElem.innerText) + 1;
     };
 
+    // Submit Comment Action
     document.getElementById('submitCommentBtn').onclick = () => {
       if (!activeKey) return;
       
@@ -302,6 +308,7 @@
       });
     };
 
+    // Render Comments
     function loadComments(commentsData) {
       const commentsList = document.getElementById('commentsList');
       commentsList.innerHTML = '';
@@ -323,6 +330,7 @@
       }
     }
 
+    // Modal Close Action
     document.getElementById('closeModalBtn').onclick = () => document.getElementById('knowledgeModal').classList.add('hidden');
     document.getElementById('closeModalBtn2').onclick = () => document.getElementById('knowledgeModal').classList.add('hidden');
   </script>
