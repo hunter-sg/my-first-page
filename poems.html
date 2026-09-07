@@ -15,45 +15,28 @@
   <nav class="bg-indigo-900 text-white py-3 px-4 shadow-md sticky top-0 z-50">
     <div class="container mx-auto flex justify-between items-center">
       <a href="index.html" class="text-lg font-bold tracking-wide hover:text-amber-400 transition">စာပေဥယျာဉ်</a>
-      
-      <!-- Hamburger Menu Button -->
       <button id="menuBtn" class="text-white hover:text-amber-400 focus:outline-none text-xl p-1">
         <i class="fa-solid fa-bars" id="menuIcon"></i>
       </button>
     </div>
 
-    <!-- Collapsible Menu List -->
     <div id="menuList" class="hidden container mx-auto mt-3 pt-3 border-t border-indigo-800 flex flex-col space-y-2.5 text-xs pb-2 transition-all">
-      <a href="index.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
-        <i class="fa-solid fa-house"></i> ပင်မစာမျက်နှာ
-      </a>
-      <a href="knowledges.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
-        <i class="fa-solid fa-book-open"></i> အထွေထွေသုတရသများ
-      </a>
-      <a href="newnovels.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
-        <i class="fa-solid fa-book"></i> ဝတ္ထုတို/ရှည်များ
-      </a>
-      <a href="sports.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
-        <i class="fa-solid fa-futbol"></i> နိုင်ငံတကာ အားကစားသတင်းများ
-      </a>
-      <a href="poems.html" class="text-amber-400 font-bold flex items-center gap-2 py-1">
-        <i class="fa-solid fa-feather"></i> ကဗျာများ
-      </a>
-      <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-black px-3 py-1.5 rounded-full font-bold transition shadow-sm inline-flex items-center gap-1 w-fit mt-1">
-        <i class="fa-solid fa-plus"></i> စာမူသစ်တင်ရန်
-      </a>
+      <a href="index.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1"><i class="fa-solid fa-house"></i> ပင်မစာမျက်နှာ</a>
+      <a href="knowledges.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1"><i class="fa-solid fa-book-open"></i> အထွေထွေသုတရသများ</a>
+      <a href="newnovels.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1"><i class="fa-solid fa-book"></i> ဝတ္ထုတို/ရှည်များ</a>
+      <a href="sports.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1"><i class="fa-solid fa-futbol"></i> နိုင်ငံတကာ အားကစားသတင်းများ</a>
+      <a href="poems.html" class="text-amber-400 font-bold flex items-center gap-2 py-1"><i class="fa-solid fa-feather"></i> ကဗျာများ</a>
+      <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-black px-3 py-1.5 rounded-full font-bold transition shadow-sm inline-flex items-center gap-1 w-fit mt-1"><i class="fa-solid fa-plus"></i> စာမူသစ်တင်ရန်</a>
     </div>
   </nav>
 
-  <!-- Header Section -->
+  <!-- Header -->
   <header class="bg-indigo-800 text-white py-8 px-4 text-center shadow-inner">
-    <h2 class="text-2xl md:text-3xl font-bold mb-2">
-      <i class="fa-solid fa-feather text-amber-400 mr-2"></i>ကဗျာများ
-    </h2>
+    <h2 class="text-2xl md:text-3xl font-bold mb-2"><i class="fa-solid fa-feather text-amber-400 mr-2"></i>ကဗျာများ</h2>
     <p class="text-gray-200 text-xs md:text-sm">စိတ်ကူးယဉ် ခံစားမှု လှပသော ကဗျာများကို ဖတ်ရှုခံစားနိုင်ပါသည်။</p>
   </header>
 
-  <!-- Main Content (Firebase Data Container) -->
+  <!-- Main Content Container -->
   <main class="container mx-auto my-8 px-4 flex-grow">
     <div id="poemsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="col-span-full text-center py-12 text-gray-500">
@@ -63,7 +46,7 @@
     </div>
   </main>
 
-  <!-- Modal Component for Full Reading, Views, Likes & Comments -->
+  <!-- Reading & Comment Modal -->
   <div id="poemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       
@@ -74,22 +57,18 @@
           <h3 id="modalTitle" class="text-2xl font-bold text-gray-800 mt-2"></h3>
           <p id="modalAuthor" class="text-xs text-indigo-600 font-semibold mt-1"></p>
         </div>
-        <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 text-2xl font-bold p-2">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 text-2xl font-bold p-2"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <!-- Modal Body -->
       <div class="p-6 overflow-y-auto flex-grow space-y-6">
-        
-        <!-- Image Container (ပုံပါရှိပါက ဖော်ပြပေးမည်) -->
         <div id="modalImageContainer" class="hidden text-center mb-4">
           <img id="modalImage" src="" alt="Cover Image" class="max-h-80 mx-auto rounded-lg shadow-sm border border-gray-100 object-cover">
         </div>
 
         <p id="modalContent" class="text-gray-700 text-base whitespace-pre-line leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100"></p>
 
-        <!-- Stats Bar & Like Button -->
+        <!-- View/Like Stats -->
         <div class="flex justify-between items-center pt-4 border-t border-gray-200">
           <div class="flex items-center gap-4 text-sm text-gray-600">
             <span><i class="fa-solid fa-eye text-indigo-600 mr-1"></i> <span id="modalViews">0</span> ကြိမ်ဖတ်ရှုခဲ့သည်</span>
@@ -100,27 +79,23 @@
           </button>
         </div>
 
-        <!-- Comments Section (No Login Required) -->
+        <!-- Comments Section -->
         <div class="pt-4 border-t border-gray-200">
           <h4 class="font-bold text-gray-800 text-base mb-4 flex items-center gap-2">
             <i class="fa-solid fa-comments text-indigo-600"></i> မှတ်ချက်များ (Comments)
           </h4>
 
+          <!-- New Comment Input Box -->
           <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 space-y-3">
-            <div>
-              <input type="text" id="commenterName" placeholder="သင့်အမည် ရိုက်ထည့်ပါ..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            </div>
-
+            <input type="text" id="commenterName" placeholder="သင့်အမည် ရိုက်ထည့်ပါ..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးသားရန်..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-            
             <div class="text-right">
-              <button id="submitCommentBtn" class="bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition">
-                မှတ်ချက်ပေးမည်
-              </button>
+              <button id="submitCommentBtn" class="bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition">မှတ်ချက်ပေးမည်</button>
             </div>
           </div>
 
-          <div id="commentsList" class="space-y-3">
+          <!-- Comment List View -->
+          <div id="commentsList" class="space-y-4">
             <p class="text-xs text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>
           </div>
         </div>
@@ -133,12 +108,11 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="bg-indigo-950 text-gray-400 py-4 text-center text-xs mt-auto">
     <p>© 2026 စာပေဥယျာဉ်။ မူပိုင်ခွင့်များအားလုံး လက်ဝယ်ရှိသည်။</p>
   </footer>
 
-  <!-- Firebase Script & App Logic -->
+  <!-- Firebase Script Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -161,21 +135,17 @@
     let currentData = {};
     let activeKey = null;
 
-    // Hamburger Menu Script
+    // Mobile Navigation Toggle
     const menuBtn = document.getElementById('menuBtn');
     const menuList = document.getElementById('menuList');
     const menuIcon = document.getElementById('menuIcon');
 
     menuBtn.onclick = () => {
       menuList.classList.toggle('hidden');
-      if (menuList.classList.contains('hidden')) {
-        menuIcon.className = "fa-solid fa-bars";
-      } else {
-        menuIcon.className = "fa-solid fa-xmark";
-      }
+      menuIcon.className = menuList.classList.contains('hidden') ? "fa-solid fa-bars" : "fa-solid fa-xmark";
     };
 
-    // Realtime Database Fetch for Poems
+    // Load Data Realtime
     onValue(poemsRef, (snapshot) => {
       container.innerHTML = '';
       currentData = snapshot.val() || {};
@@ -184,8 +154,6 @@
       if (keys.length > 0) {
         keys.forEach((key) => {
           const item = currentData[key];
-          
-          // Image HTML check
           const imageHtml = item.image ? `<img src="${item.image}" class="w-full h-48 object-cover rounded-lg mb-3">` : '';
 
           container.innerHTML += `
@@ -214,16 +182,11 @@
           `;
         });
       } else {
-        container.innerHTML = `
-          <div class="col-span-full text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
-            <i class="fa-solid fa-feather text-gray-300 text-5xl mb-3"></i>
-            <p class="text-gray-500">ကဗျာများ မရှိသေးပါ။</p>
-          </div>
-        `;
+        container.innerHTML = `<div class="col-span-full text-center py-12 bg-white rounded-lg border border-dashed border-gray-300"><p class="text-gray-500">ကဗျာများ မရှိသေးပါ။</p></div>`;
       }
     });
 
-    // Open Modal Function
+    // Open Article Modal
     window.openModal = function(key) {
       activeKey = key;
       const item = currentData[key];
@@ -237,7 +200,6 @@
       document.getElementById('modalViews').innerText = (item.views || 0) + 1;
       document.getElementById('modalLikesCount').innerText = item.likes || 0;
 
-      // Image modal display setup
       const imgContainer = document.getElementById('modalImageContainer');
       const modalImg = document.getElementById('modalImage');
       if (item.image) {
@@ -251,68 +213,188 @@
       document.getElementById('poemModal').classList.remove('hidden');
     };
 
-    // Like Button Action
+    // Article Like Action
     document.getElementById('likeBtn').onclick = () => {
       if (!activeKey) return;
-      runTransaction(ref(database, `poems/${activeKey}/likes`), (currentLikes) => (currentLikes || 0) + 1);
+      runTransaction(ref(database, `poems/${activeKey}/likes`), (likes) => (likes || 0) + 1);
       const countElem = document.getElementById('modalLikesCount');
       countElem.innerText = parseInt(countElem.innerText) + 1;
     };
 
-    // Submit Comment Action (No Login Required)
+    // Main Comment Post
     document.getElementById('submitCommentBtn').onclick = () => {
       if (!activeKey) return;
 
       const authorName = document.getElementById('commenterName').value.trim();
       const text = document.getElementById('commentText').value.trim();
 
-      if (!authorName) {
-        alert('ကျေးဇူးပြု၍ သင့်အမည်ကို ရိုက်ထည့်ပေးပါ။');
-        return;
-      }
-
-      if (!text) { 
-        alert('ကျေးဇူးပြု၍ မှတ်ချက် ရေးသားပါ။'); 
-        return; 
-      }
+      if (!authorName) return alert('ကျေးဇူးပြု၍ သင့်အမည်ကို ရိုက်ထည့်ပေးပါ။');
+      if (!text) return alert('ကျေးဇူးပြု၍ မှတ်ချက် ရေးသားပါ။');
 
       push(ref(database, `poems/${activeKey}/comments`), {
         name: authorName,
         text: text,
+        likes: 0,
         date: new Date().toLocaleDateString('my-MM')
       }).then(() => {
         document.getElementById('commentText').value = '';
-        onValue(ref(database, `poems/${activeKey}/comments`), (snapshot) => {
-          loadComments(snapshot.val());
-        }, { onlyOnce: true });
-      }).catch((error) => {
-        console.error("Error adding comment: ", error);
-        alert("မှတ်ချက်တင်ရာတွင် အမှားအယွင်း ရှိသွားပါသည်။");
+        refreshCurrentComments();
       });
     };
 
-    // Render Comments
+    // Render Comments UI
     function loadComments(commentsData) {
       const commentsList = document.getElementById('commentsList');
       commentsList.innerHTML = '';
-      if (commentsData) {
-        Object.values(commentsData).reverse().forEach(c => {
-          commentsList.innerHTML += `
-            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 text-xs">
-              <div class="flex justify-between font-bold text-indigo-900 mb-1">
-                <span class="flex items-center gap-1"><i class="fa-solid fa-user-circle text-gray-400"></i> ${c.name || 'ဧည့်သည်'}</span>
-                <span class="text-gray-400 font-normal">${c.date || ''}</span>
-              </div>
-              <p class="text-gray-700 leading-relaxed">${c.text}</p>
-            </div>
-          `;
-        });
-      } else {
+
+      if (!commentsData) {
         commentsList.innerHTML = `<p class="text-xs text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
+        return;
       }
+
+      Object.entries(commentsData).reverse().forEach(([commentId, c]) => {
+        const repliesHtml = renderReplies(commentId, c.replies);
+
+        commentsList.innerHTML += `
+          <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 text-xs space-y-2">
+            <div class="flex justify-between font-bold text-indigo-900">
+              <span class="flex items-center gap-1"><i class="fa-solid fa-user-circle text-gray-400"></i> ${c.name || 'ဧည့်သည်'}</span>
+              <span class="text-gray-400 font-normal">${c.date || ''}</span>
+            </div>
+            
+            <p class="text-gray-700 leading-relaxed">${c.text}</p>
+
+            <div class="flex items-center gap-4 text-gray-500 pt-1 border-t border-gray-100 font-semibold">
+              <button onclick="likeComment('${commentId}')" class="hover:text-red-500 transition flex items-center gap-1">
+                <i class="fa-solid fa-heart text-red-500"></i> <span>${c.likes || 0}</span>
+              </button>
+              <button onclick="toggleReplyBox('${commentId}')" class="hover:text-indigo-600 transition flex items-center gap-1">
+                <i class="fa-solid fa-reply"></i> ပြန်စာ (Reply)
+              </button>
+            </div>
+
+            <!-- Reply Box -->
+            <div id="reply-box-${commentId}" class="hidden pt-2 space-y-2">
+              <input type="text" id="reply-name-${commentId}" placeholder="သင့်အမည်..." class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              <textarea id="reply-text-${commentId}" rows="2" placeholder="ပြန်စာ ရေးသားရန်..." class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+              <div class="text-right">
+                <button onclick="submitReply('${commentId}')" class="bg-indigo-900 text-white px-3 py-1 rounded text-xs font-bold hover:bg-indigo-800 transition">
+                  Reply ပေးမည်
+                </button>
+              </div>
+            </div>
+
+            <div id="replies-list-${commentId}" class="pl-3 border-l-2 border-indigo-200 space-y-2 mt-2">
+              ${repliesHtml}
+            </div>
+          </div>
+        `;
+      });
     }
 
-    // Modal Close Action
+    // Nested Reply Builder
+    function renderReplies(commentId, repliesData, parentPath = '') {
+      if (!repliesData) return '';
+
+      let html = '';
+      Object.entries(repliesData).forEach(([replyId, r]) => {
+        const currentPath = parentPath ? `${parentPath}/${replyId}/replies` : replyId;
+        const subReplies = renderReplies(commentId, r.replies, currentPath);
+
+        html += `
+          <div class="bg-white p-2.5 rounded border border-gray-100 text-xs space-y-1 mt-1">
+            <div class="flex justify-between font-bold text-indigo-900">
+              <span class="flex items-center gap-1"><i class="fa-solid fa-circle-user text-indigo-400"></i> ${r.name || 'ဧည့်သည်'}</span>
+              <span class="text-gray-400 font-normal">${r.date || ''}</span>
+            </div>
+
+            <p class="text-gray-700 leading-relaxed">${r.text}</p>
+
+            <div class="flex items-center gap-3 text-gray-500 pt-1 font-semibold text-[11px]">
+              <button onclick="likeReply('${commentId}', '${currentPath}')" class="hover:text-red-500 transition flex items-center gap-1">
+                <i class="fa-solid fa-heart text-red-500"></i> ${r.likes || 0}
+              </button>
+              <button onclick="toggleReplyBox('nested-${replyId}')" class="hover:text-indigo-600 transition flex items-center gap-1">
+                <i class="fa-solid fa-reply"></i> Reply
+              </button>
+            </div>
+
+            <!-- Nested Reply Box -->
+            <div id="reply-box-nested-${replyId}" class="hidden pt-2 space-y-2">
+              <input type="text" id="reply-name-nested-${replyId}" placeholder="သင့်အမည်..." class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              <textarea id="reply-text-nested-${replyId}" rows="2" placeholder="ပြန်စာ ရေးသားရန်..." class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+              <div class="text-right">
+                <button onclick="submitNestedReply('${commentId}', '${currentPath}', 'nested-${replyId}')" class="bg-indigo-900 text-white px-3 py-1 rounded text-xs font-bold hover:bg-indigo-800 transition">
+                  Reply ပေးမည်
+                </button>
+              </div>
+            </div>
+
+            <div class="pl-2 border-l-2 border-gray-200 space-y-1">
+              ${subReplies}
+            </div>
+          </div>
+        `;
+      });
+
+      return html;
+    }
+
+    // Window Functions for Dynamic Elements
+    window.toggleReplyBox = function(id) {
+      const box = document.getElementById(`reply-box-${id}`);
+      if (box) box.classList.toggle('hidden');
+    };
+
+    window.likeComment = function(commentId) {
+      if (!activeKey) return;
+      runTransaction(ref(database, `poems/${activeKey}/comments/${commentId}/likes`), (likes) => (likes || 0) + 1);
+      refreshCurrentComments();
+    };
+
+    window.likeReply = function(commentId, replyPath) {
+      if (!activeKey) return;
+      runTransaction(ref(database, `poems/${activeKey}/comments/${commentId}/replies/${replyPath}/likes`), (likes) => (likes || 0) + 1);
+      refreshCurrentComments();
+    };
+
+    window.submitReply = function(commentId) {
+      if (!activeKey) return;
+      const name = document.getElementById(`reply-name-${commentId}`).value.trim();
+      const text = document.getElementById(`reply-text-${commentId}`).value.trim();
+
+      if (!name || !text) return alert('အမည် နှင့် ပြန်စာကို ဖြည့်စွက်ပါ။');
+
+      push(ref(database, `poems/${activeKey}/comments/${commentId}/replies`), {
+        name: name,
+        text: text,
+        likes: 0,
+        date: new Date().toLocaleDateString('my-MM')
+      }).then(() => refreshCurrentComments());
+    };
+
+    window.submitNestedReply = function(commentId, parentPath, elementId) {
+      if (!activeKey) return;
+      const name = document.getElementById(`reply-name-${elementId}`).value.trim();
+      const text = document.getElementById(`reply-text-${elementId}`).value.trim();
+
+      if (!name || !text) return alert('အမည် နှင့် ပြန်စာကို ဖြည့်စွက်ပါ။');
+
+      push(ref(database, `poems/${activeKey}/comments/${commentId}/replies/${parentPath}/replies`), {
+        name: name,
+        text: text,
+        likes: 0,
+        date: new Date().toLocaleDateString('my-MM')
+      }).then(() => refreshCurrentComments());
+    };
+
+    function refreshCurrentComments() {
+      onValue(ref(database, `poems/${activeKey}/comments`), (snapshot) => {
+        loadComments(snapshot.val());
+      }, { onlyOnce: true });
+    }
+
+    // Close Modal Event Listeners
     document.getElementById('closeModalBtn').onclick = () => document.getElementById('poemModal').classList.add('hidden');
     document.getElementById('closeModalBtn2').onclick = () => document.getElementById('poemModal').classList.add('hidden');
   </script>
