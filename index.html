@@ -14,29 +14,33 @@
     <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-2">
     
     <!-- 1. Left: Logo & Brand Name -->
-      <a href="index.html" class="flex items-center gap-2 flex-shrink-0">
-        <img src="photo_2026-09-07_21-25-15.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-amber-400/50 object-cover">
-        <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
+      <a href="index.html" class="flex items-center gap-1.5 flex-shrink-0">
+        <img src="photo_2026-09-07_21-25-15.jpg" alt="Logo" class="w-7 h-7 md:w-8 md:h-8 rounded-full border border-amber-400/50 object-cover">
+        <h1 class="text-xs md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
       </a>
 
-    <!-- 2. Middle: Search Bar & Live Date/Time -->
-      <div class="flex items-center gap-1.5 flex-1 max-w-[170px] sm:max-w-xs md:max-w-md mx-1">
-        <div class="relative w-24 sm:w-full">
+    <!-- 2. Middle Left: Search Bar -->
+      <div class="flex items-center flex-1 max-w-[140px] sm:max-w-xs md:max-w-sm mx-1">
+        <div class="relative w-full">
           <input type="text" id="searchInput" onkeyup="searchPosts()" placeholder="ရှာရန်..." class="w-full bg-indigo-950/80 text-white placeholder-indigo-300 text-[11px] rounded-full pl-7 pr-2 py-1 border border-indigo-700/60 focus:outline-none focus:border-amber-400 transition">
-          <i class="fa-solid fa-magnifying-glass absolute left-2 top-2 text-indigo-400 text-[10px]"></i>
-        </div>
-      <!-- Live Date & Time Box -->
-        <div id="liveClock" class="text-[9px] sm:text-[10px] font-mono bg-indigo-950/60 px-1.5 py-1 rounded-md border border-indigo-800/50 text-amber-300 flex-shrink-0 whitespace-nowrap">
-          07/09/2026 | 00:00:00
+          <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-indigo-400 text-[10px]"></i>
         </div>
       </div>
 
-    <!-- 3. Mobile Menu Toggle Button -->
-      <button id="menuBtn" class="text-white text-base focus:outline-none md:hidden p-1.5 rounded-lg hover:bg-indigo-800 transition">
-        <i id="menuIcon" class="fa-solid fa-bars"></i>
-      </button>
+    <!-- 3. Right: Live Date/Time Box & Mobile Menu Button -->
+      <div class="flex items-center gap-2 flex-shrink-0">
+      <!-- Live Date & Time Box -->
+        <div id="liveClock" class="text-[9px] sm:text-[10px] font-mono bg-indigo-950/60 px-2 py-1 rounded-md border border-indigo-800/50 text-amber-300 whitespace-nowrap">
+          08/09/2026 | 00:00:00
+        </div>
 
-    <!-- 4. Navigation Links (Desktop: Row / Mobile: Absolute Dropdown Below Header) -->
+      <!-- Mobile Menu Toggle Button -->
+        <button id="menuBtn" class="text-white text-base focus:outline-none md:hidden p-1 rounded-lg hover:bg-indigo-800 transition">
+          <i id="menuIcon" class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+    <!-- 4. Navigation Links (Dropdown) -->
       <nav id="menuList" class="hidden absolute top-full left-0 right-0 bg-indigo-950 border-t border-indigo-800/80 p-4 shadow-xl flex-col gap-3 text-xs font-semibold md:static md:flex md:flex-row md:bg-transparent md:border-none md:p-0 md:shadow-none md:space-x-4 lg:space-x-6 flex-shrink-0 z-50">
         <a href="index.html" class="text-amber-400 font-bold border-b md:border-b-2 border-amber-400 pb-1 md:pb-0.5">ပင်မ</a>
         <a href="knowledges.html" class="hover:text-indigo-200 py-1 md:py-0">သုတရသ</a>
