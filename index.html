@@ -167,8 +167,11 @@
         return;
       }
 
-    // Get the top 5 latest posts
-      const latestList = allPosts.reverse().slice(0, 5);
+    // နောက်ဆုံးတင်ခဲ့သော စာမူကို ထိပ်ဆုံးမှာထားရန် Sort လုပ်ခြင်း
+      allPosts.sort((a, b) => b.id.localeCompare(a.id));
+
+    // ထိပ်ဆုံးမှ ၅ ခုကို ယူခြင်း
+      const latestList = allPosts.slice(0, 5);
 
       latestList.forEach(post => {
         container.innerHTML += `
