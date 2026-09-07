@@ -20,12 +20,13 @@
       </a>
 
     <!-- 2. Middle: Search Bar & Live Date/Time -->
-      <div class="flex items-center gap-2 flex-1 max-w-xs md:max-w-md mx-2">
-        <div class="relative w-full">
-          <input type="text" id="searchInput" onkeyup="searchPosts()" placeholder="ရှာဖွေရန်..." class="w-full bg-indigo-950/80 text-white placeholder-indigo-300 text-xs rounded-full pl-8 pr-3 py-1.5 border border-indigo-700/60 focus:outline-none focus:border-amber-400 transition">
-          <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-indigo-400 text-xs"></i>
+      <div class="flex items-center gap-1.5 flex-1 max-w-[170px] sm:max-w-xs md:max-w-md mx-1">
+        <div class="relative w-24 sm:w-full">
+          <input type="text" id="searchInput" onkeyup="searchPosts()" placeholder="ရှာရန်..." class="w-full bg-indigo-950/80 text-white placeholder-indigo-300 text-[11px] rounded-full pl-7 pr-2 py-1 border border-indigo-700/60 focus:outline-none focus:border-amber-400 transition">
+          <i class="fa-solid fa-magnifying-glass absolute left-2 top-2 text-indigo-400 text-[10px]"></i>
         </div>
-        <div id="liveClock" class="hidden sm:block text-[10px] font-mono bg-indigo-950/60 px-2 py-1 rounded-md border border-indigo-800/50 text-amber-300 flex-shrink-0 whitespace-nowrap">
+      <!-- Live Date & Time Box -->
+        <div id="liveClock" class="text-[9px] sm:text-[10px] font-mono bg-indigo-950/60 px-1.5 py-1 rounded-md border border-indigo-800/50 text-amber-300 flex-shrink-0 whitespace-nowrap">
           07/09/2026 | 00:00:00
         </div>
       </div>
