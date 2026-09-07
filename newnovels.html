@@ -38,48 +38,98 @@
     </div>
   </nav>
 
+  <!-- Header -->
   <header class="bg-indigo-800 text-white py-8 px-4 text-center shadow-inner">
     <h2 class="text-2xl md:text-3xl font-bold mb-2">
-      <i class="fa-solid fa-book text-amber-400 mr-2"></i>ဝတ္ထုတို/ရှည်များ စုစည်းမှု
+      <i class="fa-solid fa-book text-amber-400 mr-2"></i>ဝတ္ထုတို/ရှည် စာမူများ
     </h2>
-    <p class="text-gray-200 text-sm">ရသစုံ ဝတ္ထုတို နှင့် ဝတ္ထုရှည်များ</p>
+    <p class="text-gray-200 text-sm">စိတ်ဝင်စားဖွယ် ဝတ္ထုတို/ရှည်များကို တစ်နေရာတည်းတွင် ဖတ်ရှုနိုင်ပါသည်။</p>
   </header>
 
+  <!-- Main Content -->
   <main class="container mx-auto my-8 px-4 flex-grow">
     <div id="novelContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="col-span-full text-center py-12 text-gray-500">
         <i class="fa-solid fa-spinner fa-spin text-3xl mb-3 text-indigo-600"></i>
-        <p>ဝတ္ထုများကို ရယူနေပါသည်...</p>
+        <p>စာမူများကို ရယူနေပါသည်...</p>
       </div>
     </div>
   </main>
 
+  <!-- Modal for Full Reading, Likes and Comments -->
   <div id="novelModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      
+      <!-- Modal Header -->
       <div class="p-5 border-b flex justify-between items-center bg-indigo-50">
         <div>
-          <span class="bg-amber-100 text-amber-800 text-xs px-3 py-1 rounded-full font-bold">ဝတ္ထု</span>
+          <span class="bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-bold">ဝတ္ထု</span>
           <h3 id="modalTitle" class="text-2xl font-bold text-gray-800 mt-2"></h3>
           <p id="modalAuthor" class="text-xs text-indigo-600 font-semibold mt-1"></p>
         </div>
-        <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 text-2xl font-bold p-2"><i class="fa-solid fa-xmark"></i></button>
+        <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600 text-2xl font-bold p-2">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
-      <div class="p-6 overflow-y-auto flex-grow">
+
+      <!-- Modal Body (Content, Like, Comment) -->
+      <div class="p-6 overflow-y-auto flex-grow space-y-6">
+        
+        <!-- Article Content -->
         <p id="modalContent" class="text-gray-700 text-base whitespace-pre-line leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100"></p>
+
+        <!-- Stats Bar & Like Button -->
+        <div class="flex justify-between items-center pt-4 border-t border-gray-200">
+          <div class="flex items-center gap-4 text-sm text-gray-600">
+            <span><i class="fa-solid fa-eye text-indigo-600 mr-1"></i> <span id="modalViews">0</span> ကြိမ်ဖတ်ရှုခဲ့သည်</span>
+            <span><i class="fa-solid fa-heart text-red-500 mr-1"></i> <span id="modalLikesCount">0</span> ခု</span>
+          </div>
+          <button id="likeBtn" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-4 py-1.5 rounded-full font-bold text-sm transition flex items-center gap-2">
+            <i class="fa-solid fa-heart"></i> Like ပေးမည်
+          </button>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="pt-4 border-t border-gray-200">
+          <h4 class="font-bold text-gray-800 text-base mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-comments text-indigo-600"></i> မှတ်ချက်များ (Comments)
+          </h4>
+
+          <!-- Comment Input Form -->
+          <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 space-y-3">
+            <input type="text" id="commenterName" placeholder="သင့်အမည်" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးသားရန်..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            <div class="text-right">
+              <button id="submitCommentBtn" class="bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition">
+                မှတ်ချက်ပေးမည်
+              </button>
+            </div>
+          </div>
+
+          <!-- Comments List -->
+          <div id="commentsList" class="space-y-3">
+            <p class="text-xs text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>
+          </div>
+        </div>
+
       </div>
-      <div class="p-4 border-t text-right bg-gray-50">
-        <button id="closeModalBtn2" class="px-5 py-2 bg-indigo-900 text-white rounded-lg font-bold hover:bg-indigo-800 transition">ပိတ်မည်</button>
+
+      <!-- Modal Footer -->
+      <div class="p-3 border-t text-right bg-gray-50">
+        <button id="closeModalBtn2" class="px-5 py-2 bg-indigo-900 text-white rounded-lg font-bold hover:bg-indigo-800 transition text-sm">ပိတ်မည်</button>
       </div>
     </div>
   </div>
 
+  <!-- Footer -->
   <footer class="bg-indigo-950 text-gray-400 py-4 text-center text-xs mt-auto">
     <p>© 2026 စာပေဥယျာဉ်။ မူပိုင်ခွင့်များအားလုံး လက်ဝယ်ရှိသည်။</p>
   </footer>
 
+  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -95,32 +145,43 @@
     const database = getDatabase(app);
     const container = document.getElementById('novelContainer');
     
-    // novels path မှ သီးသန့် ရယူမည်
-    const novelRef = ref(database, 'novels');
-    let currentNovels = [];
+    const novelsRef = ref(database, 'novels');
+    let currentData = {};
+    let activeKey = null;
 
-    onValue(novelRef, (snapshot) => {
+    // Load Articles
+    onValue(novelsRef, (snapshot) => {
       container.innerHTML = '';
-      const data = snapshot.val();
-      if (data) {
-        currentNovels = Object.values(data).reverse();
-        currentNovels.forEach((item, index) => {
+      currentData = snapshot.val() || {};
+      const keys = Object.keys(currentData).reverse();
+
+      if (keys.length > 0) {
+        keys.forEach((key) => {
+          const item = currentData[key];
+          const views = item.views || 0;
+          const likes = item.likes || 0;
+
           container.innerHTML += `
-            <div class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-between border border-gray-100">
+            <div class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-between border border-gray-100 hover:shadow-lg transition">
               <div>
                 <div class="flex justify-between items-center mb-3">
-                  <span class="bg-amber-100 text-amber-800 text-xs px-3 py-1 rounded-full font-bold">
+                  <span class="bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-bold">
                     <i class="fa-solid fa-book mr-1"></i> ဝတ္ထု
                   </span>
                   <span class="text-xs text-gray-400">${item.date || ''}</span>
                 </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-1">${item.title}</h3>
-                <p class="text-xs text-indigo-600 font-semibold mb-4">ကလောင် - ${item.author}</p>
-                <p class="text-gray-600 text-sm whitespace-pre-line line-clamp-4 leading-relaxed">${item.content}</p>
+                <h3 class="text-xl font-bold text-gray-800 mb-1">${item.title || 'ခေါင်းစဉ်မရှိ'}</h3>
+                <p class="text-xs text-indigo-600 font-semibold mb-4">ရေးသားသူ - ${item.author || 'မသိရပါ'}</p>
+                <p class="text-gray-600 text-sm whitespace-pre-line line-clamp-4 leading-relaxed">${item.content || ''}</p>
               </div>
-              <div class="mt-6 pt-3 border-t border-gray-100 text-right">
-                <button onclick="openModal(${index})" class="text-indigo-900 font-bold text-sm hover:text-amber-600 transition inline-flex items-center gap-1">
-                  ဖတ်ရှုရန် <i class="fa-solid fa-arrow-right text-xs"></i>
+
+              <div class="mt-6 pt-3 border-t border-gray-100 flex justify-between items-center text-xs text-gray-500">
+                <div class="flex items-center gap-3">
+                  <span><i class="fa-solid fa-eye text-indigo-600"></i> ${views}</span>
+                  <span><i class="fa-solid fa-heart text-red-500"></i> ${likes}</span>
+                </div>
+                <button onclick="openModal('${key}')" class="text-indigo-900 font-bold text-sm hover:text-amber-600 transition inline-flex items-center gap-1">
+                  အပြည့်အစုံ ဖတ်ရန် <i class="fa-solid fa-arrow-right text-xs"></i>
                 </button>
               </div>
             </div>
@@ -136,16 +197,87 @@
       }
     });
 
-    window.openModal = function(index) {
-      const item = currentNovels[index];
-      if (item) {
-        document.getElementById('modalTitle').innerText = item.title;
-        document.getElementById('modalAuthor').innerText = 'ကလောင် - ' + item.author;
-        document.getElementById('modalContent').innerText = item.content;
-        document.getElementById('novelModal').classList.remove('hidden');
-      }
+    // Open Modal and Increment View Count
+    window.openModal = function(key) {
+      activeKey = key;
+      const item = currentData[key];
+      if (!item) return;
+
+      // Update Views
+      runTransaction(ref(database, `novels/${key}/views`), (currentViews) => {
+        return (currentViews || 0) + 1;
+      });
+
+      // Display Data
+      document.getElementById('modalTitle').innerText = item.title || '';
+      document.getElementById('modalAuthor').innerText = 'ရေးသားသူ - ' + (item.author || '');
+      document.getElementById('modalContent').innerText = item.content || '';
+      document.getElementById('modalViews').innerText = (item.views || 0) + 1;
+      document.getElementById('modalLikesCount').innerText = item.likes || 0;
+
+      // Load Comments
+      loadComments(item.comments);
+
+      document.getElementById('novelModal').classList.remove('hidden');
     };
 
+    // Like Button Logic
+    document.getElementById('likeBtn').onclick = () => {
+      if (!activeKey) return;
+      runTransaction(ref(database, `novels/${activeKey}/likes`), (currentLikes) => {
+        return (currentLikes || 0) + 1;
+      });
+      const countElem = document.getElementById('modalLikesCount');
+      countElem.innerText = parseInt(countElem.innerText) + 1;
+    };
+
+    // Comment Logic
+    document.getElementById('submitCommentBtn').onclick = () => {
+      if (!activeKey) return;
+      const name = document.getElementById('commenterName').value.trim() || 'ဧည့်သည်';
+      const text = document.getElementById('commentText').value.trim();
+
+      if (!text) {
+        alert('ကျေးဇူးပြု၍ မှတ်ချက် ရေးသားပါ။');
+        return;
+      }
+
+      const commentsRef = ref(database, `novels/${activeKey}/comments`);
+      push(commentsRef, {
+        name: name,
+        text: text,
+        date: new Date().toLocaleDateString('my-MM')
+      }).then(() => {
+        document.getElementById('commentText').value = '';
+        onValue(ref(database, `novels/${activeKey}/comments`), (snapshot) => {
+          loadComments(snapshot.val());
+        }, { onlyOnce: true });
+      });
+    };
+
+    function loadComments(commentsData) {
+      const commentsList = document.getElementById('commentsList');
+      commentsList.innerHTML = '';
+
+      if (commentsData) {
+        const commentsArr = Object.values(commentsData).reverse();
+        commentsArr.forEach(c => {
+          commentsList.innerHTML += `
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 text-xs">
+              <div class="flex justify-between font-bold text-indigo-900 mb-1">
+                <span><i class="fa-solid fa-user-circle mr-1"></i>${c.name}</span>
+                <span class="text-gray-400 font-normal">${c.date || ''}</span>
+              </div>
+              <p class="text-gray-700 leading-relaxed">${c.text}</p>
+            </div>
+          `;
+        });
+      } else {
+        commentsList.innerHTML = `<p class="text-xs text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
+      }
+    }
+
+    // Close Modal
     document.getElementById('closeModalBtn').onclick = () => document.getElementById('novelModal').classList.add('hidden');
     document.getElementById('closeModalBtn2').onclick = () => document.getElementById('novelModal').classList.add('hidden');
   </script>
