@@ -19,12 +19,13 @@
         <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
       </a>
 
-      <!-- Search Bar & Live Clock -->
+      <!-- Search Bar & Live Date/Time -->
       <div class="flex items-center gap-2 flex-1 max-w-xs md:max-w-md mx-2">
         <div class="relative w-full">
           <input type="text" id="searchInput" onkeyup="searchPosts()" placeholder="ရှာဖွေရန်..." class="w-full bg-indigo-950/80 text-white placeholder-indigo-300 text-xs rounded-full pl-8 pr-3 py-1.5 border border-indigo-700/60 focus:outline-none focus:border-amber-400 transition">
           <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-indigo-400 text-xs"></i>
         </div>
+        <!-- Live Date & Time Box -->
         <div id="liveClock" class="text-[10px] font-mono bg-indigo-950/60 px-2.5 py-1 rounded-md border border-indigo-800/50 text-amber-300 flex-shrink-0 whitespace-nowrap">
           07/09/2026 | 00:00:00
         </div>
@@ -98,12 +99,14 @@
     const database = getDatabase(app);
     const postsContainer = document.getElementById('postsContainer');
 
-    // Live Clock
+    // Live Date & Time Updater
     function updateClock() {
       const clockEl = document.getElementById('liveClock');
       if (clockEl) {
         const now = new Date();
-        clockEl.textContent = now.toLocaleTimeString();
+        const dateStr = now.toLocaleDateString('en-GB'); // DD/MM/YYYY Format
+        const timeStr = now.toLocaleTimeString();       // HH:MM:SS AM/PM
+        clockEl.textContent = `${dateStr} | ${timeStr}`;
       }
     }
     setInterval(updateClock, 1000);
@@ -132,7 +135,6 @@
         onValue(ref(database, category), (snapshot) => {
           const data = snapshot.val();
           
-          // Remove old items of this category
           allPosts = allPosts.filter(p => p.category !== category);
 
           if (data) {
@@ -179,7 +181,6 @@
         return;
       }
 
-      // Sort by latest (ID order)
       allPosts.sort((a, b) => b.id.localeCompare(a.id));
 
       allPosts.forEach(post => {
@@ -198,7 +199,6 @@
               <h3 class="text-xs font-bold text-gray-800 truncate mb-1">${post.title}</h3>
               <p class="text-[11px] text-gray-500 truncate mb-2">${post.content}</p>
               
-              <!-- Like & View Count Bar -->
               <div class="flex items-center justify-between text-[11px] text-gray-400 border-t border-gray-50 pt-1.5">
                 <span class="text-indigo-600 font-semibold truncate">ရေးသားသူ - ${post.author}</span>
                 <div class="flex items-center gap-3 flex-shrink-0">
@@ -224,12 +224,11 @@
       });
     };
 
-    // Open Detail Modal & Increase Views
+    // Open Modal
     window.openModal = function(category, postId) {
       const post = allPosts.find(p => p.id === postId && p.category === category);
       if (!post) return;
 
-      // Increase View Count in Firebase
       const viewsRef = ref(database, `${category}/${postId}/views`);
       runTransaction(viewsRef, (currentViews) => {
         return (currentViews || 0) + 1;
@@ -262,7 +261,6 @@
       modalContent.innerHTML = `
         <div class="bg-white rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[90vh]">
           
-          <!-- Compact Header -->
           <div class="bg-indigo-50/70 px-4 py-3 border-b border-indigo-100 flex justify-between items-start flex-shrink-0">
             <div class="pr-2">
               <div class="flex items-center gap-2 mb-1">
@@ -275,14 +273,12 @@
             <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-lg p-1 transition flex-shrink-0"><i class="fa-solid fa-xmark"></i></button>
           </div>
 
-          <!-- Extended Body & Comments -->
           <div class="p-4 md:p-5 overflow-y-auto max-h-[70vh] space-y-4">
             ${imageHtml}
             <div class="bg-gray-50/70 p-4 rounded-xl border border-gray-100 text-xs md:text-sm text-gray-700 leading-relaxed space-y-3">
               <p class="whitespace-pre-line">${post.content}</p>
             </div>
 
-            <!-- Like and View Status in Modal -->
             <div class="flex items-center justify-between text-xs px-2 py-1 text-gray-500 border-y border-gray-100">
               <button onclick="handleLike('${post.category}', '${post.id}')" class="flex items-center gap-1.5 text-red-500 font-bold hover:bg-red-50 px-2 py-1 rounded-lg transition">
                 <i class="fa-solid fa-heart"></i> ကြိုက်နှစ်သက်သူ (${post.likes})
@@ -292,7 +288,6 @@
               </span>
             </div>
 
-            <!-- Comment Section -->
             <div class="border-t border-gray-100 pt-3 space-y-3">
               <h4 class="text-xs font-bold text-gray-800 flex items-center gap-1.5"><i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ</h4>
               
@@ -307,7 +302,6 @@
             </div>
           </div>
 
-          <!-- Footer -->
           <div class="px-4 py-2.5 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0">
             <button onclick="closeModal()" class="bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-5 py-2 rounded-lg font-bold transition">ပိတ်မည်</button>
           </div>
@@ -347,7 +341,7 @@
       }
     };
 
-    // Filter Posts by Search
+    // Search Posts
     window.searchPosts = function() {
       const input = document.getElementById('searchInput').value.toLowerCase();
       const postCards = document.querySelectorAll('#postsContainer > div');
