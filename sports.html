@@ -9,7 +9,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col justify-between">
 
-  <!-- Header / Navigation Bar -->
+  <!-- Header -->
   <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
       <a href="index.html" class="text-xl font-bold tracking-wide flex items-center gap-2">
@@ -28,48 +28,40 @@
     </div>
   </header>
 
-  <!-- Main Content Body -->
+  <!-- Main Content -->
   <main class="container mx-auto my-6 px-4 flex-grow max-w-4xl">
-    
-    <!-- Section Title Box -->
     <div class="bg-white rounded-2xl p-4 md:p-5 shadow-sm border border-gray-100 mb-6 flex items-center justify-between">
       <div>
         <h2 class="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2">
           <span class="p-2 bg-amber-100 text-amber-800 rounded-lg text-sm"><i class="fa-solid fa-trophy"></i></span>
           အားကစား ဆောင်းပါးများနှင့် သတင်းများ
         </h2>
-        <p class="text-xs text-gray-500 mt-1">နောက်ဆုံးရ အားကစား သတင်းများ နှင့် ဆောင်းပါးများကို ဖတ်ရှုနိုင်ပါသည်</p>
+        <p class="text-xs text-gray-500 mt-1">နောက်ဆုံးရ အားကစား သတင်းများနှင့် ဆောင်းပါးများ</p>
       </div>
       <a href="submit.html" class="hidden sm:inline-flex items-center gap-1.5 bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-3.5 py-2 rounded-lg font-bold transition">
         <i class="fa-solid fa-pen-to-square"></i> စာမူတင်ရန်
       </a>
     </div>
 
-    <!-- Posts Grid List -->
     <div id="sportsPostsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="col-span-full text-center py-10 text-gray-400 text-xs">
         <i class="fa-solid fa-spinner fa-spin text-lg mr-2"></i> စာမူများကို ရယူနေပါသည်...
       </div>
     </div>
-
   </main>
 
   <!-- Detail Modal Popup -->
   <div id="postModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div id="modalContent" class="w-full flex justify-center">
-      <!-- Modal Content Will Be Dynamically Inserted Here -->
-    </div>
+    <div id="modalContent" class="w-full flex justify-center"></div>
   </div>
 
-  <!-- Footer -->
   <footer class="bg-indigo-950 text-indigo-200 py-4 text-center text-xs mt-10">
     <p>© 2026 စာပေဥယျာဉ်. All rights reserved.</p>
   </footer>
 
-  <!-- Firebase & Logic Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -86,7 +78,7 @@
 
     const postsContainer = document.getElementById('sportsPostsContainer');
 
-    // Mobile Navigation Toggle
+    // Navigation Logic
     const menuBtn = document.getElementById('menuBtn');
     const menuList = document.getElementById('menuList');
     const menuIcon = document.getElementById('menuIcon');
@@ -100,7 +92,7 @@
 
     let sportsPosts = [];
 
-    // Fetch Sports Posts from Firebase RTDB
+    // Fetch Sports Posts
     onValue(ref(database, 'sports'), (snapshot) => {
       const data = snapshot.val();
       postsContainer.innerHTML = '';
@@ -118,14 +110,13 @@
           author: val.author || 'မသိရပါ',
           content: val.content || '',
           date: val.date || '',
-          image: val.image || val.imageUrl || val.img || ''
+          image: val.image || val.imageUrl || val.img || '',
+          comments: val.comments || {}
         });
       });
 
-      // Sort Posts (Newest First)
       sportsPosts.sort((a, b) => b.id.localeCompare(a.id));
 
-      // Render Cards List
       sportsPosts.forEach(post => {
         const imageMarkup = post.image 
           ? `<img src="${post.image}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-gray-100" />`
@@ -139,7 +130,7 @@
                 <span class="text-[10px] px-2 py-0.5 bg-amber-100 text-amber-800 font-bold rounded">အားကစား</span>
                 <span class="text-[11px] text-gray-400">${post.date}</span>
               </div>
-              <h3 class="text-xs font-bold text-gray-800 truncate mb-1 group-hover:text-amber-700">
+              <h3 class="text-xs font-bold text-gray-800 truncate mb-1">
                 ${post.title}
               </h3>
               <p class="text-[11px] text-gray-500 truncate mb-1">
@@ -152,7 +143,7 @@
       });
     });
 
-    // Open Modal Function (Optimized Layout & Scalable Scroll)
+    // Open Modal with Comment Box
     window.openModal = function(postId) {
       const post = sportsPosts.find(p => p.id === postId);
       if (!post) return;
@@ -166,10 +157,28 @@
            </div>`
         : '';
 
+      // Comments list rendering
+      let commentsHtml = '';
+      if (post.comments && Object.keys(post.comments).length > 0) {
+        Object.values(post.comments).forEach(c => {
+          commentsHtml += `
+            <div class="bg-gray-100/70 p-2.5 rounded-lg text-xs space-y-0.5">
+              <div class="flex justify-between font-bold text-indigo-950 text-[11px]">
+                <span>${c.name || 'ဧည့်သည်'}</span>
+                <span class="text-gray-400 text-[10px] font-normal">${c.date || ''}</span>
+              </div>
+              <p class="text-gray-700">${c.text}</p>
+            </div>
+          `;
+        });
+      } else {
+        commentsHtml = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
+      }
+
       modalContent.innerHTML = `
         <div class="bg-white rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[90vh]">
           
-          <!-- Compact Header Box -->
+          <!-- Header -->
           <div class="bg-indigo-50/70 px-4 py-3 border-b border-indigo-100 flex justify-between items-start flex-shrink-0">
             <div class="pr-2">
               <div class="flex items-center gap-2 mb-1">
@@ -177,24 +186,45 @@
                 <span class="text-[11px] text-gray-500 font-medium">ရေးသားသူ - ${post.author}</span>
                 <span class="text-[11px] text-gray-400">• ${post.date}</span>
               </div>
-              <h2 class="text-sm md:text-base font-bold text-gray-800 leading-snug">
-                ${post.title}
-              </h2>
+              <h2 class="text-sm md:text-base font-bold text-gray-800 leading-snug">${post.title}</h2>
             </div>
             <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-lg p-1 transition flex-shrink-0">
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
 
-          <!-- Extended Readable Content Area -->
-          <div class="p-4 md:p-5 overflow-y-auto max-h-[70vh] space-y-3">
+          <!-- Body Content + Comments -->
+          <div class="p-4 md:p-5 overflow-y-auto max-h-[70vh] space-y-4">
             ${imageHtml}
             <div class="bg-gray-50/70 p-4 rounded-xl border border-gray-100 text-xs md:text-sm text-gray-700 leading-relaxed space-y-3">
               <p class="whitespace-pre-line">${post.content}</p>
             </div>
+
+            <!-- Comment Box Section -->
+            <div class="border-t border-gray-100 pt-3 space-y-3">
+              <h4 class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                <i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ
+              </h4>
+
+              <!-- Comment Input Form -->
+              <div class="space-y-2 bg-indigo-50/40 p-3 rounded-xl border border-indigo-50">
+                <input type="text" id="commentName" placeholder="သင့်နာမည် ရေးပါ..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500">
+                <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးရန်..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                <button onclick="addComment('${post.id}')" class="bg-indigo-900 text-white text-xs px-3.5 py-1.5 rounded-lg font-semibold hover:bg-indigo-800 transition float-right">
+                  မှတ်ချက် ပို့မည်
+                </button>
+                <div class="clear-both"></div>
+              </div>
+
+              <!-- Comment Display Area -->
+              <div class="space-y-2 mt-2">
+                ${commentsHtml}
+              </div>
+            </div>
+
           </div>
 
-          <!-- Footer Button -->
+          <!-- Footer -->
           <div class="px-4 py-2.5 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0">
             <button onclick="closeModal()" class="bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-5 py-2 rounded-lg font-bold transition">
               ပိတ်မည်
@@ -206,6 +236,31 @@
 
       modalContainer.classList.remove('hidden');
       modalContainer.classList.add('flex');
+    };
+
+    // Add Comment Function
+    window.addComment = async function(postId) {
+      const nameInput = document.getElementById('commentName');
+      const textInput = document.getElementById('commentText');
+
+      if (!textInput.value.trim()) {
+        alert("မှတ်ချက် စာသား ရေးပေးပါ!");
+        return;
+      }
+
+      const commentData = {
+        name: nameInput.value.trim() || 'ဧည့်သည်',
+        text: textInput.value.trim(),
+        date: new Date().toLocaleDateString('en-GB')
+      };
+
+      try {
+        await push(ref(database, `sports/${postId}/comments`), commentData);
+        alert("မှတ်ချက် တင်ပြီးပါပြီ!");
+        closeModal();
+      } catch (err) {
+        alert("မှတ်ချက် တင်၍ မရပါ: " + err.message);
+      }
     };
 
     // Close Modal Function
