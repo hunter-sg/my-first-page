@@ -47,17 +47,18 @@
   <!-- Main Content Area -->
   <main class="container mx-auto my-6 px-4 flex-grow max-w-4xl">
     
-    <div class="bg-white rounded-2xl p-4 md:p-5 shadow-sm border border-gray-100 mb-6 flex items-center justify-between">
-      <div>
-        <h2 class="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2">
-          <span class="p-2 bg-indigo-100 text-indigo-800 rounded-lg text-sm"><i class="fa-solid fa-clock-rotate-left"></i></span>
-          နောက်ဆုံးတင်ခဲ့သော စာမူများ
-        </h2>
-        <p class="text-xs text-gray-500 mt-1">ကဏ္ဍပေါင်းစုံမှ နောက်ဆုံးထွက် စာမူများ</p>
+    <div class="flex items-center justify-between mb-4 px-1">
+      <h2 class="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2">
+        <span class="p-2 bg-indigo-100 text-indigo-800 rounded-lg text-sm">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </span> 
+        နောက်ဆုံးတင်ခဲ့သော စာမူများ
+      </h2>
+
+  <!-- Live Date & Time Box -->
+      <div id="liveClock" class="text-[10px] md:text-xs font-mono bg-indigo-900 text-amber-300 px-2.5 py-1.5 rounded-lg shadow-sm border border-indigo-700/50 whitespace-nowrap flex-shrink-0">
+        08/09/2026 | 00:00:00
       </div>
-      <a href="submit.html" class="hidden sm:inline-flex items-center gap-1.5 bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-3.5 py-2 rounded-lg font-bold transition">
-        <i class="fa-solid fa-pen-to-square"></i> စာမူတင်ရန်
-      </a>
     </div>
 
     <!-- Posts Container -->
