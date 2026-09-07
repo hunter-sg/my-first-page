@@ -31,59 +31,106 @@
         <a href="poems.html" class="hover:text-amber-400 transition flex items-center gap-1 whitespace-nowrap">
           <i class="fa-solid fa-feather"></i> ကဗျာများ
         </a>
-        <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-black px-3 py-1 rounded-full font-bold transition shadow-sm flex items-center gap-1 whitespace-nowrap">
+        <a href="submit.html" class="text-amber-400 font-bold flex items-center gap-1 whitespace-nowrap">
           <i class="fa-solid fa-plus"></i> စာမူသစ်တင်ရန်
         </a>
       </div>
     </div>
   </nav>
 
-  <main class="container mx-auto my-8 px-4 max-w-2xl flex-grow">
-    <div class="bg-white rounded-xl shadow-md p-6 md:p-8 border border-gray-100">
-      <h2 class="text-2xl font-bold text-indigo-900 mb-6 text-center">
-        <i class="fa-solid fa-pen-nib text-amber-500 mr-2"></i>စာမူသစ် ပေးပို့ရန်
-      </h2>
+  <!-- Header -->
+  <header class="bg-indigo-800 text-white py-8 px-4 text-center shadow-inner">
+    <h2 class="text-2xl md:text-3xl font-bold mb-2">
+      <i class="fa-solid fa-pen-nib text-amber-400 mr-2"></i>စာမူသစ်တင်ရန်
+    </h2>
+    <p class="text-gray-200 text-sm">သင့်ရဲ့ ကဗျာ၊ ဝတ္ထု၊ သုတရသနဲ့ အားကစားဆောင်းပါးများကို ဤနေရာမှ တင်သွင်းနိုင်ပါသည်။</p>
+  </header>
+
+  <!-- Main Form Content -->
+  <main class="container mx-auto my-8 px-4 flex-grow max-w-2xl">
+    <div class="bg-white rounded-2xl shadow-md p-6 md:p-8 border border-gray-100">
       
-      <form id="submitForm" class="space-y-4">
+      <!-- Login Status Bar -->
+      <div id="authStatusContainer" class="mb-6 p-3 bg-indigo-50 rounded-xl border border-indigo-100 flex justify-between items-center text-xs">
+        <span id="userNameDisplay" class="font-bold text-indigo-900 flex items-center gap-2">
+          <i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ရသေးပါ
+        </span>
+        <button id="googleAuthBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5">
+          <i class="fa-brands fa-google"></i> Google Login ဝင်မည်
+        </button>
+      </div>
+
+      <!-- Submission Form -->
+      <form id="submitForm" class="space-y-5">
+        
+        <!-- Category Selection -->
         <div>
-          <label class="block text-sm font-bold text-gray-700 mb-1">အမျိုးအစား ရွေးချယ်ပါ</label>
-          <select id="categorySelect" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm">
-            <option value="knowledges">အထွေထွေသုတရသများ</option>
-            <option value="novels">ဝတ္ထုတို/ရှည်များ</option>
-            <option value="sports">နိုင်ငံတကာ အားကစားသတင်းများ</option>
+          <label class="block text-gray-700 text-sm font-bold mb-2">
+            <i class="fa-solid fa-list text-indigo-600 mr-1"></i> ကဏ္ဍရွေးချယ်ရန် <span class="text-red-500">*</span>
+          </label>
+          <select id="itemCategory" required class="w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm bg-white">
+            <option value="" disabled selected>-- ကဏ္ဍတစ်ခုကို ရွေးပါ --</option>
             <option value="poems">ကဗျာများ</option>
+            <option value="novels">ဝတ္ထုတို/ရှည်များ</option>
+            <option value="knowledges">အထွေထွေသုတရသများ</option>
+            <option value="sports">နိုင်ငံတကာ အားကစားသတင်းများ</option>
           </select>
         </div>
 
+        <!-- Title -->
         <div>
-          <label class="block text-sm font-bold text-gray-700 mb-1">ခေါင်းစဉ် / ခေါင်းစီး</label>
-          <input type="text" id="titleInput" required class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm" placeholder="စာမူခေါင်းစဉ် ရေးပါ...">
+          <label class="block text-gray-700 text-sm font-bold mb-2">
+            <i class="fa-solid fa-heading text-indigo-600 mr-1"></i> ခေါင်းစဉ် <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="itemTitle" required placeholder="ခေါင်းစဉ် ထည့်သွင်းပါ..." class="w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
         </div>
 
+        <!-- Author Name -->
         <div>
-          <label class="block text-sm font-bold text-gray-700 mb-1">ရေးသားသူ / ကလောင်အမည်</label>
-          <input type="text" id="authorInput" required class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm" placeholder="သင်၏ ကလောင်အမည် ရေးပါ...">
+          <label class="block text-gray-700 text-sm font-bold mb-2">
+            <i class="fa-solid fa-user-pen text-indigo-600 mr-1"></i> ရေးသားသူအမည် <span class="text-red-500">*</span>
+          </label>
+          <input type="text" id="itemAuthor" required placeholder="သင့်နာမည် (သို့) ကလောင်နာမည်..." class="w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
         </div>
 
+        <!-- Image URL -->
         <div>
-          <label class="block text-sm font-bold text-gray-700 mb-1">စာမူအကြောင်းအရာ</label>
-          <textarea id="contentInput" rows="8" required class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm" placeholder="စာမူ အပြည့်အစုံကို ဒီမှာ ရေးပါ..."></textarea>
+          <label class="block text-gray-700 text-sm font-bold mb-2">
+            <i class="fa-solid fa-image text-indigo-600 mr-1"></i> ပုံလင့်ခ် (Image URL) <span class="text-gray-400 font-normal">(မပါလည်းရပါသည်)</span>
+          </label>
+          <input type="url" id="itemImage" placeholder="https://example.com/image.jpg (ပုံလင့်ခ်ထည့်ရန်)" class="w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
+          <p class="text-xs text-gray-400 mt-1">အင်တာနက်ပေါ်ရှိ ပုံ၏လင့်ခ် (Image Address) ကို ကူးယူထည့်သွင်းပေးပါ။</p>
         </div>
 
-        <button type="submit" id="submitBtn" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white font-bold py-3 px-4 rounded-lg transition shadow flex items-center justify-center gap-2">
-          <i class="fa-solid fa-paper-plane"></i> စာမူ တင်မည်
-        </button>
+        <!-- Content -->
+        <div>
+          <label class="block text-gray-700 text-sm font-bold mb-2">
+            <i class="fa-solid fa-align-left text-indigo-600 mr-1"></i> စာသားအကြောင်းအရာ <span class="text-red-500">*</span>
+          </label>
+          <textarea id="itemContent" rows="8" required placeholder="သင့်ရဲ့ ကဗျာ (သို့) ဆောင်းပါး အကြောင်းအရာများကို ဤနေရာတွင် ရေးသားပါ..." class="w-full px-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm leading-relaxed"></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2">
+          <button type="submit" id="submitBtn" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white font-bold py-3 px-4 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-sm">
+            <i class="fa-solid fa-paper-plane"></i> စာမူ တင်သွင်းမည်
+          </button>
+        </div>
+
       </form>
     </div>
   </main>
 
+  <!-- Footer -->
   <footer class="bg-indigo-950 text-gray-400 py-4 text-center text-xs mt-auto">
     <p>© 2026 စာပေဥယျာဉ်။ မူပိုင်ခွင့်များအားလုံး လက်ဝယ်ရှိသည်။</p>
   </footer>
 
+  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -97,38 +144,80 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-    document.getElementById('submitForm').addEventListener('submit', (e) => {
+    let currentUser = null;
+    const authorInput = document.getElementById('itemAuthor');
+
+    // Auth State Observer
+    onAuthStateChanged(auth, (user) => {
+      const nameDisplay = document.getElementById('userNameDisplay');
+      const authBtn = document.getElementById('googleAuthBtn');
+
+      if (user) {
+        currentUser = user;
+        nameDisplay.innerHTML = `<img src="${user.photoURL}" class="w-5 h-5 rounded-full border inline mr-1"> <span class="text-indigo-900">${user.displayName}</span>`;
+        authBtn.innerText = 'ထွက်မည်';
+        authBtn.className = "bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-md font-bold transition text-xs";
+        authBtn.onclick = () => signOut(auth);
+
+        // အကယ်၍ ရေးသားသူအမည် ဖြည့်မထားရင် Google နာမည်ကို အလိုအလျောက် ထည့်ပေးမည်
+        if (!authorInput.value && user.displayName) {
+          authorInput.value = user.displayName;
+        }
+      } else {
+        currentUser = null;
+        nameDisplay.innerHTML = `<i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ရသေးပါ`;
+        authBtn.innerHTML = `<i class="fa-brands fa-google"></i> Google Login`;
+        authBtn.className = "bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5 text-xs";
+        authBtn.onclick = () => signInWithPopup(auth, provider);
+      }
+    });
+
+    // Handle Form Submit
+    document.getElementById('submitForm').addEventListener('submit', function(e) {
       e.preventDefault();
+
+      const category = document.getElementById('itemCategory').value;
+      const title = document.getElementById('itemTitle').value.trim();
+      const author = document.getElementById('itemAuthor').value.trim();
+      const image = document.getElementById('itemImage').value.trim();
+      const content = document.getElementById('itemContent').value.trim();
       const submitBtn = document.getElementById('submitBtn');
+
+      if (!category || !title || !author || !content) {
+        alert('ကျေးဇူးပြု၍ မဖြစ်မနေ ဖြည့်ရမည့် အချက်အလက်များကို ပြည့်စုံစွာ ဖြည့်စွက်ပါ။');
+        return;
+      }
+
       submitBtn.disabled = true;
-      submitBtn.innerText = 'တင်နေပါသည်...';
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> တင်သွင်းနေပါသည်...`;
 
-      const category = document.getElementById('categorySelect').value;
-      const title = document.getElementById('titleInput').value;
-      const author = document.getElementById('authorInput').value;
-      const content = document.getElementById('contentInput').value;
-
-      const categoryRef = ref(database, category);
-
-      push(categoryRef, {
+      // Firebase Database သို့ ပေးပို့ခြင်း
+      push(ref(database, category), {
         title: title,
         author: author,
+        image: image || '',
         content: content,
-        date: new Date().toLocaleDateString('my-MM')
-      }).then(() => {
-        alert('စာမူ အောင်မြင်စွာ တင်ပြီးပါပြီ။');
-        let redirectUrl = 'index.html';
-        if (category === 'knowledges') redirectUrl = 'knowledges.html';
-        else if (category === 'novels') redirectUrl = 'newnovels.html';
-        else if (category === 'sports') redirectUrl = 'sports.html';
-        else if (category === 'poems') redirectUrl = 'poems.html';
-        
-        window.location.href = redirectUrl;
-      }).catch((error) => {
-        alert('အမှားအယွင်းရှိပါသည်: ' + error.message);
+        date: new Date().toLocaleDateString('my-MM', { year: 'numeric', month: 'long', day: 'numeric' }),
+        views: 0,
+        likes: 0
+      })
+      .then(() => {
+        alert('စာမူတင်သွင်းခြင်း အောင်မြင်ပါသည်။');
+        document.getElementById('submitForm').reset();
+        if (currentUser && currentUser.displayName) {
+          authorInput.value = currentUser.displayName;
+        }
         submitBtn.disabled = false;
-        submitBtn.innerText = 'စာမူ တင်မည်';
+        submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> စာမူ တင်သွင်းမည်`;
+      })
+      .catch((error) => {
+        console.error("Error writing to database: ", error);
+        alert('တင်သွင်းရာတွင် အမှားအယွင်း ရှိသွားပါသည်။ ကျေးဇူးပြု၍ ထပ်မံကြိုးစားပါ။');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> စာမူ တင်သွင်းမည်`;
       });
     });
   </script>
