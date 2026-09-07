@@ -12,51 +12,58 @@
 <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
 
   <!-- Navigation Bar -->
-  <nav class="bg-indigo-900 text-white py-1.5 px-4 shadow-md sticky top-0 z-50">
-    <div class="container mx-auto flex flex-wrap justify-between items-center gap-2">
-      <h1 class="text-lg font-bold tracking-wide">စာပေဥယျာဉ်</h1>
-      <div class="flex items-center space-x-2.5 text-xs flex-wrap">
-        <a href="index.html" class="hover:text-amber-400 transition flex items-center gap-1 whitespace-nowrap">
-          <i class="fa-solid fa-house"></i> ပင်မစာမျက်နှာ
-        </a>
-        <a href="knowledges.html" class="hover:text-amber-400 transition flex items-center gap-1 whitespace-nowrap">
-          <i class="fa-solid fa-book-open"></i> အထွေထွေသုတရသများ
-        </a>
-        <a href="newnovels.html" class="text-amber-400 font-bold flex items-center gap-1 whitespace-nowrap">
-          <i class="fa-solid fa-book"></i> ဝတ္ထုတို/ရှည်များ
-        </a>
-        <a href="sports.html" class="hover:text-amber-400 transition flex items-center gap-1 whitespace-nowrap">
-          <i class="fa-solid fa-futbol"></i> နိုင်ငံတကာ အားကစားသတင်းများ
-        </a>
-        <a href="poems.html" class="hover:text-amber-400 transition flex items-center gap-1 whitespace-nowrap">
-          <i class="fa-solid fa-feather"></i> ကဗျာများ
-        </a>
-        <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-black px-3 py-1 rounded-full font-bold transition shadow-sm flex items-center gap-1 whitespace-nowrap">
-          <i class="fa-solid fa-plus"></i> စာမူသစ်တင်ရန်
-        </a>
-      </div>
+  <nav class="bg-indigo-900 text-white py-3 px-4 shadow-md sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-lg font-bold tracking-wide hover:text-amber-400 transition">စာပေဥယျာဉ်</a>
+      
+      <!-- Hamburger Menu Button -->
+      <button id="menuBtn" class="text-white hover:text-amber-400 focus:outline-none text-xl p-1">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
+      </button>
+    </div>
+
+    <!-- Collapsible Menu List -->
+    <div id="menuList" class="hidden container mx-auto mt-3 pt-3 border-t border-indigo-800 flex flex-col space-y-2.5 text-xs pb-2 transition-all">
+      <a href="index.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
+        <i class="fa-solid fa-house"></i> ပင်မစာမျက်နှာ
+      </a>
+      <a href="knowledges.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
+        <i class="fa-solid fa-book-open"></i> အထွေထွေသုတရသများ
+      </a>
+      <a href="newnovels.html" class="text-amber-400 font-bold flex items-center gap-2 py-1">
+        <i class="fa-solid fa-book"></i> ဝတ္ထုတို/ရှည်များ
+      </a>
+      <a href="sports.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
+        <i class="fa-solid fa-futbol"></i> နိုင်ငံတကာ အားကစားသတင်းများ
+      </a>
+      <a href="poems.html" class="hover:text-amber-400 transition flex items-center gap-2 py-1">
+        <i class="fa-solid fa-feather"></i> ကဗျာများ
+      </a>
+      <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-black px-3 py-1.5 rounded-full font-bold transition shadow-sm inline-flex items-center gap-1 w-fit mt-1">
+        <i class="fa-solid fa-plus"></i> စာမူသစ်တင်ရန်
+      </a>
     </div>
   </nav>
 
-  <!-- Header -->
+  <!-- Header Section -->
   <header class="bg-indigo-800 text-white py-8 px-4 text-center shadow-inner">
     <h2 class="text-2xl md:text-3xl font-bold mb-2">
       <i class="fa-solid fa-book text-amber-400 mr-2"></i>ဝတ္ထုတို/ရှည်များ
     </h2>
-    <p class="text-gray-200 text-sm">စိတ်ဝင်စားဖွယ်ရာ ဝတ္ထုတိုနှင့် ဝတ္ထုရှည်များကို ဖတ်ရှုခံစားနိုင်ပါသည်။</p>
+    <p class="text-gray-200 text-xs md:text-sm">စိတ်ဝင်စားဖွယ် ဝတ္ထုတို၊ ဝတ္ထုရှည်များနှင့် ရသစာပေများကို ဖတ်ရှုနိုင်ပါသည်။</p>
   </header>
 
-  <!-- Main Content -->
+  <!-- Main Content (Firebase Data Container) -->
   <main class="container mx-auto my-8 px-4 flex-grow">
-    <div id="novelContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div id="novelsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="col-span-full text-center py-12 text-gray-500">
         <i class="fa-solid fa-spinner fa-spin text-3xl mb-3 text-indigo-600"></i>
-        <p>ဝတ္ထုများကို ရယူနေပါသည်...</p>
+        <p>အချက်အလက်များကို ရယူနေပါသည်...</p>
       </div>
     </div>
   </main>
 
-  <!-- Modal for Full Reading, Likes and Comments -->
+  <!-- Modal Component for Full Reading, Views, Likes & Comments -->
   <div id="novelModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
       
@@ -74,7 +81,7 @@
 
       <!-- Modal Body -->
       <div class="p-6 overflow-y-auto flex-grow space-y-6">
-        <p id="modalContent" class="text-gray-700 text-base whitespace-pre-line leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100 text-justify"></p>
+        <p id="modalContent" class="text-gray-700 text-base whitespace-pre-line leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100"></p>
 
         <!-- Stats Bar & Like Button -->
         <div class="flex justify-between items-center pt-4 border-t border-gray-200">
@@ -93,13 +100,12 @@
             <i class="fa-solid fa-comments text-indigo-600"></i> မှတ်ချက်များ (Comments)
           </h4>
 
-          <!-- Comment Input Form -->
           <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 space-y-3">
             <div id="userInfo" class="flex justify-between items-center bg-white p-2.5 rounded-lg border border-gray-200 text-xs">
               <span id="userNameDisplay" class="font-bold text-indigo-900 flex items-center gap-2">
                 <i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ထားပါ
               </span>
-              <button id="googleAuthBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5">
+              <button id="googleAuthBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5 text-xs">
                 <i class="fa-brands fa-google"></i> Google Login ဝင်မည်
               </button>
             </div>
@@ -131,7 +137,7 @@
     <p>© 2026 စာပေဥယျာဉ်။ မူပိုင်ခွင့်များအားလုံး လက်ဝယ်ရှိသည်။</p>
   </footer>
 
-  <!-- Firebase Script -->
+  <!-- Firebase Script & App Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -153,12 +159,26 @@
     const provider = new GoogleAuthProvider();
 
     let currentUser = null;
-    const container = document.getElementById('novelContainer');
-    // သင့် Database တွင် novels ဟု သိမ်းထားပါက 'novels' ဟု ထားပါ၊ newnovels ဟု သိမ်းထားပါက 'newnovels' ဟု ပြောင်းပေးပါ။
-    const novelsRef = ref(database, 'novels'); 
+    const container = document.getElementById('novelsContainer');
+    const novelsRef = ref(database, 'novels');
     let currentData = {};
     let activeKey = null;
 
+    // Hamburger Menu Script
+    const menuBtn = document.getElementById('menuBtn');
+    const menuList = document.getElementById('menuList');
+    const menuIcon = document.getElementById('menuIcon');
+
+    menuBtn.onclick = () => {
+      menuList.classList.toggle('hidden');
+      if (menuList.classList.contains('hidden')) {
+        menuIcon.className = "fa-solid fa-bars";
+      } else {
+        menuIcon.className = "fa-solid fa-xmark";
+      }
+    };
+
+    // Firebase Auth Observer
     onAuthStateChanged(auth, (user) => {
       const nameDisplay = document.getElementById('userNameDisplay');
       const authBtn = document.getElementById('googleAuthBtn');
@@ -178,6 +198,7 @@
       }
     });
 
+    // Realtime Database Fetch for Novels
     onValue(novelsRef, (snapshot) => {
       container.innerHTML = '';
       currentData = snapshot.val() || {};
@@ -195,7 +216,7 @@
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-1">${item.title || 'ခေါင်းစဉ်မရှိ'}</h3>
                 <p class="text-xs text-indigo-600 font-semibold mb-4">ရေးသားသူ - ${item.author || 'မသိရပါ'}</p>
-                <p class="text-gray-600 text-sm whitespace-pre-line line-clamp-4 leading-relaxed text-justify">${item.content || ''}</p>
+                <p class="text-gray-600 text-sm whitespace-pre-line line-clamp-4 leading-relaxed">${item.content || ''}</p>
               </div>
 
               <div class="mt-6 pt-3 border-t border-gray-100 flex justify-between items-center text-xs text-gray-500">
@@ -220,6 +241,7 @@
       }
     });
 
+    // Open Modal Function
     window.openModal = function(key) {
       activeKey = key;
       const item = currentData[key];
@@ -237,6 +259,7 @@
       document.getElementById('novelModal').classList.remove('hidden');
     };
 
+    // Like Button Action
     document.getElementById('likeBtn').onclick = () => {
       if (!activeKey) return;
       runTransaction(ref(database, `novels/${activeKey}/likes`), (currentLikes) => (currentLikes || 0) + 1);
@@ -244,6 +267,7 @@
       countElem.innerText = parseInt(countElem.innerText) + 1;
     };
 
+    // Submit Comment Action
     document.getElementById('submitCommentBtn').onclick = () => {
       if (!activeKey) return;
       
@@ -283,6 +307,7 @@
       });
     };
 
+    // Render Comments
     function loadComments(commentsData) {
       const commentsList = document.getElementById('commentsList');
       commentsList.innerHTML = '';
@@ -304,6 +329,7 @@
       }
     }
 
+    // Modal Close Action
     document.getElementById('closeModalBtn').onclick = () => document.getElementById('novelModal').classList.add('hidden');
     document.getElementById('closeModalBtn2').onclick = () => document.getElementById('novelModal').classList.add('hidden');
   </script>
