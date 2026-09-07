@@ -9,35 +9,33 @@
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col justify-between">
 
-  <!-- Header -->
+  <!-- Header Navigation -->
   <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
     <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-2">
-    
-    <!-- 1. Left: Logo & Brand Name -->
+      
+      <!-- Logo & Brand -->
       <a href="index.html" class="flex items-center gap-2 flex-shrink-0">
         <img src="photo_2026-09-07_21-25-15.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-amber-400/50 object-cover">
         <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
       </a>
 
-    <!-- 2. Middle: Search Bar & Live Time -->
+      <!-- Search Bar & Live Clock -->
       <div class="flex items-center gap-2 flex-1 max-w-xs md:max-w-md mx-2">
-      <!-- Search Input -->
         <div class="relative w-full">
           <input type="text" id="searchInput" onkeyup="searchPosts()" placeholder="ရှာဖွေရန်..." class="w-full bg-indigo-950/80 text-white placeholder-indigo-300 text-xs rounded-full pl-8 pr-3 py-1.5 border border-indigo-700/60 focus:outline-none focus:border-amber-400 transition">
           <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-indigo-400 text-xs"></i>
         </div>
-      <!-- Live Time Display -->
-        <div id="liveClock" class="hidden sm:block text-[10px] font-mono bg-indigo-950/60 px-2 py-1 rounded-md border border-indigo-800/50 text-amber-300 flex-shrink-0">
+        <div id="liveClock" class="text-[10px] font-mono bg-indigo-950/60 px-2 py-1 rounded-md border border-indigo-800/50 text-amber-300 flex-shrink-0">
           00:00:00
         </div>
       </div>
 
-    <!-- 3. Mobile Menu Button -->
+      <!-- Mobile Menu Button -->
       <button id="menuBtn" class="text-white text-base focus:outline-none md:hidden">
         <i id="menuIcon" class="fa-solid fa-bars"></i>
       </button>
 
-    <!-- 4. Right: Navigation Menu Links -->
+      <!-- Navigation Links -->
       <nav id="menuList" class="hidden md:flex space-x-4 lg:space-x-6 text-xs font-semibold flex-shrink-0">
         <a href="index.html" class="text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5">ပင်မ</a>
         <a href="knowledges.html" class="hover:text-indigo-200">သုတရသ</a>
@@ -49,47 +47,42 @@
   </header>
 
   <!-- Main Content Area -->
-  <main class="container mx-auto my-8 px-4 flex-grow">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      
-      <!-- Left Side: နောက်ဆုံးတင်ခဲ့သော စာမူများ -->
-      <div class="lg:col-span-6 bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-4">
-        <div class="flex justify-between items-center pb-3 border-b border-gray-100">
-          <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
-            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> နောက်ဆုံးတင်ခဲ့သော စာမူများ
-          </h3>
-          <span class="text-xs text-indigo-600 font-semibold">လတ်တလော</span>
-        </div>
-
-        <!-- Feed Container -->
-        <div id="latestPostsContainer" class="space-y-3">
-          <div class="text-center py-6 text-gray-400 text-xs">
-            <i class="fa-solid fa-spinner fa-spin mr-1"></i> ရယူနေပါသည်...
-          </div>
-        </div>
+  <main class="container mx-auto my-6 px-4 flex-grow max-w-4xl">
+    
+    <div class="bg-white rounded-2xl p-4 md:p-5 shadow-sm border border-gray-100 mb-6 flex items-center justify-between">
+      <div>
+        <h2 class="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2">
+          <span class="p-2 bg-indigo-100 text-indigo-800 rounded-lg text-sm"><i class="fa-solid fa-clock-rotate-left"></i></span>
+          နောက်ဆုံးတင်ခဲ့သော စာမူများ
+        </h2>
+        <p class="text-xs text-gray-500 mt-1">ကဏ္ဍပေါင်းစုံမှ နောက်ဆုံးထွက် စာမူများ</p>
       </div>
+      <a href="submit.html" class="hidden sm:inline-flex items-center gap-1.5 bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-3.5 py-2 rounded-lg font-bold transition">
+        <i class="fa-solid fa-pen-to-square"></i> စာမူတင်ရန်
+      </a>
+    </div>
 
-      <!-- Right Side: ပင်မ မိတ်ဆက် -->
-      <div class="lg:col-span-6 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
-        <div class="w-12 h-12 bg-indigo-50 text-indigo-800 rounded-full flex items-center justify-center text-xl mb-3">
-          <i class="fa-solid fa-book-bookmark"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-800 mb-2">ပင်မစာမျက်နှာသို့ ရောက်ရှိပါပြီ</h3>
-        <p class="text-gray-500 text-xs leading-relaxed max-w-sm mb-4">
-          အထွေထွေသုတရသများ၊ ဝတ္ထုတိုများနှင့် အခြားကဏ္ဍများကို အပေါ်ဘက်ရှိ မီနူး (Menu) မှတစ်ဆင့် ဝင်ရောက်ဖတ်ရှုနိုင်ပါသည်။
-        </p>
-        <a href="knowledges.html" class="bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-5 py-2 rounded-lg font-bold transition">
-          သုတရသများ ဖတ်ရှုရန်
-        </a>
+    <!-- Posts Container -->
+    <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="col-span-full text-center py-10 text-gray-400 text-xs">
+        <i class="fa-solid fa-spinner fa-spin text-lg mr-2"></i> စာမူများကို ရယူနေပါသည်...
       </div>
-
     </div>
   </main>
 
-  <!-- Firebase Logic Script -->
+  <!-- Detail Modal Popup -->
+  <div id="postModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div id="modalContent" class="w-full flex justify-center"></div>
+  </div>
+
+  <footer class="bg-indigo-950 text-indigo-200 py-4 text-center text-xs mt-10">
+    <p>© 2026 စာပေဥယျာဉ်. All rights reserved.</p>
+  </footer>
+
+  <!-- Firebase & Logic Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -103,98 +96,273 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const postsContainer = document.getElementById('postsContainer');
 
-    const container = document.getElementById('latestPostsContainer');
+    // Live Clock
+    function updateClock() {
+      const clockEl = document.getElementById('liveClock');
+      if (clockEl) {
+        const now = new Date();
+        clockEl.textContent = now.toLocaleTimeString();
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    // Mobile Menu Toggle Logic
+    // Mobile Menu Toggle
     const menuBtn = document.getElementById('menuBtn');
     const menuList = document.getElementById('menuList');
     const menuIcon = document.getElementById('menuIcon');
-
-    if (menuBtn && menuList && menuIcon) {
+    if (menuBtn) {
       menuBtn.onclick = () => {
         menuList.classList.toggle('hidden');
         menuIcon.className = menuList.classList.contains('hidden') ? "fa-solid fa-bars" : "fa-solid fa-xmark";
       };
     }
 
-    // Categories Configuration
-    const categories = [
-      { name: 'knowledges', label: 'သုတရသ', page: 'knowledges.html', color: 'bg-blue-50 text-blue-700' },
-      { name: 'novels', label: 'ဝတ္ထု', page: 'newnovels.html', color: 'bg-emerald-50 text-emerald-700' },
-      { name: 'sports', label: 'အားကစား', page: 'sports.html', color: 'bg-amber-50 text-amber-700' },
-      { name: 'poems', label: 'ကဗျာ', page: 'poems.html', color: 'bg-purple-50 text-purple-700' }
-    ];
-
+    const categories = ['knowledges', 'newnovels', 'sports', 'poems'];
     let allPosts = [];
-    let loadedCount = 0;
 
-    categories.forEach(cat => {
-      onValue(ref(database, cat.name), (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          Object.entries(data).forEach(([key, val]) => {
-            allPosts.push({
-              id: key,
-              title: val.title || 'ခေါင်းစဉ်မရှိ',
-              content: val.content || '',
-              author: val.author || 'မသိရပါ',
-              date: val.date || '',
-              imgSrc: val.image || val.imageUrl || val.img || '',
-              categoryLabel: cat.label,
-              categoryColor: cat.color,
-              targetPage: cat.page
+    // Load Posts from all categories
+    function loadAllPosts() {
+      allPosts = [];
+      let loadedCategories = 0;
+
+      categories.forEach(category => {
+        onValue(ref(database, category), (snapshot) => {
+          const data = snapshot.val();
+          
+          // Remove old items of this category
+          allPosts = allPosts.filter(p => p.category !== category);
+
+          if (data) {
+            Object.entries(data).forEach(([key, val]) => {
+              allPosts.push({
+                id: key,
+                category: category,
+                categoryName: getCategoryName(category),
+                title: val.title || 'ခေါင်းစဉ်မရှိ',
+                author: val.author || 'မသိရပါ',
+                content: val.content || '',
+                date: val.date || '',
+                image: val.image || val.imageUrl || val.img || '',
+                likes: val.likes || 0,
+                views: val.views || 0,
+                comments: val.comments || {}
+              });
             });
-          });
-        }
-        
-        loadedCount++;
-        if (loadedCount === categories.length) {
-          renderLatestPosts();
-        }
-      }, { onlyOnce: true });
-    });
+          }
 
-    function renderLatestPosts() {
-      if (!container) return;
-      container.innerHTML = '';
+          loadedCategories++;
+          if (loadedCategories >= categories.length) {
+            renderPosts();
+          }
+        });
+      });
+    }
+
+    function getCategoryName(cat) {
+      switch(cat) {
+        case 'knowledges': return 'သုတရသ';
+        case 'newnovels': return 'ဝတ္ထု';
+        case 'sports': return 'အားကစား';
+        case 'poems': return 'ကဗျာ';
+        default: return 'အခြား';
+      }
+    }
+
+    function renderPosts() {
+      postsContainer.innerHTML = '';
 
       if (allPosts.length === 0) {
-        container.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">စာမူများ မရှိသေးပါ။</p>`;
+        postsContainer.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-xs">စာမူများ မရှိသေးပါ။</div>`;
         return;
       }
 
-      // Sort Posts by Firebase Key (Newest First)
+      // Sort by latest (ID order)
       allPosts.sort((a, b) => b.id.localeCompare(a.id));
 
-      const latestList = allPosts.slice(0, 5);
+      allPosts.forEach(post => {
+        const imageMarkup = post.image 
+          ? `<img src="${post.image}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-gray-100" />`
+          : `<div class="w-20 h-20 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 flex-shrink-0 border border-indigo-100"><i class="fa-solid fa-book-open text-xl"></i></div>`;
 
-      latestList.forEach(post => {
-        const imageMarkup = post.imgSrc 
-          ? `<img src="${post.imgSrc}" class="w-14 h-14 rounded-md object-cover flex-shrink-0 border border-gray-100" alt="post thumbnail" />`
-          : '';
-
-        container.innerHTML += `
-          <a href="${post.targetPage}" class="block p-2.5 rounded-lg border border-gray-100 hover:bg-indigo-50/50 hover:border-indigo-100 transition group">
-            <div class="flex items-center gap-3">
-              ${imageMarkup}
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center justify-between gap-2 mb-1">
-                  <span class="text-[10px] px-2 py-0.5 rounded font-bold ${post.categoryColor}">${post.categoryLabel}</span>
-                  <span class="text-[11px] text-gray-400">${post.date}</span>
+        postsContainer.innerHTML += `
+          <div onclick="openModal('${post.category}', '${post.id}')" class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition cursor-pointer flex gap-3.5 items-center">
+            ${imageMarkup}
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 bg-indigo-100 text-indigo-800 font-bold rounded">${post.categoryName}</span>
+                <span class="text-[11px] text-gray-400">${post.date}</span>
+              </div>
+              <h3 class="text-xs font-bold text-gray-800 truncate mb-1">${post.title}</h3>
+              <p class="text-[11px] text-gray-500 truncate mb-2">${post.content}</p>
+              
+              <!-- Like & View Count Bar -->
+              <div class="flex items-center justify-between text-[11px] text-gray-400 border-t border-gray-50 pt-1.5">
+                <span class="text-indigo-600 font-semibold truncate">ရေးသားသူ - ${post.author}</span>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                  <span class="flex items-center gap-1 hover:text-red-500 transition" onclick="event.stopPropagation(); handleLike('${post.category}', '${post.id}')">
+                    <i class="fa-solid fa-heart text-red-400"></i> ${post.likes}
+                  </span>
+                  <span class="flex items-center gap-1">
+                    <i class="fa-solid fa-eye text-indigo-400"></i> ${post.views}
+                  </span>
                 </div>
-                <h4 class="text-xs font-bold text-gray-800 truncate group-hover:text-indigo-900">
-                  ${post.title}
-                </h4>
-                <p class="text-[11px] text-gray-500 truncate mt-0.5">
-                  ${post.content}
-                </p>
               </div>
             </div>
-          </a>
+          </div>
         `;
       });
     }
+
+    // Handle Like
+    window.handleLike = function(category, postId) {
+      const postRef = ref(database, `${category}/${postId}/likes`);
+      runTransaction(postRef, (currentLikes) => {
+        return (currentLikes || 0) + 1;
+      });
+    };
+
+    // Open Detail Modal & Increase Views
+    window.openModal = function(category, postId) {
+      const post = allPosts.find(p => p.id === postId && p.category === category);
+      if (!post) return;
+
+      // Increase View Count in Firebase
+      const viewsRef = ref(database, `${category}/${postId}/views`);
+      runTransaction(viewsRef, (currentViews) => {
+        return (currentViews || 0) + 1;
+      });
+
+      const modalContainer = document.getElementById('postModal');
+      const modalContent = document.getElementById('modalContent');
+
+      const imageHtml = post.image 
+        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm"><img src="${post.image}" class="w-full h-auto max-h-64 object-cover" /></div>`
+        : '';
+
+      let commentsHtml = '';
+      if (post.comments && Object.keys(post.comments).length > 0) {
+        Object.values(post.comments).forEach(c => {
+          commentsHtml += `
+            <div class="bg-gray-100/70 p-2.5 rounded-lg text-xs space-y-0.5">
+              <div class="flex justify-between font-bold text-indigo-950 text-[11px]">
+                <span>${c.name || 'ဧည့်သည်'}</span>
+                <span class="text-gray-400 text-[10px] font-normal">${c.date || ''}</span>
+              </div>
+              <p class="text-gray-700">${c.text}</p>
+            </div>
+          `;
+        });
+      } else {
+        commentsHtml = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
+      }
+
+      modalContent.innerHTML = `
+        <div class="bg-white rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[90vh]">
+          
+          <!-- Compact Header -->
+          <div class="bg-indigo-50/70 px-4 py-3 border-b border-indigo-100 flex justify-between items-start flex-shrink-0">
+            <div class="pr-2">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 bg-indigo-100 text-indigo-800 font-bold rounded">${post.categoryName}</span>
+                <span class="text-[11px] text-gray-500 font-medium">ရေးသားသူ - ${post.author}</span>
+                <span class="text-[11px] text-gray-400">• ${post.date}</span>
+              </div>
+              <h2 class="text-sm md:text-base font-bold text-gray-800 leading-snug">${post.title}</h2>
+            </div>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-lg p-1 transition flex-shrink-0"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+          <!-- Extended Body & Comments -->
+          <div class="p-4 md:p-5 overflow-y-auto max-h-[70vh] space-y-4">
+            ${imageHtml}
+            <div class="bg-gray-50/70 p-4 rounded-xl border border-gray-100 text-xs md:text-sm text-gray-700 leading-relaxed space-y-3">
+              <p class="whitespace-pre-line">${post.content}</p>
+            </div>
+
+            <!-- Like and View Status in Modal -->
+            <div class="flex items-center justify-between text-xs px-2 py-1 text-gray-500 border-y border-gray-100">
+              <button onclick="handleLike('${post.category}', '${post.id}')" class="flex items-center gap-1.5 text-red-500 font-bold hover:bg-red-50 px-2 py-1 rounded-lg transition">
+                <i class="fa-solid fa-heart"></i> ကြိုက်နှစ်သက်သူ (${post.likes})
+              </button>
+              <span class="flex items-center gap-1.5 text-indigo-600">
+                <i class="fa-solid fa-eye"></i> ကြည့်ရှုသူ (${post.views + 1})
+              </span>
+            </div>
+
+            <!-- Comment Section -->
+            <div class="border-t border-gray-100 pt-3 space-y-3">
+              <h4 class="text-xs font-bold text-gray-800 flex items-center gap-1.5"><i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ</h4>
+              
+              <div class="space-y-2 bg-indigo-50/40 p-3 rounded-xl border border-indigo-50">
+                <input type="text" id="commentName" placeholder="သင့်နာမည် ရေးပါ..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500">
+                <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးရန်..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                <button onclick="addComment('${post.category}', '${post.id}')" class="bg-indigo-900 text-white text-xs px-3.5 py-1.5 rounded-lg font-semibold hover:bg-indigo-800 transition float-right">မှတ်ချက် ပို့မည်</button>
+                <div class="clear-both"></div>
+              </div>
+
+              <div class="space-y-2 mt-2">${commentsHtml}</div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="px-4 py-2.5 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0">
+            <button onclick="closeModal()" class="bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-5 py-2 rounded-lg font-bold transition">ပိတ်မည်</button>
+          </div>
+        </div>
+      `;
+
+      modalContainer.classList.remove('hidden');
+      modalContainer.classList.add('flex');
+    };
+
+    // Add Comment
+    window.addComment = async function(category, postId) {
+      const nameInput = document.getElementById('commentName');
+      const textInput = document.getElementById('commentText');
+      
+      if (!textInput.value.trim()) return alert("မှတ်ချက် စာသား ရေးပေးပါ!");
+
+      try {
+        await push(ref(database, `${category}/${postId}/comments`), {
+          name: nameInput.value.trim() || 'ဧည့်သည်',
+          text: textInput.value.trim(),
+          date: new Date().toLocaleDateString('en-GB')
+        });
+        alert("မှတ်ချက် တင်ပြီးပါပြီ!");
+        closeModal();
+      } catch (err) {
+        alert("မှတ်ချက် တင်၍ မရပါ: " + err.message);
+      }
+    };
+
+    // Close Modal
+    window.closeModal = function() {
+      const modalContainer = document.getElementById('postModal');
+      if (modalContainer) {
+        modalContainer.classList.add('hidden');
+        modalContainer.classList.remove('flex');
+      }
+    };
+
+    // Filter Posts by Search
+    window.searchPosts = function() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const postCards = document.querySelectorAll('#postsContainer > div');
+
+      postCards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if (text.includes(input)) {
+          card.style.display = "";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    };
+
+    loadAllPosts();
   </script>
 </body>
 </html>
