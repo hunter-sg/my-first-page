@@ -95,10 +95,21 @@
             <i class="fa-solid fa-comments text-indigo-600"></i> မှတ်ချက်များ (Comments)
           </h4>
 
-          <!-- Comment Input Form -->
+          <!-- Comment Input Form (Google Login Integrated) -->
           <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 space-y-3">
-            <input type="text" id="commenterName" placeholder="သင့်အမည်" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <!-- User Profile Info / Login State -->
+            <div id="userInfo" class="flex justify-between items-center bg-white p-2.5 rounded-lg border border-gray-200 text-xs">
+              <span id="userNameDisplay" class="font-bold text-indigo-900 flex items-center gap-2">
+                <i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ထားပါ
+              </span>
+              <button id="googleAuthBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5">
+                <i class="fa-brands fa-google"></i> Google Login ဝင်မည်
+              </button>
+            </div>
+
+            <!-- Comment Textarea -->
             <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးသားရန်..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            
             <div class="text-right">
               <button id="submitCommentBtn" class="bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition">
                 မှတ်ချက်ပေးမည်
@@ -130,6 +141,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -143,11 +155,36 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUser = null;
     const container = document.getElementById('knowledgeContainer');
-    
     const knowledgesRef = ref(database, 'knowledges');
     let currentData = {};
     let activeKey = null;
+
+    // Auth State Monitor (User Login သို့မဟုတ် Logout အခြေအနေကို စောင့်ကြည့်ခြင်း)
+    onAuthStateChanged(auth, (user) => {
+      const nameDisplay = document.getElementById('userNameDisplay');
+      const authBtn = document.getElementById('googleAuthBtn');
+
+      if (user) {
+        currentUser = user;
+        nameDisplay.innerHTML = `<img src="${user.photoURL}" class="w-5 h-5 rounded-full border"> <span class="text-indigo-900">${user.displayName}</span>`;
+        authBtn.innerText = 'ထွက်မည်';
+        authBtn.className = "bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-md font-bold transition text-xs";
+        authBtn.onclick = () => signOut(auth);
+      } else {
+        currentUser = null;
+        nameDisplay.innerHTML = `<i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ထားပါ`;
+        authBtn.innerHTML = `<i class="fa-brands fa-google"></i> Google Login`;
+        authBtn.className = "bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5 text-xs";
+        authBtn.onclick = () => {
+          signInWithPopup(auth, provider).catch((error) => console.error("Login Error:", error));
+        };
+      }
+    });
 
     // Load Articles
     onValue(knowledgesRef, (snapshot) => {
@@ -197,27 +234,23 @@
       }
     });
 
-    // Open Modal and Increment View Count
+    // Open Modal and Increment Views
     window.openModal = function(key) {
       activeKey = key;
       const item = currentData[key];
       if (!item) return;
 
-      // Update Views
       runTransaction(ref(database, `knowledges/${key}/views`), (currentViews) => {
         return (currentViews || 0) + 1;
       });
 
-      // Display Data
       document.getElementById('modalTitle').innerText = item.title || '';
       document.getElementById('modalAuthor').innerText = 'ရေးသားသူ - ' + (item.author || '');
       document.getElementById('modalContent').innerText = item.content || '';
       document.getElementById('modalViews').innerText = (item.views || 0) + 1;
       document.getElementById('modalLikesCount').innerText = item.likes || 0;
 
-      // Load Comments
       loadComments(item.comments);
-
       document.getElementById('knowledgeModal').classList.remove('hidden');
     };
 
@@ -231,12 +264,17 @@
       countElem.innerText = parseInt(countElem.innerText) + 1;
     };
 
-    // Comment Logic
+    // Submit Comment Logic
     document.getElementById('submitCommentBtn').onclick = () => {
       if (!activeKey) return;
-      const name = document.getElementById('commenterName').value.trim() || 'ဧည့်သည်';
-      const text = document.getElementById('commentText').value.trim();
 
+      if (!currentUser) {
+        alert("မှတ်ချက်ပေးရန်အတွက် ကျေးဇူးပြု၍ Google Account ဖြင့် Login ဝင်ပေးပါ။");
+        signInWithPopup(auth, provider);
+        return;
+      }
+
+      const text = document.getElementById('commentText').value.trim();
       if (!text) {
         alert('ကျေးဇူးပြု၍ မှတ်ချက် ရေးသားပါ။');
         return;
@@ -244,7 +282,8 @@
 
       const commentsRef = ref(database, `knowledges/${activeKey}/comments`);
       push(commentsRef, {
-        name: name,
+        name: currentUser.displayName || 'Google အသုံးပြုသူ',
+        photo: currentUser.photoURL || '',
         text: text,
         date: new Date().toLocaleDateString('my-MM')
       }).then(() => {
@@ -262,10 +301,14 @@
       if (commentsData) {
         const commentsArr = Object.values(commentsData).reverse();
         commentsArr.forEach(c => {
+          const userImg = c.photo 
+            ? `<img src="${c.photo}" class="w-4 h-4 rounded-full inline mr-1">` 
+            : `<i class="fa-solid fa-user-circle mr-1"></i>`;
+
           commentsList.innerHTML += `
             <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 text-xs">
               <div class="flex justify-between font-bold text-indigo-900 mb-1">
-                <span><i class="fa-solid fa-user-circle mr-1"></i>${c.name}</span>
+                <span class="flex items-center gap-1">${userImg} ${c.name}</span>
                 <span class="text-gray-400 font-normal">${c.date || ''}</span>
               </div>
               <p class="text-gray-700 leading-relaxed">${c.text}</p>
