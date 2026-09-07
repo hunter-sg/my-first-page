@@ -65,17 +65,34 @@
       </div>
     </div>
 
-    <!-- Posts Container (Where posts rendered via JS) -->
+    <!-- Posts Container (Where posts rendered via Firebase JS) -->
     <div id="postsContainer" class="grid grid-cols-1 gap-4">
-      <!-- Posts will be loaded dynamically -->
+      <!-- Dynamic posts will load here -->
     </div>
 
   </main>
 
   <!-- JavaScript Logic -->
   <script type="module">
-    // ဥပမာအဖြစ်ထားရှိသော allPosts (သင့်ရဲ့ Firebase သို့မဟုတ် Data နဲ့ ချိတ်ဆက်ရန်)
-    let allPosts = []; 
+    // Firebase မှ သင့်ရဲ့ မူလ config များနှင့် function များကို ဤနေရာတွင် ထည့်သွင်းအသုံးပြုပါ
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // ⚠️ (သင့်ရဲ့ မူလ Firebase Config အချက်အလက်များကို ဤနေရာတွင် ထည့်ရန်)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let allPosts = [];
+    const postsContainer = document.getElementById('postsContainer');
 
     // Mobile Menu Toggle Script
     const menuBtn = document.getElementById('menuBtn');
@@ -91,6 +108,42 @@
           menuIcon.className = "fa-solid fa-xmark";
         }
       });
+    }
+
+    // Fetch Posts from Firebase Categories (ဥပမာ - knowledges, novels, sports, poems)
+    async function loadAllPosts() {
+      const categories = [
+        { id: 'knowledges', name: 'သုတရသ' },
+        { id: 'novels', name: 'ဝတ္ထု' },
+        { id: 'sports', name: 'အားကစား' },
+        { id: 'poems', name: 'ကဗျာ' }
+      ];
+
+      allPosts = [];
+      for (const cat of categories) {
+        try {
+          const querySnapshot = await getDocs(collection(db, cat.id));
+          querySnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            allPosts.push({
+              id: docSnap.id,
+              category: cat.id,
+              categoryName: cat.name,
+              title: data.title || '',
+              author: data.author || '',
+              content: data.content || '',
+              image: data.image || '',
+              date: data.date || '',
+              likes: data.likes || 0,
+              views: data.views || 0
+            });
+          });
+        } catch (error) {
+          console.error("Error loading category: ", cat.id, error);
+        }
+      }
+
+      renderPosts(allPosts);
     }
 
     // Real-time Search Function
@@ -116,9 +169,7 @@
 
     // Render Posts Function
     function renderPosts(postsToRender = allPosts) {
-      const postsContainer = document.getElementById('postsContainer');
       if (!postsContainer) return;
-      
       postsContainer.innerHTML = '';
 
       if (postsToRender.length === 0) {
@@ -130,19 +181,43 @@
         return;
       }
 
-      postsToRender.forEach(post => {
+      // ရက်စွဲအလိုက် အသစ်ဆုံးများကို ဦးစားပေး စီခြင်း
+      const sortedPosts = [...postsToRender].sort((a, b) => b.id.localeCompare(a.id));
+
+      sortedPosts.forEach(post => {
+        const imageMarkup = post.image 
+          ? `<img src="${post.image}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-gray-100" />`
+          : `<div class="w-20 h-20 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 flex-shrink-0 border border-indigo-100"><i class="fa-solid fa-book-open text-xl"></i></div>`;
+
         postsContainer.innerHTML += `
-          <div class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm transition flex gap-3.5 items-center">
+          <div class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition cursor-pointer flex gap-3.5 items-center">
+            ${imageMarkup}
             <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-[10px] px-2 py-0.5 bg-indigo-100 text-indigo-800 font-bold rounded">${post.categoryName}</span>
+                <span class="text-[11px] text-gray-400">${post.date}</span>
+              </div>
               <h3 class="text-xs font-bold text-gray-800 truncate mb-1">${post.title}</h3>
               <p class="text-[11px] text-gray-500 truncate mb-2">${post.content}</p>
+              
+              <div class="flex items-center justify-between text-[11px] text-gray-400 border-t border-gray-50 pt-1.5">
+                <span class="text-indigo-600 font-semibold truncate">ရေးသားသူ - ${post.author}</span>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                  <span class="flex items-center gap-1 text-red-500">
+                    <i class="fa-solid fa-heart"></i> ${post.likes}
+                  </span>
+                  <span class="flex items-center gap-1 text-indigo-500">
+                    <i class="fa-solid fa-eye"></i> ${post.views}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         `;
       });
     }
 
-    // Live Clock & Date Update Function
+    // Live Clock & Date Update Function (Time on top, Date on bottom)
     function updateClock() {
       const now = new Date();
       const timeString = now.toLocaleTimeString(); 
@@ -157,6 +232,9 @@
 
     setInterval(updateClock, 1000);
     updateClock();
+
+    // Load Posts on Page Load
+    loadAllPosts();
   </script>
 </body>
 </html>
