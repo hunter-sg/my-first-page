@@ -81,6 +81,12 @@
 
       <!-- Modal Body -->
       <div class="p-6 overflow-y-auto flex-grow space-y-6">
+        
+        <!-- Image Container (ပုံပါရှိပါက ဖော်ပြပေးမည်) -->
+        <div id="modalImageContainer" class="hidden text-center mb-4">
+          <img id="modalImage" src="" alt="Cover Image" class="max-h-80 mx-auto rounded-lg shadow-sm border border-gray-100 object-cover">
+        </div>
+
         <p id="modalContent" class="text-gray-700 text-base whitespace-pre-line leading-relaxed bg-gray-50 p-4 rounded-lg border border-gray-100"></p>
 
         <!-- Stats Bar & Like Button -->
@@ -94,33 +100,16 @@
           </button>
         </div>
 
-        <!-- Comments Section -->
+        <!-- Comments Section (No Login Required) -->
         <div class="pt-4 border-t border-gray-200">
           <h4 class="font-bold text-gray-800 text-base mb-4 flex items-center gap-2">
             <i class="fa-solid fa-comments text-indigo-600"></i> မှတ်ချက်များ (Comments)
           </h4>
 
           <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 space-y-3">
-  <!-- Google Status & Name Input -->
-            <div class="flex flex-col sm:flex-row gap-2 justify-between items-center bg-white p-2.5 rounded-lg border border-gray-200 text-xs">
-              <div id="userInfo" class="flex items-center gap-2 w-full sm:w-auto">
-                <span id="userNameDisplay" class="font-bold text-indigo-900 flex items-center gap-2">
-                  <i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ထားပါ
-                </span>
-          </div>
-    
-    <!-- User Name Input for Anonymous Users -->
-    
-  </div>
-
-  <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးသားရန်..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-  
-  <div class="text-right">
-    <button id="submitCommentBtn" class="bg-indigo-900 hover:bg-indigo-800 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition">
-      မှတ်ချက်ပေးမည်
-    </button>
-  </div>
-</div>
+            <div>
+              <input type="text" id="commenterName" placeholder="သင့်အမည် ရိုက်ထည့်ပါ..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
 
             <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးသားရန်..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
             
@@ -153,7 +142,6 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -167,10 +155,7 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
 
-    let currentUser = null;
     const container = document.getElementById('poemsContainer');
     const poemsRef = ref(database, 'poems');
     let currentData = {};
@@ -190,26 +175,6 @@
       }
     };
 
-    // Firebase Auth Observer
-    onAuthStateChanged(auth, (user) => {
-      const nameDisplay = document.getElementById('userNameDisplay');
-      const authBtn = document.getElementById('googleAuthBtn');
-
-      if (user) {
-        currentUser = user;
-        nameDisplay.innerHTML = `<img src="${user.photoURL}" class="w-5 h-5 rounded-full border inline mr-1"> <span class="text-indigo-900">${user.displayName}</span>`;
-        authBtn.innerText = 'ထွက်မည်';
-        authBtn.className = "bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-md font-bold transition text-xs";
-        authBtn.onclick = () => signOut(auth);
-      } else {
-        currentUser = null;
-        nameDisplay.innerHTML = `<i class="fa-solid fa-circle-user text-base text-gray-400"></i> Login မဝင်ထားပါ`;
-        authBtn.innerHTML = `<i class="fa-brands fa-google"></i> Google Login`;
-        authBtn.className = "bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md font-bold transition flex items-center gap-1.5 text-xs";
-        authBtn.onclick = () => signInWithPopup(auth, provider);
-      }
-    });
-
     // Realtime Database Fetch for Poems
     onValue(poemsRef, (snapshot) => {
       container.innerHTML = '';
@@ -219,19 +184,24 @@
       if (keys.length > 0) {
         keys.forEach((key) => {
           const item = currentData[key];
+          
+          // Image HTML check
+          const imageHtml = item.image ? `<img src="${item.image}" class="w-full h-48 object-cover rounded-lg mb-3">` : '';
+
           container.innerHTML += `
-            <div class="bg-white rounded-xl shadow-md p-6 flex flex-col justify-between border border-gray-100 hover:shadow-lg transition">
+            <div class="bg-white rounded-xl shadow-md p-5 flex flex-col justify-between border border-gray-100 hover:shadow-lg transition">
               <div>
-                <div class="flex justify-between items-center mb-3">
+                ${imageHtml}
+                <div class="flex justify-between items-center mb-2">
                   <span class="bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-bold">ကဗျာ</span>
                   <span class="text-xs text-gray-400">${item.date || ''}</span>
                 </div>
                 <h3 class="text-xl font-bold text-gray-800 mb-1">${item.title || 'ခေါင်းစဉ်မရှိ'}</h3>
-                <p class="text-xs text-indigo-600 font-semibold mb-4">ရေးသားသူ - ${item.author || 'မသိရပါ'}</p>
+                <p class="text-xs text-indigo-600 font-semibold mb-3">ရေးသားသူ - ${item.author || 'မသိရပါ'}</p>
                 <p class="text-gray-600 text-sm whitespace-pre-line line-clamp-4 leading-relaxed">${item.content || ''}</p>
               </div>
 
-              <div class="mt-6 pt-3 border-t border-gray-100 flex justify-between items-center text-xs text-gray-500">
+              <div class="mt-5 pt-3 border-t border-gray-100 flex justify-between items-center text-xs text-gray-500">
                 <div class="flex items-center gap-3">
                   <span><i class="fa-solid fa-eye text-indigo-600"></i> ${item.views || 0}</span>
                   <span><i class="fa-solid fa-heart text-red-500"></i> ${item.likes || 0}</span>
@@ -267,6 +237,16 @@
       document.getElementById('modalViews').innerText = (item.views || 0) + 1;
       document.getElementById('modalLikesCount').innerText = item.likes || 0;
 
+      // Image modal display setup
+      const imgContainer = document.getElementById('modalImageContainer');
+      const modalImg = document.getElementById('modalImage');
+      if (item.image) {
+        modalImg.src = item.image;
+        imgContainer.classList.remove('hidden');
+      } else {
+        imgContainer.classList.add('hidden');
+      }
+
       loadComments(item.comments);
       document.getElementById('poemModal').classList.remove('hidden');
     };
@@ -279,33 +259,25 @@
       countElem.innerText = parseInt(countElem.innerText) + 1;
     };
 
-    // Submit Comment Action
+    // Submit Comment Action (No Login Required)
     document.getElementById('submitCommentBtn').onclick = () => {
       if (!activeKey) return;
-      
-      if (!currentUser) {
-        alert("မှတ်ချက်ပေးရန်အတွက် ကျေးဇူးပြု၍ Google Account ဖြင့် Login ဝင်ပေးပါ။");
-        signInWithPopup(auth, provider);
+
+      const authorName = document.getElementById('commenterName').value.trim();
+      const text = document.getElementById('commentText').value.trim();
+
+      if (!authorName) {
+        alert('ကျေးဇူးပြု၍ သင့်အမည်ကို ရိုက်ထည့်ပေးပါ။');
         return;
       }
 
-      const text = document.getElementById('commentText').value.trim();
       if (!text) { 
         alert('ကျေးဇူးပြု၍ မှတ်ချက် ရေးသားပါ။'); 
         return; 
       }
 
-      let authorName = currentUser.displayName;
-      if (!authorName && currentUser.email) {
-        authorName = currentUser.email.split('@')[0];
-      }
-      if (!authorName) {
-        authorName = 'Google အသုံးပြုသူ';
-      }
-
       push(ref(database, `poems/${activeKey}/comments`), {
         name: authorName,
-        photo: currentUser.photoURL || '',
         text: text,
         date: new Date().toLocaleDateString('my-MM')
       }).then(() => {
@@ -325,11 +297,10 @@
       commentsList.innerHTML = '';
       if (commentsData) {
         Object.values(commentsData).reverse().forEach(c => {
-          const userImg = c.photo ? `<img src="${c.photo}" class="w-4 h-4 rounded-full inline mr-1 border">` : `<i class="fa-solid fa-user-circle mr-1"></i>`;
           commentsList.innerHTML += `
             <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 text-xs">
               <div class="flex justify-between font-bold text-indigo-900 mb-1">
-                <span class="flex items-center gap-1">${userImg} ${c.name || 'Google အသုံးပြုသူ'}</span>
+                <span class="flex items-center gap-1"><i class="fa-solid fa-user-circle text-gray-400"></i> ${c.name || 'ဧည့်သည်'}</span>
                 <span class="text-gray-400 font-normal">${c.date || ''}</span>
               </div>
               <p class="text-gray-700 leading-relaxed">${c.text}</p>
