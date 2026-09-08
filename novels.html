@@ -93,18 +93,18 @@
     const category = urlParams.get('category') || 'newnovels';
     const selectedId = urlParams.get('id');
 
-    // စာအုပ်အမည် အရင်းအမြစ်ကို ပိုမို တိကျစွာ ခွဲထုတ်ပေးသည့် Helper Function
+    // စာအုပ်အမည်ကို အတိအကျ ခွဲထုတ်ပေးသည့် Helper Function (Error Free)
     function getNovelBaseName(title) {
       if (!title) return '';
-      // :: သို့မဟုတ် - သို့မဟုတ် .. စသည့် သင်္ကေတများအားလုံးကို ခွဲထုတ်ပေးမည်
-      let baseName = title.split('::')[0].split('-')[0].split('..')[0].trim();
+      // :: သို့မဟုတ် - သို့မဟုတ် .. စသည်ဖြင့် ပါသမျှကို ခွဲထုတ်ခြင်း
+      let name = title.split('::')[0].split('-')[0].split('..')[0].trim();
       
-      // အကယ်၍ 'Chapter' ဆိုသည့် စာသားပါနေပါက Chapter ၏ ရှေ့ပိုင်းကိုသာ ယူမည်
-      if (baseName.toLowerCase().includes('chapter')) {
-        baseName = baseName.split(/chapter/i)[0].trim();
+      // Chapter ဆိုသည်များ ပါလာပါက ၎င်း၏ အရှေ့ပိုင်းကိုသာ ယူခြင်း
+      const chapIndex = name.toLowerCase().indexOf('chapter');
+      if (chapIndex !== -1) {
+        name = name.substring(0, chapIndex).trim();
       }
-      
-      return baseName.toLowerCase();
+      return name.toLowerCase();
     }
 
     async function loadNovel() {
@@ -119,15 +119,16 @@
           const keys = Object.keys(data);
 
           if (keys.length > 0) {
-            // ၁။ လက်ရှိ ရွေးချယ်ထားသော Novel Post ကို ယူမည်
+            // ၁။ ရွေးချယ်ထားသော Novel Post ကို ယူမည်
             const targetKey = (selectedId && data[selectedId]) ? selectedId : keys[0];
             const currentPost = data[targetKey];
             
-            // ၂။ လက်ရှိ စာအုပ်၏ အခြေခံ နာမည်ကို ယူမည်
+            // ၂။ စာအုပ်အမည် အရင်းအမြစ်ကို ယူမည်
             const currentNovelBaseName = getNovelBaseName(currentPost.title);
 
-            // Header/Detail Info များ ဖြည့်သွင်းခြင်း
-            document.getElementById('novelTitle').textContent = currentPost.title ? currentPost.title.split('::')[0].split('-')[0].split('..')[0].trim() : 'ခေါင်းစဉ် မရှိပါ';
+            // UI ပေါ်တွင် စာအုပ် အချက်အလက်များ တင်ခြင်း
+            const displayTitle = currentPost.title ? currentPost.title.split('::')[0].split('-')[0].split('..')[0].trim() : 'ခေါင်းစဉ် မရှိပါ';
+            document.getElementById('novelTitle').textContent = displayTitle;
             document.getElementById('novelAuthor').textContent = currentPost.author || 'Unknown';
             document.getElementById('novelCover').src = currentPost.image || 'photo_2026-09-07_21-25-15.jpg';
             document.getElementById('novelSummary').textContent = currentPost.summary || (currentPost.content ? currentPost.content.substring(0, 250) + '...' : 'အကြောင်းအရာ မရှိသေးပါ။');
@@ -135,13 +136,13 @@
             const readFirstBtn = document.getElementById('readFirstBtn');
             readFirstBtn.href = `read.html?category=${category}&id=${targetKey}`;
 
-            // ၃။ တူညီသော စာအုပ်အမည်ရှိသည့် Chapter များကိုသာ သီးသန့် Filter လုပ်ခြင်း
+            // ၃။ တူညီသော စာအုပ်အမည်ရှိသည့် Chapter များကိုသာ Filter လုပ်ခြင်း
             const filteredKeys = keys.filter(key => {
               const postTitle = data[key].title;
               return getNovelBaseName(postTitle) === currentNovelBaseName;
             });
 
-            // ၄။ Filter လုပ်ထားသော Chapter များကိုသာ ပြသခြင်း
+            // ၄။ Filter ဖြစ်လာသော Chapter List ကိုသာ ထုတ်ပြခြင်း
             if (filteredKeys.length > 0) {
               filteredKeys.forEach((key, index) => {
                 const post = data[key];
@@ -168,7 +169,7 @@
           grid.innerHTML = '<p class="text-xs text-gray-400 col-span-full text-center">မည်သည့် အခန်းမှ မရှိသေးပါ။</p>';
         }
       } catch (err) {
-        console.error(err);
+        console.error("Data Load Error:", err);
       }
     }
 
