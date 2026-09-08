@@ -102,13 +102,23 @@
 
     // Live Date & Time Updater
     function updateClock() {
-      const clockEl = document.getElementById('liveClock');
-      if (clockEl) {
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('en-GB'); // DD/MM/YYYY Format
-        const timeStr = now.toLocaleTimeString();       // HH:MM:SS AM/PM
-        clockEl.textContent = `${dateStr} | ${timeStr}`;
-      }
+      const now = new Date();
+    
+    // Time (HH:MM:SS)
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    // Date (DD/MM/YYYY)
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+
+      const timeEl = document.getElementById('timeDisplay');
+      const dateEl = document.getElementById('dateDisplay');
+
+      if (timeEl) timeEl.textContent = `${hours}:${minutes}:${seconds}`;
+      if (dateEl) dateEl.textContent = `${day}/${month}/${year}`;
     }
     setInterval(updateClock, 1000);
     updateClock();
