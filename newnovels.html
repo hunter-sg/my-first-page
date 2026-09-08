@@ -1,81 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
   <meta charset="UTF-8">
-  <title>Novel Detail - Literature Garden</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Novels - Literature Garden</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
-<body class="bg-indigo-950 text-white min-h-screen">
+<body class="bg-indigo-950 text-white min-h-screen flex flex-col font-sans">
 
-  <!-- Breadcrumb -->
-  <div class="max-w-4xl mx-auto px-4 py-3 text-xs text-gray-400 flex items-center space-x-2 border-b border-indigo-900">
-    <a href="index.html" class="hover:text-amber-400"><i class="fa-solid fa-house"></i> Home</a>
-    <span>&gt;</span>
-    <a href="newnovels.html" class="hover:text-amber-400">Action</a>
-    <span>&gt;</span>
-    <span id="breadcrumbTitle" class="text-amber-400">Shadow Slave</span>
-  </div>
-
-  <main class="max-w-4xl mx-auto px-4 py-6">
-    <!-- Novel Info Section -->
-    <div class="bg-indigo-900/40 rounded-xl border border-indigo-800/60 p-6 backdrop-blur">
-      <div class="flex flex-col md:flex-row gap-6 items-center md:items-start">
-        
-        <!-- Cover Image Box -->
-        <div class="w-48 flex-shrink-0 shadow-2xl rounded-lg overflow-hidden border-2 border-amber-400/40">
-          <img id="novelCover" src="" alt="Novel Cover" class="w-full h-auto object-cover">
-        </div>
-
-        <!-- Meta Details -->
-        <div class="flex-1 space-y-3 text-center md:text-left">
-          <h1 id="novelTitle" class="text-2xl md:text-3xl font-extrabold text-amber-400"></h1>
-          
-          <div class="space-y-1.5 text-sm text-gray-300">
-            <p><i class="fa-solid fa-user text-amber-400 w-5"></i> Author: <span id="novelAuthor" class="text-white"></span></p>
-            <p><i class="fa-solid fa-tags text-amber-400 w-5"></i> Genre: <span id="novelGenre" class="text-white">Action, Fantasy</span></p>
-            <p><i class="fa-solid fa-globe text-amber-400 w-5"></i> Type: <span class="text-white">Webnovel</span></p>
-            <p><i class="fa-solid fa-clock text-amber-400 w-5"></i> Status: <span class="text-emerald-400 font-semibold">Ongoing</span></p>
-          </div>
-
-          <!-- Rating -->
-          <div class="pt-2 flex items-center justify-center md:justify-start space-x-2">
-            <div class="text-amber-400 text-lg">★★★★★</div>
-            <span class="text-xs text-gray-400">(4.5 / 5 - 5512 votes)</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Summary -->
-      <div class="mt-8 border-t border-indigo-800/80 pt-6">
-        <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2 mb-3">
-          <i class="fa-solid fa-circle-info"></i> SUMMARY
-        </h2>
-        <p id="novelSummary" class="text-sm text-gray-300 leading-relaxed justify-start"></p>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="mt-8 flex flex-wrap gap-4 justify-center">
-        <a href="#chapterListSection" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-2.5 rounded-lg flex items-center gap-2 transition">
-          <i class="fa-solid fa-list"></i> CHAPTER LIST
-        </a>
-        <a id="readFirstBtn" href="#" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-2.5 rounded-lg flex items-center gap-2 transition">
-          <i class="fa-solid fa-circle-arrow-right"></i> READ FIRST
-        </a>
-      </div>
-    </div>
-
-    <!-- Chapter List Section -->
-    <div id="chapterListSection" class="mt-8 bg-indigo-900/40 rounded-xl border border-indigo-800/60 p-6">
-      <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2 mb-4">
-        <i class="fa-solid fa-pen-to-square"></i> LATEST CHAPTERS
-      </h2>
+  <!-- Header & Navbar -->
+  <header class="bg-indigo-900 border-b border-indigo-800 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       
-      <div id="chaptersContainer" class="divide-y divide-indigo-800/50">
-        <!-- Chapters will be dynamically rendered here -->
+      <!-- Logo & Title -->
+      <a href="index.html" class="flex items-center space-x-2">
+        <div class="w-10 h-10 rounded-full border-2 border-amber-400 overflow-hidden flex items-center justify-center bg-indigo-950">
+          <i class="fa-solid fa-book-open text-amber-400 text-lg"></i>
+        </div>
+        <span class="text-xl font-bold text-amber-400 tracking-wide">စာပေဥယျာဉ်</span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="relative hidden sm:block w-64">
+        <input type="text" id="searchInput" placeholder="ရှာဖွေရန်..." class="w-full bg-indigo-950/80 text-sm text-white pl-9 pr-4 py-1.5 rounded-full border border-indigo-800 focus:outline-none focus:border-amber-400 placeholder-gray-400">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-xs"></i>
+      </div>
+
+      <!-- Live Date & Time Box -->
+      <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
+        <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
+        <span id="dateDisplay" class="font-medium">00/00/0000</span>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav id="menuList" class="hidden md:flex items-center space-x-6 text-sm">
+        <a href="index.html" class="text-white hover:text-amber-400 transition">ပင်မ</a>
+        <a href="knowledges.html" class="text-white hover:text-amber-400 transition">သုတရသ</a>
+        <a href="newnovels.html" class="text-amber-400 font-bold border-b-2 border-amber-400 pb-1">ဝတ္ထု</a>
+        <a href="sports.html" class="text-white hover:text-amber-400 transition">အားကစား</a>
+        <a href="poems.html" class="text-white hover:text-amber-400 transition">ကဗျာ</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6">
+    
+    <!-- Section Heading -->
+    <div class="flex items-center justify-between mb-6 border-b border-indigo-800/80 pb-3">
+      <h1 class="text-xl md:text-2xl font-bold text-amber-400 flex items-center gap-2">
+        <i class="fa-solid fa-book-bookmark"></i> နောက်ဆုံးထွက် ဝတ္ထုများ
+      </h1>
+      <span class="text-xs text-gray-400">New & Popular Novels</span>
+    </div>
+
+    <!-- Novel Grid / List Container -->
+    <div id="novelsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Loading State -->
+      <div class="col-span-full text-center py-10 text-gray-400">
+        <i class="fa-solid fa-spinner fa-spin text-2xl text-amber-400 mb-2"></i>
+        <p>ဝတ္ထုများ ရယူနေပါသည်...</p>
       </div>
     </div>
+
   </main>
 
+  <!-- Footer -->
+  <footer class="bg-indigo-900/60 border-t border-indigo-800 py-4 text-center text-xs text-gray-400 mt-8">
+    <p>© 2026 Literature Garden. All rights reserved.</p>
+  </footer>
+
+  <!-- Main Script -->
+  <script src="app.js"></script>
 </body>
 </html>
