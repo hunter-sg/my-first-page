@@ -356,8 +356,34 @@
         }
       });
     };
-
+    
     loadAllPosts();
+    function updateClock() {
+        const now = new Date();
+        
+        // Time Formatting (HH:MM:SS)
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+        const timeElement = document.getElementById('timeDisplay');
+        if (timeElement) {
+            timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        // Date Formatting (DD/MM/YYYY)
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        
+        const dateElement = document.getElementById('dateDisplay');
+        if (dateElement) {
+            dateElement.textContent = `${day}/${month}/${year}`;
+        }
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
   </script>
 </body>
 </html>
