@@ -61,7 +61,7 @@
         <i class="fa-solid fa-list text-amber-500"></i> CHAPTER LIST
       </h2>
 
-      <!-- Chapter Grid (၂ တိုင်ပြိုင်) -->
+      <!-- Chapter Grid -->
       <div id="chapterListGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div class="col-span-full text-center py-6 text-gray-400 text-xs">
           <i class="fa-solid fa-spinner fa-spin mr-2"></i> အခန်းများကို ရယူနေပါသည်...
@@ -91,7 +91,14 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category') || 'newnovels';
-    const selectedId = urlParams.get('id'); // URL က ID ကို ယူခြင်း
+    const selectedId = urlParams.get('id');
+
+    // စာအုပ်အမည် အရင်းအမြစ်ကို သီးသန့် ခွဲထုတ်ပေးသည့် Helper Function
+    function getNovelBaseName(title) {
+      if (!title) return '';
+      // " :: " သို့မဟုတ် " - " စသည့် သင်္ကေတများပါပါက ရှေ့ဆုံး စာအုပ်အမည်ကိုပဲ ယူမည်
+      return title.split('::')[0].split('-')[0].trim();
+    }
 
     async function loadNovel() {
       const dbRef = ref(db);
@@ -105,41 +112,50 @@
           const keys = Object.keys(data);
 
           if (keys.length > 0) {
-            // URL မှ ID ပါလာပါက ၎င်း ID ကိုယူမည်၊ မပါပါက ပထမဆုံး Item ကိုယူမည်
+            // ၁။ လက်ရှိ ရွေးချယ်ထားသော Novel Post ကို ယူမည်
             const targetKey = (selectedId && data[selectedId]) ? selectedId : keys[0];
             const currentPost = data[targetKey];
+            
+            // ၂။ လက်ရှိ စာအုပ်၏ အခြေခံ နာမည်ကို ယူမည် (ဥပမာ- Shadow Slave)
+            const currentNovelBaseName = getNovelBaseName(currentPost.title);
 
-            // Header Info ပြင်ဆင်ခြင်း
-            document.getElementById('novelTitle').textContent = currentPost.title ? currentPost.title.split('-')[0] : 'ခေါင်းစဉ် မရှိပါ';
+            // Header/Detail Info များ ဖြည့်သွင်းခြင်း
+            document.getElementById('novelTitle').textContent = currentNovelBaseName || currentPost.title;
             document.getElementById('novelAuthor').textContent = currentPost.author || 'Unknown';
             document.getElementById('novelCover').src = currentPost.image || 'photo_2026-09-07_21-25-15.jpg';
-            
-            // Summary ရှိရင် Summary ကိုပြမည်၊ မရှိရင် Content ကို ဖြတ်ပြမည်
             document.getElementById('novelSummary').textContent = currentPost.summary || (currentPost.content ? currentPost.content.substring(0, 250) + '...' : 'အကြောင်းအရာ မရှိသေးပါ။');
 
-            // READ FIRST ခလုတ်နှိပ်ပါက ရွေးချယ်ထားသော အခန်း သို့ သွားရန်
             const readFirstBtn = document.getElementById('readFirstBtn');
             readFirstBtn.href = `read.html?category=${category}&id=${targetKey}`;
 
-            // Chapter များအားလုံးကို Grid အဖြစ်ထုတ်ပေးခြင်း
-            keys.forEach((key, index) => {
-              const post = data[key];
-              const chapBox = document.createElement('div');
-              chapBox.className = "p-3 bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-200 rounded-xl flex items-center justify-between text-xs cursor-pointer transition";
-              chapBox.innerHTML = `
-                <span class="font-semibold text-gray-700 truncate">
-                  <i class="fa-regular fa-file-lines text-indigo-600 mr-2"></i>${post.title || `Chapter ${index + 1}`}
-                </span>
-                <span class="text-[10px] text-gray-400 flex-shrink-0">${post.date || ''}</span>
-              `;
-              
-              // အခန်းတစ်ခုခုကို နှိပ်လိုက်ပါက သက်ဆိုင်ရာ read.html သို့ သွားရန်
-              chapBox.onclick = () => {
-                window.location.href = `read.html?category=${category}&id=${key}`;
-              };
-              
-              grid.appendChild(chapBox);
+            // ၃။ ပို့စ်များထဲမှ လက်ရှိ စာအုပ်အမည်နှင့် တူညီသော Chapter များကိုသာ သီးသန့် စစ်ထုတ်ခြင်း (Filter)
+            const filteredKeys = keys.filter(key => {
+              const postTitle = data[key].title;
+              return getNovelBaseName(postTitle) === currentNovelBaseName;
             });
+
+            // ၄။ Filter လုပ်ထားသော Chapter များကိုသာ Chapter List Grid ထဲသို့ ထည့်သွင်းခြင်း
+            if (filteredKeys.length > 0) {
+              filteredKeys.forEach((key, index) => {
+                const post = data[key];
+                const chapBox = document.createElement('div');
+                chapBox.className = "p-3 bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-200 rounded-xl flex items-center justify-between text-xs cursor-pointer transition";
+                chapBox.innerHTML = `
+                  <span class="font-semibold text-gray-700 truncate">
+                    <i class="fa-regular fa-file-lines text-indigo-600 mr-2"></i>${post.title || `Chapter ${index + 1}`}
+                  </span>
+                  <span class="text-[10px] text-gray-400 flex-shrink-0">${post.date || ''}</span>
+                `;
+                
+                chapBox.onclick = () => {
+                  window.location.href = `read.html?category=${category}&id=${key}`;
+                };
+                
+                grid.appendChild(chapBox);
+              });
+            } else {
+              grid.innerHTML = '<p class="text-xs text-gray-400 col-span-full text-center">ဒီစာအုပ်အတွက် Chapter များ မရှိသေးပါ။</p>';
+            }
           }
         } else {
           grid.innerHTML = '<p class="text-xs text-gray-400 col-span-full text-center">မည်သည့် အခန်းမှ မရှိသေးပါ။</p>';
