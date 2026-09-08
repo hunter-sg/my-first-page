@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novel Detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-white min-h-screen p-4 md:p-8">
+
+  <!-- Main Novel Detail Box -->
+  <div class="max-w-4xl mx-auto bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-700">
+    <div class="flex flex-col md:flex-row gap-6">
+      
+      <!-- Cover Image -->
+      <div class="w-full md:w-1/3">
+        <img id="novelCover" src="" alt="Cover" class="w-full h-auto rounded-lg shadow border border-slate-700 object-cover min-h-[250px] bg-slate-700">
+      </div>
+
+      <!-- Info & Summary -->
+      <div class="w-full md:w-2/3 flex flex-col justify-between">
+        <div>
+          <h1 id="novelTitle" class="text-2xl font-bold mb-2 text-amber-400">Loading...</h1>
+          <p class="text-gray-300 font-semibold mb-4" id="novelAuthor"></p>
+
+          <h3 class="font-bold text-gray-300 border-b border-slate-700 pb-1 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-circle-info text-amber-400"></i> SUMMARY
+          </h3>
+          <p id="novelSummary" class="text-gray-300 text-sm leading-relaxed mb-4"></p>
+        </div>
+
+        <div class="flex gap-3">
+          <a id="readFirstBtn" href="#" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-lg flex items-center gap-2 transition">
+            <i class="fa-solid fa-book-open"></i> READ FIRST
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter List Section -->
+    <div class="mt-8 border-t border-slate-700 pt-6">
+      <h2 class="text-lg font-bold mb-4 text-amber-400 flex items-center gap-2">
+        <i class="fa-solid fa-list-ul"></i> CHAPTER LIST
+      </h2>
+
+      <!-- Chapter Grid -->
+      <div id="chapterListGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <p class="text-gray-400 text-sm">အခန်းများ ဒေါင်းလုဒ်ဆွဲနေသည်...</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
+      authDomain: "my-new-projects-e2d79.firebaseapp.com",
+      databaseURL: "https://my-new-projects-e2d79-default-rtdb.firebaseio.com",
+      projectId: "my-new-projects-e2d79",
+      storageBucket: "my-new-projects-e2d79.firebasestorage.app",
+      messagingSenderId: "544924460381",
+      appId: "1:544924460381:web:711d1427a2caaaaaf6b4b4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // URL parameter မှ Category သို့မဟုတ် Novel ID ကို ဖတ်ယူခြင်း
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category') || 'ဝတ္ထု'; 
+
+    async function loadNovelDetails() {
+      const dbRef = ref(db);
+      
+      try {
+        const snapshot = await get(child(dbRef, category));
+        const chapterListGrid = document.getElementById('chapterListGrid');
+        chapterListGrid.innerHTML = '';
+
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const keys = Object.keys(data);
+
+          if (keys.length > 0) {
+            // ပထမဆုံး စာမူ/အခန်း မှ အချက်အလက်ကို ယူပြီး Novel Info အဖြစ်ပြသခြင်း
+            const firstPost = data[keys[0]];
+            document.getElementById('novelTitle').textContent = firstPost.title ? firstPost.title.split('-')[0] : category;
+            document.getElementById('novelAuthor').textContent = `ရေးသားသူ - ${firstPost.author || 'Unknown'}`;
+            document.getElementById('novelCover').src = firstPost.image || 'photo_2026-09-07_21-25-15.jpg';
+            document.getElementById('novelSummary').textContent = firstPost.content ? firstPost.content.substring(0, 200) + '...' : 'အကြောင်းအရာ မရှိသေးပါ။';
+
+            // Read First Button အတွက် လင့်ခ်ပေးခြင်း
+            document.getElementById('readFirstBtn').href = `post.html?category=${encodeURIComponent(category)}&id=${keys[0]}`;
+
+            // Chapter များအားလုံးကို List ထုတ်ပေးခြင်း
+            keys.forEach((key, index) => {
+              const post = data[key];
+              const chapBtn = document.createElement('a');
+              chapBtn.href = `post.html?category=${encodeURIComponent(category)}&id=${key}`;
+              chapBtn.className = "p-3 bg-slate-700 hover:bg-slate-600 rounded-lg flex items-center gap-2 text-sm text-gray-200 transition border border-slate-600";
+              chapBtn.innerHTML = `<i class="fa-solid fa-book text-amber-400"></i> ${post.title || `Chapter ${index + 1}`}`;
+              
+              chapterListGrid.appendChild(chapBtn);
+            });
+          }
+        } else {
+          chapterListGrid.innerHTML = '<p class="text-gray-400">မည်သည့် အခန်းမှ မရှိသေးပါ၊၊</p>';
+        }
+      } catch (err) {
+        console.error("Error loading chapters:", err);
+      }
+    }
+
+    loadNovelDetails();
+  </script>
+</body>
+</html>
