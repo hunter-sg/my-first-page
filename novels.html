@@ -15,7 +15,7 @@
       <i class="fa-solid fa-book-bookmark text-amber-400"></i> စာပေဥယျာဥ်
     </a>
     <a href="index.html" class="text-xs bg-indigo-950 px-3 py-1.5 rounded-lg hover:text-amber-400 transition">
-      <i class="fa-solid fa-house"></i>  ပင်မစာမျက်နှာ
+      <i class="fa-solid fa-house"></i> ပင်မစာမျက်နှာ
     </a>
   </header>
 
@@ -91,6 +91,7 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category') || 'newnovels';
+    const selectedId = urlParams.get('id'); // URL က ID ကို ယူခြင်း
 
     async function loadNovel() {
       const dbRef = ref(db);
@@ -104,17 +105,21 @@
           const keys = Object.keys(data);
 
           if (keys.length > 0) {
-            const firstPost = data[keys[0]];
+            // URL မှ ID ပါလာပါက ၎င်း ID ကိုယူမည်၊ မပါပါက ပထမဆုံး Item ကိုယူမည်
+            const targetKey = (selectedId && data[selectedId]) ? selectedId : keys[0];
+            const currentPost = data[targetKey];
 
             // Header Info ပြင်ဆင်ခြင်း
-            document.getElementById('novelTitle').textContent = firstPost.title ? firstPost.title.split('-')[0] : 'အိမ်မက် စကြာဝဠာ လမ်းစဉ်';
-            document.getElementById('novelAuthor').textContent = firstPost.author || 'translate by Hunter';
-            document.getElementById('novelCover').src = firstPost.image || 'photo_2026-09-07_21-25-15.jpg';
-            document.getElementById('novelSummary').textContent = firstPost.content ? firstPost.content.substring(0, 250) + '...' : 'အကြောင်းအရာ မရှိသေးပါ။';
+            document.getElementById('novelTitle').textContent = currentPost.title ? currentPost.title.split('-')[0] : 'ခေါင်းစဉ် မရှိပါ';
+            document.getElementById('novelAuthor').textContent = currentPost.author || 'Unknown';
+            document.getElementById('novelCover').src = currentPost.image || 'photo_2026-09-07_21-25-15.jpg';
+            
+            // Summary ရှိရင် Summary ကိုပြမည်၊ မရှိရင် Content ကို ဖြတ်ပြမည်
+            document.getElementById('novelSummary').textContent = currentPost.summary || (currentPost.content ? currentPost.content.substring(0, 250) + '...' : 'အကြောင်းအရာ မရှိသေးပါ။');
 
-            // READ FIRST ခလုတ်နှိပ်ပါက ပထမဆုံးအခန်း (read.html) သို့ သွားရန်
+            // READ FIRST ခလုတ်နှိပ်ပါက ရွေးချယ်ထားသော အခန်း သို့ သွားရန်
             const readFirstBtn = document.getElementById('readFirstBtn');
-            readFirstBtn.href = `read.html?category=${category}&id=${keys[0]}`;
+            readFirstBtn.href = `read.html?category=${category}&id=${targetKey}`;
 
             // Chapter များအားလုံးကို Grid အဖြစ်ထုတ်ပေးခြင်း
             keys.forEach((key, index) => {
