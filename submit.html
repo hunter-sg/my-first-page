@@ -30,11 +30,11 @@
           <label class="block text-xs font-semibold text-slate-300 mb-1.5">
             အခန်း / Chapter <span class="text-rose-500">*</span>
           </label>
-          <input type="text" id="chapterTitle" placeholder="ဥပမာ - Chapter 1" required class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
+          <input type="text" id="chapterTitle" placeholder="ဥပမာ - အခန်း (၁) / Chapter 1" required class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1.5">အခန်းခေါင်းစဉ် (Sub-title)</label>
-          <input type="text" id="chapterSubtitle" placeholder="ဥပမာ - ရွှေရောင်ကောင်းကင် ကမ္ဘာ" class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
+          <input type="text" id="chapterSubtitle" placeholder="ဥပမာ - နိဒါန်း" class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
         </div>
       </div>
 
@@ -55,19 +55,14 @@
           <label class="block text-xs font-semibold text-slate-300 mb-1.5">
             စာရေးသူ / ဘာသာပြန်သူ <span class="text-rose-500">*</span>
           </label>
-          <input type="text" id="author" placeholder="translate by Hunter" required class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
+          <input type="text" id="author" placeholder="Translate by Hunter" required class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition">
         </div>
       </div>
 
-      <!-- Cover Image Input -->
+      <!-- Cover Image -->
       <div>
         <label class="block text-xs font-semibold text-slate-300 mb-1.5">Cover Image (ဓါတ်ပုံ ရွေးပါ)</label>
-        <input 
-          type="file" 
-          id="coverImage" 
-          accept="image/*"
-          class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer bg-slate-950 border border-slate-700 rounded-xl p-1"
-        >
+        <input type="file" id="coverImage" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer bg-slate-950 border border-slate-700 rounded-xl p-1">
       </div>
 
       <!-- Summary -->
@@ -109,7 +104,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Image ကို Base64 အဖြစ် ပြောင်းပေးသည့် Function
     const convertBase64 = (file) => {
       return new Promise((resolve, reject) => {
         const fileReader = new FileReader();
@@ -130,24 +124,26 @@
       const fileInput = document.getElementById('coverImage');
       let imageBase64 = "";
 
-      // ဓါတ်ပုံ ရွေးထားပါက Base64 ပြောင်းမည်
       if (fileInput.files.length > 0) {
         try {
           imageBase64 = await convertBase64(fileInput.files[0]);
         } catch (err) {
-          console.error("Image conversion error:", err);
+          console.error("Image error:", err);
         }
       }
 
+      const rawTitle = document.getElementById('novelTitle').value.trim();
+
       const postData = {
-        bookTitle: document.getElementById('novelTitle').value.trim(),
+        title: rawTitle,       // ခေါင်းစဉ် (Key ၁)
+        bookTitle: rawTitle,   // ခေါင်းစဉ် (Key ၂)
         chapter: document.getElementById('chapterTitle').value.trim(),
         subTitle: document.getElementById('chapterSubtitle').value.trim(),
         author: document.getElementById('author').value.trim(),
         category: category,
         summary: document.getElementById('summary').value.trim(),
         content: document.getElementById('content').value.trim(),
-        coverImage: imageBase64, // ဓါတ်ပုံ data သိမ်းဆည်းခြင်း
+        coverImage: imageBase64,
         timestamp: Date.now()
       };
 
