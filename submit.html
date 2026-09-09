@@ -30,7 +30,7 @@
         >
       </div>
 
-      <!-- Chapter Number / Title (သီးခြား ခွဲထုတ်ထားသည့် Input Field) -->
+      <!-- Chapter Number / Title -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1.5">
@@ -173,16 +173,15 @@
       const summary = document.getElementById('summary').value.trim();
       const content = document.getElementById('content').value.trim();
 
-      // ခေါင်းစဉ်နှစ်ခုပေါင်းစပ်ခြင်း (ဥပမာ - ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်: Chapter 1 - နိဒါန်း)
       let fullDisplayTitle = novelTitle;
       if (chapterTitle) fullDisplayTitle += `: ${chapterTitle}`;
       if (chapterSubtitle) fullDisplayTitle += ` - ${chapterSubtitle}`;
 
       const postData = {
-        bookTitle: novelTitle,          // ဝတ္ထုအမည် သီးသန့်
-        chapter: chapterTitle,           // Chapter နံပါတ် သီးသန့်
-        subTitle: chapterSubtitle,       // အခန်းခေါင်းစဉ် သီးသန့်
-        title: fullDisplayTitle,         // အပြည့်အစုံ
+        bookTitle: novelTitle,
+        chapter: chapterTitle,
+        subTitle: chapterSubtitle,
+        title: fullDisplayTitle,
         author: author,
         category: category,
         summary: summary,
@@ -196,11 +195,13 @@
         await set(newPostRef, postData);
 
         alert('စာမူ အောင်မြင်စွာ တင်ပြီးပါပြီ။');
-        document.getElementById('uploadForm').reset();
+        
+        // စာမူတင်ပြီးပါက index.html သို့ ပြန်လည်ညွှန်းပေးမည်
+        window.location.href = 'index.html';
+
       } catch (err) {
         console.error("Upload Error:", err);
         alert('စာမူတင်ရာတွင် အမှားအယွင်းရှိနေပါသည်။');
-      } finally {
         btn.disabled = false;
         btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> စာမူတင်မည်`;
       }
