@@ -245,12 +245,15 @@
           // Database သို့ Data ပို့ခြင်း
           const category = document.getElementById('postCategory').value;
           const rawTitle = document.getElementById('postTitle').value.trim();
-
+          const chapterText = document.getElementById('postChapter').value.trim();
+          const subtitleText = document.getElementById('postSubtitle').value.trim();
+          const displayTitle = subtitleText ? `${chapterText} - ${subtitleText}` : chapterText;
+          
           const newPost = {
-            title: rawTitle,
+            title: displayTitle,  // rawTitle အစား displayTitle သုံးပါ
             bookTitle: rawTitle,
-            chapter: document.getElementById('postChapter').value.trim(),
-            subTitle: document.getElementById('postSubtitle').value.trim(),
+            chapter: chapterText,
+            subTitle: subtitleText,
             author: document.getElementById('postAuthor').value.trim(),
             category: category,
             summary: document.getElementById('postSummary').value.trim(),
