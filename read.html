@@ -3,83 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chapter Reader - စာပေဥယျာဉ်</title>
+  <title>Read Chapter - စာပေဥယျာဉ်</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col items-center">
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
 
-  <!-- Navigation Bar / Breadcrumb -->
-  <header class="w-full bg-white border-b border-gray-200 py-3 px-4 shadow-sm text-xs text-gray-600 flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <a href="index.html" class="hover:text-indigo-600"><i class="fa-solid fa-house"></i> Home</a>
-      <span>›</span>
-      <a href="novels.html" class="hover:text-indigo-600" id="novelBreadcrumb">Novel</a>
-      <span>›</span>
-      <span class="font-semibold text-gray-800" id="chapterBreadcrumb">Chapter</span>
-    </div>
+  <!-- Header -->
+  <header class="bg-indigo-900 text-white p-4 shadow-md flex justify-between items-center">
+    <a href="index.html" class="flex items-center gap-2 font-bold text-lg">
+      <i class="fa-solid fa-book-bookmark text-amber-400"></i> စာပေဥယျာဥ်
+    </a>
+    <a href="index.html" class="text-xs bg-indigo-950 px-3 py-1.5 rounded-lg hover:text-amber-400 transition">
+      <i class="fa-solid fa-house"></i> ပင်မစာမျက်နှာ
+    </a>
   </header>
 
-  <!-- Reading Container -->
-  <main class="w-full max-w-3xl my-6 px-4 flex-1">
+  <main class="container mx-auto max-w-3xl my-6 px-4 flex-grow">
     
-    <!-- Novel Title & Chapter Header -->
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center gap-2 text-xs text-gray-500 mb-6">
+      <a href="index.html" class="hover:text-indigo-600"><i class="fa-solid fa-house"></i> Home</a>
+      <i class="fa-solid fa-chevron-right text-[10px]"></i>
+      <a id="backToNovel" href="#" class="hover:text-indigo-600 font-medium">ဝတ္ထုစာမျက်နှာ</a>
+      <i class="fa-solid fa-chevron-right text-[10px]"></i>
+      <span id="breadChapter" class="text-gray-700 font-semibold truncate">Chapter</span>
+    </nav>
+
+    <!-- Reading Title Area -->
     <div class="text-center mb-6">
-      <h1 id="readNovelTitle" class="text-xl md:text-2xl font-extrabold text-slate-800 tracking-wide uppercase mb-1">...</h1>
-      <p id="readChapterTitle" class="text-sm font-semibold text-gray-600">...</p>
-      
-      <!-- Top Navigation Control Buttons (ပုံပါအတိုင်း) -->
-      <div class="flex items-center justify-center gap-1.5 mt-4">
-        <button id="prevBtnTop" class="bg-slate-500 hover:bg-slate-600 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1 transition">
-          <i class="fa-solid fa-chevron-left text-[10px]"></i> Prev Chapter
-        </button>
-        <a id="listBtnTop" href="novels.html" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-2.5 py-1.5 rounded transition">
-          <i class="fa-solid fa-list-ul"></i>
-        </a>
-        <button id="nextBtnTop" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1 transition">
-          Next Chapter <i class="fa-solid fa-chevron-right text-[10px]"></i>
-        </button>
-      </div>
-      
-      <!-- Divider Ornament -->
-      <div class="text-gray-400 my-4 text-xl tracking-widest">~ § ~</div>
+      <!-- စာအုပ် ခေါင်းစဉ်အဓိက (အလိုအလျောက် ပြောင်းမည်) -->
+      <h1 id="bookMainTitle" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">...</h1>
+      <!-- Chapter ခေါင်းစဉ် -->
+      <h2 id="chapterSubTitle" class="text-sm md:text-base text-gray-600 font-medium">...</h2>
     </div>
 
-    <!-- Chapter Content Area (စာပိုဒ်များ ဖတ်ရန်နေရာ) -->
-    <div class="bg-white rounded-xl p-6 md:p-10 shadow-sm border border-gray-200 mb-8">
-      <h2 id="contentHeading" class="text-lg font-bold text-gray-900 mb-6"></h2>
-      <div id="readContent" class="text-sm md:text-base text-gray-700 leading-relaxed space-y-4 whitespace-pre-line font-serif">
-        စာမူများကို ရယူနေပါသည်...
-      </div>
+    <!-- Navigation Buttons -->
+    <div class="flex justify-center items-center gap-3 mb-8">
+      <a id="prevBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition hidden">
+        <i class="fa-solid fa-chevron-left mr-1"></i> Prev Chapter
+      </a>
+      <a id="novelListBtn" href="#" class="bg-slate-800 hover:bg-slate-900 text-white p-2.5 rounded-lg transition" title="Chapter List">
+        <i class="fa-solid fa-list text-xs"></i>
+      </a>
+      <a id="nextBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition hidden">
+        Next Chapter <i class="fa-solid fa-chevron-right ml-1"></i>
+      </a>
     </div>
 
-    <!-- Bottom Navigation Control Buttons -->
-    <div class="text-center space-y-4 mb-10">
-      <!-- Divider Ornament -->
-      <div class="text-gray-400 text-xl tracking-widest">~ § ~</div>
+    <div class="text-center my-4 text-gray-400">~ § ~</div>
 
-      <div class="flex items-center justify-center gap-1.5">
-        <button id="prevBtnBottom" class="bg-slate-500 hover:bg-slate-600 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1 transition">
-          <i class="fa-solid fa-chevron-left text-[10px]"></i> Prev Chapter
-        </button>
-        <a href="novels.html" class="bg-slate-800 hover:bg-slate-900 text-white text-xs px-2.5 py-1.5 rounded transition">
-          <i class="fa-solid fa-list-ul"></i>
-        </a>
-        <button id="nextBtnBottom" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1 transition">
-          Next Chapter <i class="fa-solid fa-chevron-right text-[10px]"></i>
-        </button>
-      </div>
-
-      <!-- Report Button -->
-      <div>
-        <button onclick="alert('စာမူ အမှားပြင်ဆင်ရန် တိုင်ကြားချက် ပေးပို့လိုက်ပါပြီ။')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition">
-          <i class="fa-solid fa-triangle-exclamation mr-1"></i> Report chapter
-        </button>
-      </div>
-
-      <!-- Keyboard Tip Box -->
-      <div class="bg-sky-100 border border-sky-300 text-sky-800 text-xs py-2 px-4 rounded-lg inline-block">
-        Use arrow keys (or A / D) to PREV/NEXT chapter
+    <!-- Content Card Box -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8">
+      <h3 id="contentHeaderTitle" class="text-lg md:text-xl font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4">
+        ...
+      </h3>
+      
+      <!-- Content Text -->
+      <div id="chapterContent" class="text-sm md:text-base text-gray-700 leading-relaxed space-y-4 whitespace-pre-line">
+        <div class="text-center py-8 text-gray-400">
+          <i class="fa-solid fa-spinner fa-spin mr-2"></i> စာဖတ်ရန် ပြင်ဆင်နေပါသည်...
+        </div>
       </div>
     </div>
 
@@ -88,7 +72,7 @@
   <!-- Firebase Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -107,94 +91,60 @@
     const category = urlParams.get('category') || 'newnovels';
     const currentId = urlParams.get('id');
 
-    let allChapters = [];
-    let currentIndex = -1;
+    async function loadChapter() {
+      if (!currentId) return;
 
-    async function loadChapterContent() {
+      const dbRef = ref(db);
       try {
-        const snapshot = await get(ref(db, category));
+        const snapshot = await get(child(dbRef, category));
         if (snapshot.exists()) {
           const data = snapshot.val();
-          // အခန်းများကို စီစဉ်ခြင်း
           const keys = Object.keys(data);
-          allChapters = keys.map(key => ({ id: key, ...data[key] }));
-          
-          // ID အလိုက် တိုစဉ်အတိုင်း စီပေးခြင်း
-          allChapters.sort((a, b) => a.id.localeCompare(b.id));
+          const currentPost = data[currentId];
 
-          // လက်ရှိ ရောက်နေသော အခန်း အညွှန်း (Index) ရှာခြင်း
-          if (currentId) {
-            currentIndex = allChapters.findIndex(ch => ch.id === currentId);
+          if (currentPost) {
+            const rawTitle = currentPost.title || '';
+            
+            // စာအုပ်အမည် နှင့် Chapter နာမည် ခွဲထုတ်ခြင်း
+            let mainBookTitle = rawTitle.split(/::|-|\.\.|chapter/i)[0].trim();
+            
+            // UI ထဲသို့ တင်ခြင်း
+            document.getElementById('bookMainTitle').textContent = mainBookTitle;
+            document.getElementById('chapterSubTitle').textContent = rawTitle;
+            document.getElementById('contentHeaderTitle').textContent = rawTitle;
+            document.getElementById('breadChapter').textContent = rawTitle;
+            document.getElementById('chapterContent').textContent = currentPost.content || currentPost.summary || 'စာဖတ်ရန် အကြောင်းအရာ မရှိသေးပါ။';
+
+            // Back To Novel Link
+            const novelListBtn = document.getElementById('novelListBtn');
+            const backToNovel = document.getElementById('backToNovel');
+            const novelUrl = `novels.html?category=${category}&id=${currentId}`;
+            
+            novelListBtn.href = novelUrl;
+            backToNovel.href = novelUrl;
+            backToNovel.textContent = mainBookTitle;
+
+            // Prev & Next Chapter Navigation Logic
+            const currentIndex = keys.indexOf(currentId);
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            if (currentIndex > 0) {
+              prevBtn.href = `read.html?category=${category}&id=${keys[currentIndex - 1]}`;
+              prevBtn.classList.remove('hidden');
+            }
+            if (currentIndex < keys.length - 1) {
+              nextBtn.href = `read.html?category=${category}&id=${keys[currentIndex + 1]}`;
+              nextBtn.classList.remove('hidden');
+            }
           }
-          if (currentIndex === -1) currentIndex = 0; // ရှာမတွေ့ပါက ပထမဆုံး အခန်းပြမည်
-
-          renderCurrentChapter();
         }
       } catch (err) {
-        console.error(err);
+        console.error("Read Chapter Error:", err);
       }
     }
 
-    function renderCurrentChapter() {
-      const chapter = allChapters[currentIndex];
-      if (!chapter) return;
-
-      // Header နဲ့ Titles ပြင်ခြင်း
-      const novelName = "အိမ်မက် စကြာဝဠာ လမ်းစဉ်";
-      document.getElementById('readNovelTitle').textContent = novelName;
-      document.getElementById('novelBreadcrumb').textContent = novelName;
-      document.getElementById('readChapterTitle').textContent = chapter.title || `Chapter ${currentIndex + 1}`;
-      document.getElementById('chapterBreadcrumb').textContent = chapter.title || `Chapter ${currentIndex + 1}`;
-      document.getElementById('contentHeading').textContent = chapter.title || '';
-      
-      // စာပိုဒ် ထည့်သွင်းခြင်း
-      document.getElementById('readContent').textContent = chapter.content || 'စာမူ မရှိသေးပါ။';
-
-      // Prev / Next ခလုတ်များ အလုပ်လုပ်အောင် ပြုလုပ်ခြင်း
-      const hasPrev = currentIndex > 0;
-      const hasNext = currentIndex < allChapters.length - 1;
-
-      setupNavButton('prevBtnTop', hasPrev, currentIndex - 1);
-      setupNavButton('prevBtnBottom', hasPrev, currentIndex - 1);
-      setupNavButton('nextBtnTop', hasNext, currentIndex + 1);
-      setupNavButton('nextBtnBottom', hasNext, currentIndex + 1);
-
-      // စာမျက်နှာ ထိပ်ဆုံးသို့ ပြန်တင်ပေးခြင်း
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function setupNavButton(btnId, enable, targetIndex) {
-      const btn = document.getElementById(btnId);
-      if (enable) {
-        btn.disabled = false;
-        btn.classList.remove('opacity-50', 'cursor-not-allowed');
-        btn.onclick = () => {
-          currentIndex = targetIndex;
-          renderCurrentChapter();
-        };
-      } else {
-        btn.disabled = true;
-        btn.classList.add('opacity-50', 'cursor-not-allowed');
-        btn.onclick = null;
-      }
-    }
-
-    // Keyboard Arrow Keys (သို့) A / D ဖြင့် အခန်းပြောင်းနိုင်အောင် ပြုလုပ်ခြင်း
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-        if (currentIndex > 0) {
-          currentIndex--;
-          renderCurrentChapter();
-        }
-      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-        if (currentIndex < allChapters.length - 1) {
-          currentIndex++;
-          renderCurrentChapter();
-        }
-      }
-    });
-
-    loadChapterContent();
+    loadChapter();
   </script>
 </body>
 </html>
