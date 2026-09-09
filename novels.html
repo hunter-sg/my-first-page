@@ -65,7 +65,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -80,61 +80,134 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // URL Param ယူခြင်း
     const urlParams = new URLSearchParams(window.location.search);
-    const bookId = urlParams.get('id');
+    const category = urlParams.get('category') || 'newnovels';
+    let currentId = urlParams.get('id');
 
-    const loadingEl = document.getElementById('loading');
-    const bookContainer = document.getElementById('bookContainer');
+    // Back Button Link Set
+    const prevBtn = document.getElementById('prevPageBtn');
+    if (prevBtn) prevBtn.href = `${category}.html`;
 
-    if (!bookId) {
-      loadingEl.innerHTML = `<p class="text-rose-400">စာအုပ် ID မရှိပါ။</p>`;
-    } else {
-      get(ref(db, `novels/${bookId}`)).then((snapshot) => {
+    function getBaseTitle(fullTitle) {
+      if (!fullTitle) return '';
+      let clean = fullTitle.trim();
+      if (clean.toLowerCase().includes('shadow slave')) return 'shadow slave';
+      if (clean.includes('ကောင်းကင်ဘုံကို')) return 'ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်';
+      return clean.split(/::|-|\.\.|chapter/i)[0].trim().toLowerCase();
+    }
+
+    async function loadNovelDetails() {
+      const dbRef = ref(db);
+      try {
+        const snapshot = await get(child(dbRef, category));
         if (snapshot.exists()) {
-          const book = snapshot.val();
+          const data = snapshot.val();
+          const allKeys = Object.keys(data);
 
-          document.getElementById('bookCover').src = book.coverImage || 'https://via.placeholder.com/300x400/1e1b4b/amber400?text=No+Cover';
-          document.getElementById('bookTitle').textContent = book.title;
-          document.getElementById('bookAuthor').querySelector('span').textContent = book.author || 'အမည်မသိ';
-          document.getElementById('bookSummary').textContent = book.summary || 'အကျဉ်းချုပ် မရှိပါ။';
+          if (allKeys.length === 0) return;
 
-          const chapterListEl = document.getElementById('chapterList');
-          chapterListEl.innerHTML = '';
-
-          if (book.chapters) {
-            const chapters = Object.keys(book.chapters).map(key => ({
-              id: key,
-              ...book.chapters[key]
-            })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-
-            chapters.forEach((chap) => {
-              const displayTitle = chap.subTitle ? `${chap.chapterTitle} - ${chap.subTitle}` : chap.chapterTitle;
-
-              const chapItem = `
-                <a href="read.html?bookId=${bookId}&chapId=${chap.id}" 
-                   class="flex items-center justify-between p-3.5 bg-[#18153d] hover:bg-[#2e2a72] border border-[#3b358c]/60 rounded-xl transition duration-200 group">
-                  <div class="flex items-center gap-3">
-                    <i class="fa-regular fa-file-lines text-amber-400 group-hover:scale-110 transition"></i>
-                    <span class="text-sm font-medium text-gray-200 group-hover:text-amber-300">${displayTitle}</span>
-                  </div>
-                  <span class="text-xs text-gray-400 flex items-center gap-2">
-                    ${chap.date || ''} <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                  </span>
-                </a>
-              `;
-              chapterListEl.insertAdjacentHTML('beforeend', chapItem);
-            });
-          } else {
-            chapterListEl.innerHTML = `<p class="text-sm text-gray-400 py-4 text-center">အခန်းများ မရှိသေးပါ။</p>`;
+          // ID မပါလာပါက ပထမဆုံး Post ကို အလိုအလျောက် ယူမည်
+          if (!currentId || !data[currentId]) {
+            currentId = allKeys[0];
           }
 
-          loadingEl.classList.add('hidden');
-          bookContainer.classList.remove('hidden');
-        } else {
-          loadingEl.innerHTML = `<p class="text-rose-400">စာအုပ် မတွေ့ရှိပါ။</p>`;
+          const currentPost = data[currentId];
+          const rawTitle = currentPost.title || '';
+          const targetBaseName = getBaseTitle(rawTitle);
+          let mainBookTitle = rawTitle.split(/::|-|\.\.|chapter/i)[0].trim() || rawTitle;
+
+          // ဒီဝတ္ထုနဲ့ သက်ဆိုင်သည့် အခန်းစဉ်များ ရှာခြင်း
+          const filteredKeys = allKeys.filter(key => getBaseTitle(data[key].title) === targetBaseName);
+
+          // ၁။ ပုံ (Image) ကို ရှာဖွေတပ်ဆင်ခြင်း
+          let coverUrl = currentPost.image || currentPost.imageUrl || currentPost.img || currentPost.cover || '';
+          if (!coverUrl && filteredKeys.length > 0) {
+            for (let k of filteredKeys) {
+              const imgFound = data[k].image || data[k].imageUrl || data[k].img || data[k].cover;
+              if (imgFound) {
+                coverUrl = imgFound;
+                break;
+              }
+            }
+          }
+
+          const coverImgEl = document.getElementById('novelCover');
+          if (coverImgEl) {
+            if (coverUrl) {
+              coverImgEl.src = coverUrl;
+            } else {
+              coverImgEl.src = 'https://via.placeholder.com/200x260?text=No+Cover';
+            }
+            coverImgEl.classList.remove('hidden');
+          }
+
+          // ၂။ Summary ရှာဖွေတပ်ဆင်ခြင်း
+          let summaryText = currentPost.summary || currentPost.description || '';
+          if (!summaryText && filteredKeys.length > 0) {
+            for (let k of filteredKeys) {
+              if (data[k].summary || data[k].description) {
+                summaryText = data[k].summary || data[k].description;
+                break;
+              }
+            }
+          }
+
+          // Summary မရှိပါက Content မှ အစပိုင်း ၂၀၀ ကို ဖြတ်ထုတ်သုံးမည်
+          if (!summaryText) {
+            const mainContent = currentPost.content || '';
+            summaryText = mainContent.length > 200 ? mainContent.substring(0, 200) + '...' : mainContent;
+          }
+
+          // UI တွင် အချက်အလက်များ တပ်ဆင်ခြင်း
+          if (document.getElementById('headerNovelTitle')) document.getElementById('headerNovelTitle').textContent = mainBookTitle;
+          if (document.getElementById('novelTitle')) document.getElementById('novelTitle').textContent = mainBookTitle;
+          if (document.getElementById('novelAuthor')) document.getElementById('novelAuthor').textContent = currentPost.author || 'translate by Hunter';
+          if (document.getElementById('novelSummary')) document.getElementById('novelSummary').textContent = summaryText || 'အကြောင်းအရာ ဖော်ပြချက် မရှိသေးပါ။';
+
+          // Read First Button
+          const readFirstBtn = document.getElementById('readFirstBtn');
+          if (readFirstBtn && filteredKeys.length > 0) {
+            readFirstBtn.href = `read.html?category=${category}&id=${filteredKeys[0]}`;
+          }
+
+          // Chapter Render Helper
+          const createChapterElement = (key) => {
+            const item = data[key];
+            const chapterTitle = item.title || key;
+
+            const link = document.createElement('a');
+            link.href = `read.html?category=${category}&id=${key}`;
+            link.className = 'flex items-center gap-2 py-2 px-1 text-gray-700 hover:text-amber-600 border-b border-dashed border-gray-200 transition truncate';
+            link.innerHTML = `
+              <i class="fa-solid fa-book text-gray-800 text-xs flex-shrink-0"></i>
+              <span class="truncate">${chapterTitle}</span>
+            `;
+            return link;
+          };
+
+          // Chapter List Render
+          const chapterListEl = document.getElementById('chapterList');
+          if (chapterListEl) {
+            chapterListEl.innerHTML = '';
+            filteredKeys.forEach(key => chapterListEl.appendChild(createChapterElement(key)));
+          }
+
+          // Latest Chapters Render
+          const latestListEl = document.getElementById('latestChaptersList');
+          if (latestListEl) {
+            latestListEl.innerHTML = '';
+            const latestKeys = [...filteredKeys].reverse().slice(0, 6);
+            latestKeys.forEach(key => latestListEl.appendChild(createChapterElement(key)));
+          }
+
         }
-      });
+      } catch (err) {
+        console.error("Novel Details Error:", err);
+      }
     }
+
+    loadNovelDetails();
   </script>
 </body>
 </html> html>
