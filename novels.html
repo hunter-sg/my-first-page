@@ -15,7 +15,7 @@
       <i class="fa-solid fa-book-bookmark text-amber-400"></i> စာပေဥယျာဥ်
     </a>
     
-    <!-- Header ညာဘက်ရှိ Buttons များ (Prev Page ခလုတ်ကို ဘယ်ဘက်တွင် ထည့်ပေးထားသည်) -->
+    <!-- Header Right Buttons -->
     <div class="flex items-center gap-2">
       <a id="prevPageBtn" href="newnovels.html" class="text-xs bg-indigo-950 px-3 py-1.5 rounded-lg hover:text-amber-400 transition flex items-center gap-1.5 border border-indigo-700/50">
         <i class="fa-solid fa-arrow-left"></i> Prev Page
@@ -107,7 +107,7 @@
     const category = urlParams.get('category') || 'newnovels';
     const currentId = urlParams.get('id');
 
-    // Prev Page Button URL Update (newnovels.html သို့ ပြန်သွားရန်)
+    // Prev Page Button URL Update
     document.getElementById('prevPageBtn').href = `${category}.html`;
 
     function getBaseTitle(fullTitle) {
@@ -142,7 +142,6 @@
               document.getElementById('novelCover').src = currentPost.image || currentPost.img;
             }
 
-            // တူညီသော ဝတ္ထု၏ အခန်းများအားလုံးကို စစ်ထုတ်ပြီး စာရင်းပြခြင်း
             const allKeys = Object.keys(data);
             const filteredKeys = allKeys.filter(key => getBaseTitle(data[key].title) === targetBaseName);
 
@@ -156,9 +155,14 @@
               const link = document.createElement('a');
               link.href = `read.html?category=${category}&id=${key}`;
               link.className = 'block p-3 bg-gray-50 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg text-xs md:text-sm font-medium border border-gray-100 transition flex justify-between items-center';
+              
+              // စာအုပ် Read Icon ထည့်သွင်းထားသည်
               link.innerHTML = `
-                <span>${chapterTitle}</span>
-                <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                <span class="flex items-center gap-2 truncate">
+                  <i class="fa-solid fa-book-open text-indigo-500 text-xs"></i>
+                  <span class="truncate">${chapterTitle}</span>
+                </span>
+                <i class="fa-solid fa-chevron-right text-xs text-gray-400 flex-shrink-0 ml-2"></i>
               `;
               chapterListEl.appendChild(link);
             });
