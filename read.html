@@ -32,13 +32,11 @@
 
     <!-- Reading Title Area -->
     <div class="text-center mb-6">
-      <!-- စာအုပ် ခေါင်းစဉ်အဓိက (ဥပမာ - ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်) -->
       <h1 id="bookMainTitle" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">...</h1>
-      <!-- Chapter ခေါင်းစဉ် (ဥပမာ - chapter 1-အခန်း (၁) - နိဒါန်း .. ရွှေရောင်ကောင်းကင် ကမ္ဘာ) -->
       <h2 id="chapterSubTitle" class="text-sm md:text-base text-gray-600 font-medium">...</h2>
     </div>
 
-    <!-- Navigation Buttons -->
+    <!-- Top Navigation Buttons -->
     <div class="flex justify-center items-center gap-3 mb-8">
       <a id="prevBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition hidden">
         <i class="fa-solid fa-chevron-left mr-1"></i> Prev Chapter
@@ -60,10 +58,23 @@
       </h3>
       
       <!-- Content Text -->
-      <div id="chapterContent" class="text-sm md:text-base text-gray-700 leading-relaxed space-y-4 whitespace-pre-line">
+      <div id="chapterContent" class="text-sm md:text-base text-gray-700 leading-relaxed space-y-4 whitespace-pre-line mb-8">
         <div class="text-center py-8 text-gray-400">
           <i class="fa-solid fa-spinner fa-spin mr-2"></i> စာဖတ်ရန် ပြင်ဆင်နေပါသည်...
         </div>
+      </div>
+
+      <!-- Bottom Navigation Buttons (စာအုပ်အောက်ဆုံးတွင် ပြသရန်) -->
+      <div class="pt-6 border-t border-gray-100 flex justify-center items-center gap-3">
+        <a id="bottomPrevBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition hidden">
+          <i class="fa-solid fa-chevron-left mr-1"></i> Prev Chapter
+        </a>
+        <a id="bottomNovelListBtn" href="#" class="bg-slate-800 hover:bg-slate-900 text-white p-2.5 rounded-lg transition" title="Chapter List">
+          <i class="fa-solid fa-list text-xs"></i>
+        </a>
+        <a id="bottomNextBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition hidden">
+          Next Chapter <i class="fa-solid fa-chevron-right ml-1"></i>
+        </a>
       </div>
     </div>
 
@@ -105,18 +116,16 @@
           if (currentPost) {
             const rawTitle = currentPost.title || '';
             
-            // ၁။ ပင်မ စာအုပ်အမည်ကို ခွဲထုတ်ခြင်း (ဥပမာ - ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်)
+            // ၁။ ပင်မ စာအုပ်အမည် ခွဲထုတ်ခြင်း
             let mainBookTitle = rawTitle.split(/::|-|\.\.|chapter/i)[0].trim();
             
-            // ၂။ Chapter နာမည်သီးသန့် ရရှိရန် စာအုပ်အမည်ကို ရှေ့ကနေ ဖယ်ထုတ်ခြင်း
+            // ၂။ Chapter နာမည်သီးသန့် ခွဲထုတ်ခြင်း
             let chapterOnlyTitle = rawTitle;
             if (rawTitle.toLowerCase().includes(mainBookTitle.toLowerCase())) {
               chapterOnlyTitle = rawTitle.replace(new RegExp(mainBookTitle, 'gi'), '').trim();
-              // ရှေ့တွင် ကျန်ခဲ့သော : သို့မဟုတ် - သို့မဟုတ် Space များကို ရှင်းထုတ်ခြင်း
               chapterOnlyTitle = chapterOnlyTitle.replace(/^[:\-\s]+/, '').trim();
             }
 
-            // အကယ်၍ ခွဲထုတ်လိုက်လို့ အလွတ်ဖြစ်သွားပါက မူလ rawTitle အတိုင်း ထားမည်
             if (!chapterOnlyTitle) {
               chapterOnlyTitle = rawTitle;
             }
@@ -128,27 +137,38 @@
             document.getElementById('breadChapter').textContent = chapterOnlyTitle;
             document.getElementById('chapterContent').textContent = currentPost.content || currentPost.summary || 'စာဖတ်ရန် အကြောင်းအရာ မရှိသေးပါ။';
 
-            // Back To Novel Link Logic
-            const novelListBtn = document.getElementById('novelListBtn');
-            const backToNovel = document.getElementById('backToNovel');
+            // Novel List Link
             const novelUrl = `novels.html?category=${category}&id=${currentId}`;
+            document.getElementById('novelListBtn').href = novelUrl;
+            document.getElementById('bottomNovelListBtn').href = novelUrl;
             
-            novelListBtn.href = novelUrl;
+            const backToNovel = document.getElementById('backToNovel');
             backToNovel.href = novelUrl;
             backToNovel.textContent = mainBookTitle;
 
-            // Prev & Next Navigation Logic
+            // Prev & Next Navigation Logic (Top & Bottom)
             const currentIndex = keys.indexOf(currentId);
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
+            const bottomPrevBtn = document.getElementById('bottomPrevBtn');
+            const bottomNextBtn = document.getElementById('bottomNextBtn');
 
             if (currentIndex > 0) {
-              prevBtn.href = `read.html?category=${category}&id=${keys[currentIndex - 1]}`;
+              const prevUrl = `read.html?category=${category}&id=${keys[currentIndex - 1]}`;
+              prevBtn.href = prevUrl;
               prevBtn.classList.remove('hidden');
+              
+              bottomPrevBtn.href = prevUrl;
+              bottomPrevBtn.classList.remove('hidden');
             }
+            
             if (currentIndex < keys.length - 1) {
-              nextBtn.href = `read.html?category=${category}&id=${keys[currentIndex + 1]}`;
+              const nextUrl = `read.html?category=${category}&id=${keys[currentIndex + 1]}`;
+              nextBtn.href = nextUrl;
               nextBtn.classList.remove('hidden');
+
+              bottomNextBtn.href = nextUrl;
+              bottomNextBtn.classList.remove('hidden');
             }
           }
         }
