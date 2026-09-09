@@ -71,26 +71,6 @@
 
   <!-- Firebase Logic -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
-      authDomain: "my-new-projects-e2d79.firebaseapp.com",
-      databaseURL: "https://my-new-projects-e2d79-default-rtdb.firebaseio.com",
-      projectId: "my-new-projects-e2d79",
-      storageBucket: "my-new-projects-e2d79.firebasestorage.app",
-      messagingSenderId: "544924460381",
-      appId: "1:544924460381:web:711d1427a2caaaaaf6b4b4"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const category = urlParams.get('category') || 'newnovels';
-    const currentId = urlParams.get('id');
-
     async function loadChapter() {
       if (!currentId) return;
 
@@ -105,17 +85,30 @@
           if (currentPost) {
             const rawTitle = currentPost.title || '';
             
-            // စာအုပ်အမည် နှင့် Chapter နာမည် ခွဲထုတ်ခြင်း
+            // ၁။ ပင်မ စာအုပ်အမည်ကို ခွဲထုတ်ခြင်း (ဥပမာ - ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်)
             let mainBookTitle = rawTitle.split(/::|-|\.\.|chapter/i)[0].trim();
             
-            // UI ထဲသို့ တင်ခြင်း
-            document.getElementById('bookMainTitle').textContent = mainBookTitle;
-            document.getElementById('chapterSubTitle').textContent = rawTitle;
-            document.getElementById('contentHeaderTitle').textContent = rawTitle;
-            document.getElementById('breadChapter').textContent = rawTitle;
+            // ၂။ Chapter နာမည်သီးသန့် ရရှိရန် စာအုပ်အမည်ကို ရှေ့ကနေ ဖယ်ထုတ်ခြင်း
+            let chapterOnlyTitle = rawTitle;
+            if (rawTitle.toLowerCase().includes(mainBookTitle.toLowerCase())) {
+              chapterOnlyTitle = rawTitle.replace(new RegExp(mainBookTitle, 'gi'), '').trim();
+              // ရှေ့မှာ ကျန်ခဲ့သော : သို့မဟုတ် - သို့မဟုတ် Space များကို ရှင်းထုတ်ခြင်း
+              chapterOnlyTitle = chapterOnlyTitle.replace(/^[:\-\s]+/, '').trim();
+            }
+
+            // အကယ်၍ ခွဲထုတ်လိုက်လို့ အလွတ်ဖြစ်သွားပါက မူလ rawTitle အတိုင်း ထားမည်
+            if (!chapterOnlyTitle) {
+              chapterOnlyTitle = rawTitle;
+            }
+
+            // UI တွင် တင်ဆက်ခြင်း
+            document.getElementById('bookMainTitle').textContent = mainBookTitle; // ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်
+            document.getElementById('chapterSubTitle').textContent = chapterOnlyTitle; // chapter 1-အခန်း (၁) - နိဒါန်း .. ရွှေရောင်ကောင်းကင် ကမ္ဘာ
+            document.getElementById('contentHeaderTitle').textContent = chapterOnlyTitle; // Chapter အစတွင် ပေါ်မည့် နာမည်
+            document.getElementById('breadChapter').textContent = chapterOnlyTitle;
             document.getElementById('chapterContent').textContent = currentPost.content || currentPost.summary || 'စာဖတ်ရန် အကြောင်းအရာ မရှိသေးပါ။';
 
-            // Back To Novel Link
+            // Back To Novel Link Logic
             const novelListBtn = document.getElementById('novelListBtn');
             const backToNovel = document.getElementById('backToNovel');
             const novelUrl = `novels.html?category=${category}&id=${currentId}`;
@@ -124,7 +117,7 @@
             backToNovel.href = novelUrl;
             backToNovel.textContent = mainBookTitle;
 
-            // Prev & Next Chapter Navigation Logic
+            // Prev & Next Navigation Logic
             const currentIndex = keys.indexOf(currentId);
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
@@ -143,8 +136,6 @@
         console.error("Read Chapter Error:", err);
       }
     }
-
-    loadChapter();
   </script>
 </body>
 </html>
