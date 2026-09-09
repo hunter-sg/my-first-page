@@ -1,158 +1,137 @@
 <!DOCTYPE html>
 <html lang="my">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>အခန်း ၁ - ကောင်းကင် ကမ္ဘာ</title>
-    <!-- Font Awesome Icons အတွက် CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Pyidaungsu', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f8f9fa;
-            color: #333;
-            padding: 20px;
-        }
-
-        /* Top Header Breadcrumb Style */
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 30px;
-        }
-
-        .breadcrumb a {
-            color: #555;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .breadcrumb a:hover {
-            color: #0b4b6f;
-        }
-
-        .breadcrumb .separator {
-            margin: 0 8px;
-            color: #888;
-        }
-
-        .breadcrumb .current {
-            color: #666;
-        }
-
-        /* Chapter Main Content Style */
-        .chapter-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .chapter-header {
-            text-align: right; /* ပုံအတိုင်း ညာဘက်ကပ်လိုပါက right ထားပါ (သို့) center ထားနိုင်ပါသည် */
-            margin-bottom: 25px;
-        }
-
-        .novel-title {
-            color: #3e7b9d;
-            font-size: 26px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .chapter-title {
-            color: #444;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        /* Navigation Buttons Style */
-        .nav-buttons {
-            display: flex;
-            justify-content: flex-end; /* ညာဘက်သို့ ကပ်ရန် */
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn {
-            background-color: #0d4663;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 8px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 2px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: background-color 0.2s ease;
-        }
-
-        .btn:hover {
-            background-color: #082d40;
-        }
-
-        .btn-icon {
-            padding: 8px 12px;
-        }
-
-        /* Reading Text Content */
-        .chapter-body {
-            margin-top: 40px;
-            line-height: 1.8;
-            font-size: 16px;
-            color: #222;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>စာဖတ်ရန် - Literature Garden</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-indigo-950 text-white min-h-screen flex flex-col font-sans select-none">
 
-    <!-- Header / Breadcrumb Section -->
-    <nav class="breadcrumb">
-        <a href="#"><i class="fa-solid fa-house"></i> Home</a>
-        <span class="separator">›</span>
-        <a href="#">ကောင်းကင်ဘုံကို ဓါးပြတိုက်မယ်</a>
-        <span class="separator">›</span>
-        <span class="current">အခန်း ၁ - ကောင်းကင် ကမ္ဘာ</span>
-    </nav>
+  <!-- Header -->
+  <header class="bg-indigo-900 border-b border-indigo-800 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="javascript:history.back()" class="text-amber-400 hover:text-amber-300 flex items-center gap-2 text-sm font-bold">
+        <i class="fa-solid fa-arrow-left"></i> နောက်သို့
+      </a>
+      <span class="text-lg font-bold text-amber-400">စာပေဥယျာဉ်</span>
+      <div class="w-16"></div> <!-- Spacer for Alignment -->
+    </div>
+  </header>
 
-    <!-- Main Content Section -->
-    <div class="chapter-container">
-        
-        <div class="chapter-header">
-            <!-- စာအုပ် Title -->
-            <h1 class="novel-title">ကောင်းကင်ဘုံကို ဓါးပြတိုက်မယ်</h1>
-            
-            <!-- အခန်း Title -->
-            <h2 class="chapter-title">အခန်း ၁ - ကောင်းကင် ကမ္ဘာ</h2>
-            
-            <!-- Navigation Buttons -->
-            <div class="nav-buttons">
-                <a href="#" class="btn"><i class="fa-solid fa-angle-left"></i> ရှေ့ အခန်း</a>
-                <a href="#" class="btn btn-icon" title="အခန်းဇယား"><i class="fa-solid fa-list-ul"></i></a>
-                <a href="#" class="btn">နောက်အခန်း <i class="fa-solid fa-angle-right"></i></a>
-            </div>
-        </div>
-
-        <!-- အခန်းစာပိုဒ်များ -->
-        <article class="chapter-body">
-            <p>ဒီနေရာမှာ စာဖတ်သူများ ဖတ်ရှုရန် စာပိုဒ်များကို ထည့်သွင်းနိုင်ပါသည်။...</p>
-        </article>
-
+  <!-- Main Content -->
+  <main class="flex-1 max-w-3xl w-full mx-auto p-4 md:p-6">
+    
+    <!-- Loading Container -->
+    <div id="loading" class="text-center py-20 text-gray-400">
+      <i class="fa-solid fa-spinner fa-spin text-4xl text-amber-400 mb-3"></i>
+      <p>စာမူ ရယူနေပါသည်...</p>
     </div>
 
+    <!-- Content Container (Hidden by default) -->
+    <article id="readerContainer" class="hidden bg-indigo-900/40 border border-indigo-800/80 backdrop-blur rounded-2xl p-5 md:p-8 shadow-xl space-y-6">
+      
+      <!-- Novel Header Info -->
+      <div class="border-b border-indigo-800/80 pb-5 text-center">
+        <h1 id="bookTitle" class="text-2xl md:text-3xl font-bold text-amber-400 mb-2"></h1>
+        <h2 id="chapterTitle" class="text-base md:text-lg font-medium text-amber-200/90 mb-3"></h2>
+        
+        <div class="flex items-center justify-center gap-4 text-xs text-gray-300">
+          <span id="authorName" class="flex items-center gap-1">
+            <i class="fa-solid fa-pen-nib text-amber-400"></i>
+          </span>
+          <span>•</span>
+          <span id="postDate" class="flex items-center gap-1">
+            <i class="fa-regular fa-calendar"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- Main Story Content -->
+      <div id="storyContent" class="text-gray-100 text-base md:text-lg leading-relaxed whitespace-pre-line tracking-wide font-normal py-2">
+      </div>
+
+      <!-- Navigation / Action Footer -->
+      <div class="border-t border-indigo-800/80 pt-6 flex items-center justify-between">
+        <a href="novels.html" class="bg-indigo-900 hover:bg-indigo-800 border border-indigo-700 text-amber-400 text-xs font-bold px-4 py-2.5 rounded-lg transition flex items-center gap-2">
+          <i class="fa-solid fa-book-bookmark"></i> စာအုပ်စင်သို့
+        </a>
+        <a href="newnovels.html" class="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-4 py-2.5 rounded-lg transition flex items-center gap-2">
+          စာမူသစ်များ <i class="fa-solid fa-chevron-right"></i>
+        </a>
+      </div>
+
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-indigo-900/60 border-t border-indigo-800 py-4 text-center text-xs text-gray-400 mt-8">
+    <p>© 2026 Literature Garden. All rights reserved.</p>
+  </footer>
+
+  <!-- Firebase JavaScript Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
+      authDomain: "my-new-projects-e2d79.firebaseapp.com",
+      databaseURL: "https://my-new-projects-e2d79-default-rtdb.firebaseio.com",
+      projectId: "my-new-projects-e2d79",
+      storageBucket: "my-new-projects-e2d79.firebasestorage.app",
+      messagingSenderId: "544924460381",
+      appId: "1:544924460381:web:711d1427a2caaaaaf6b4b4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // URL မှ Parameters များကို ဖတ်ယူခြင်း (e.g. read.html?id=-NXxxx&cat=newnovels)
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('id');
+    const category = urlParams.get('cat') || 'newnovels';
+
+    const loadingEl = document.getElementById('loading');
+    const readerContainer = document.getElementById('readerContainer');
+
+    if (!postId) {
+      loadingEl.innerHTML = `
+        <div class="text-rose-400">
+          <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+          <p>စာမူ ID မရှိပါ။ ကျေးဇူးပြု၍ စာမူရင်းမှ ပြန်လည်ဝင်ရောက်ပါ။</p>
+        </div>`;
+    } else {
+      // Firebase မှ သက်ဆိုင်ရာ စာမူ Data ကို ဆွဲထုတ်ခြင်း
+      const postRef = ref(db, `${category}/${postId}`);
+      
+      get(postRef).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+
+          // UI ပေါ်တွင် Data များ ဖြည့်သွင်းခြင်း
+          document.getElementById('bookTitle').textContent = data.bookTitle || data.title || 'ခေါင်းစဉ်မရှိပါ';
+          document.getElementById('chapterTitle').textContent = data.displayTitle || data.chapter || '';
+          document.getElementById('authorName').innerHTML = `<i class="fa-solid fa-pen-nib text-amber-400"></i> ${data.author || 'အမည်မသိ'}`;
+          document.getElementById('postDate').innerHTML = `<i class="fa-regular fa-calendar"></i> ${data.date || ''}`;
+          document.getElementById('storyContent').textContent = data.content || 'စာသား မရှိသေးပါ။';
+
+          // Loading ကို ပိတ်ပြီး Reader UI ကို ပြသခြင်း
+          loadingEl.classList.add('hidden');
+          readerContainer.classList.remove('hidden');
+        } else {
+          loadingEl.innerHTML = `
+            <div class="text-rose-400">
+              <i class="fa-solid fa-file-circle-xmark text-3xl mb-2"></i>
+              <p>ရှာဖွေနေသော စာမူကို မတွေ့ရှိပါ။</p>
+            </div>`;
+        }
+      }).catch((error) => {
+        console.error("Data Fetch Error:", error);
+        loadingEl.innerHTML = `<p class="text-rose-400">Error: ${error.message}</p>`;
+      });
+    }
+  </script>
 </body>
 </html>
