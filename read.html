@@ -22,7 +22,7 @@
   <main class="container mx-auto max-w-3xl my-6 px-4 flex-grow">
     
     <!-- Breadcrumb Navigation -->
-    <nav class="flex items-center gap-2 text-xs text-gray-500 mb-6">
+    <nav class="flex items-center gap-2 text-xs text-gray-500 mb-6 flex-wrap">
       <a href="index.html" class="hover:text-indigo-600"><i class="fa-solid fa-house"></i> Home</a>
       <i class="fa-solid fa-chevron-right text-[10px]"></i>
       <a id="backToNovel" href="#" class="hover:text-indigo-600 font-medium">ဝတ္ထုစာမျက်နှာ</a>
@@ -32,9 +32,9 @@
 
     <!-- Reading Title Area -->
     <div class="text-center mb-6">
-      <!-- စာအုပ် ခေါင်းစဉ်အဓိက (အလိုအလျောက် ပြောင်းမည်) -->
+      <!-- စာအုပ် ခေါင်းစဉ်အဓိက (ဥပမာ - ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်) -->
       <h1 id="bookMainTitle" class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">...</h1>
-      <!-- Chapter ခေါင်းစဉ် -->
+      <!-- Chapter ခေါင်းစဉ် (ဥပမာ - chapter 1-အခန်း (၁) - နိဒါန်း .. ရွှေရောင်ကောင်းကင် ကမ္ဘာ) -->
       <h2 id="chapterSubTitle" class="text-sm md:text-base text-gray-600 font-medium">...</h2>
     </div>
 
@@ -71,6 +71,26 @@
 
   <!-- Firebase Logic -->
   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
+      authDomain: "my-new-projects-e2d79.firebaseapp.com",
+      databaseURL: "https://my-new-projects-e2d79-default-rtdb.firebaseio.com",
+      projectId: "my-new-projects-e2d79",
+      storageBucket: "my-new-projects-e2d79.firebasestorage.app",
+      messagingSenderId: "544924460381",
+      appId: "1:544924460381:web:711d1427a2caaaaaf6b4b4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category') || 'newnovels';
+    const currentId = urlParams.get('id');
+
     async function loadChapter() {
       if (!currentId) return;
 
@@ -92,7 +112,7 @@
             let chapterOnlyTitle = rawTitle;
             if (rawTitle.toLowerCase().includes(mainBookTitle.toLowerCase())) {
               chapterOnlyTitle = rawTitle.replace(new RegExp(mainBookTitle, 'gi'), '').trim();
-              // ရှေ့မှာ ကျန်ခဲ့သော : သို့မဟုတ် - သို့မဟုတ် Space များကို ရှင်းထုတ်ခြင်း
+              // ရှေ့တွင် ကျန်ခဲ့သော : သို့မဟုတ် - သို့မဟုတ် Space များကို ရှင်းထုတ်ခြင်း
               chapterOnlyTitle = chapterOnlyTitle.replace(/^[:\-\s]+/, '').trim();
             }
 
@@ -102,9 +122,9 @@
             }
 
             // UI တွင် တင်ဆက်ခြင်း
-            document.getElementById('bookMainTitle').textContent = mainBookTitle; // ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်
-            document.getElementById('chapterSubTitle').textContent = chapterOnlyTitle; // chapter 1-အခန်း (၁) - နိဒါန်း .. ရွှေရောင်ကောင်းကင် ကမ္ဘာ
-            document.getElementById('contentHeaderTitle').textContent = chapterOnlyTitle; // Chapter အစတွင် ပေါ်မည့် နာမည်
+            document.getElementById('bookMainTitle').textContent = mainBookTitle;
+            document.getElementById('chapterSubTitle').textContent = chapterOnlyTitle;
+            document.getElementById('contentHeaderTitle').textContent = chapterOnlyTitle;
             document.getElementById('breadChapter').textContent = chapterOnlyTitle;
             document.getElementById('chapterContent').textContent = currentPost.content || currentPost.summary || 'စာဖတ်ရန် အကြောင်းအရာ မရှိသေးပါ။';
 
@@ -136,6 +156,8 @@
         console.error("Read Chapter Error:", err);
       }
     }
+
+    loadChapter();
   </script>
 </body>
 </html>
