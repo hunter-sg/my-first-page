@@ -36,16 +36,19 @@
       <h2 id="chapterSubTitle" class="text-sm md:text-base text-gray-600 font-medium">...</h2>
     </div>
 
-    <!-- Top Navigation Buttons -->
-    <div class="flex justify-center items-center gap-3 mb-8">
-      <a id="prevBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition hidden">
-        <i class="fa-solid fa-chevron-left mr-1"></i> Prev Chapter
+    <!-- Top Navigation Buttons & Dropdown -->
+    <div class="flex justify-center items-center gap-2 mb-8">
+      <a id="prevBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-3 py-2.5 rounded-lg transition hidden flex items-center gap-1">
+        <i class="fa-solid fa-chevron-left"></i> Prev Chapter
       </a>
-      <a id="novelListBtn" href="#" class="bg-slate-800 hover:bg-slate-900 text-white p-2.5 rounded-lg transition" title="Chapter List">
-        <i class="fa-solid fa-list text-xs"></i>
-      </a>
-      <a id="nextBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition hidden">
-        Next Chapter <i class="fa-solid fa-chevron-right ml-1"></i>
+
+      <!-- Chapter Dropdown Select Menu (Top) -->
+      <select id="chapterSelectTop" class="bg-slate-800 text-white text-xs font-semibold py-2.5 px-3 rounded-lg border border-slate-700 outline-none cursor-pointer max-w-[200px] sm:max-w-[280px] truncate">
+        <option value="">Chapter List Loading...</option>
+      </select>
+
+      <a id="nextBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-3 py-2.5 rounded-lg transition hidden flex items-center gap-1">
+        Next Chapter <i class="fa-solid fa-chevron-right"></i>
       </a>
     </div>
 
@@ -64,16 +67,19 @@
         </div>
       </div>
 
-      <!-- Bottom Navigation Buttons (စာအုပ်အောက်ဆုံးတွင် ပြသရန်) -->
-      <div class="pt-6 border-t border-gray-100 flex justify-center items-center gap-3">
-        <a id="bottomPrevBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition hidden">
-          <i class="fa-solid fa-chevron-left mr-1"></i> Prev Chapter
+      <!-- Bottom Navigation Buttons & Dropdown -->
+      <div class="pt-6 border-t border-gray-100 flex justify-center items-center gap-2">
+        <a id="bottomPrevBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-3 py-2.5 rounded-lg transition hidden flex items-center gap-1">
+          <i class="fa-solid fa-chevron-left"></i> Prev Chapter
         </a>
-        <a id="bottomNovelListBtn" href="#" class="bg-slate-800 hover:bg-slate-900 text-white p-2.5 rounded-lg transition" title="Chapter List">
-          <i class="fa-solid fa-list text-xs"></i>
-        </a>
-        <a id="bottomNextBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition hidden">
-          Next Chapter <i class="fa-solid fa-chevron-right ml-1"></i>
+
+        <!-- Chapter Dropdown Select Menu (Bottom) -->
+        <select id="chapterSelectBottom" class="bg-slate-800 text-white text-xs font-semibold py-2.5 px-3 rounded-lg border border-slate-700 outline-none cursor-pointer max-w-[200px] sm:max-w-[280px] truncate">
+          <option value="">Chapter List Loading...</option>
+        </select>
+
+        <a id="bottomNextBtn" href="#" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-3 py-2.5 rounded-lg transition hidden flex items-center gap-1">
+          Next Chapter <i class="fa-solid fa-chevron-right"></i>
         </a>
       </div>
     </div>
@@ -102,6 +108,15 @@
     const category = urlParams.get('category') || 'newnovels';
     const currentId = urlParams.get('id');
 
+    // စာအုပ်အမည်ကို စစ်ထုတ်ပေးသည့် Helper Function
+    function getBaseTitle(fullTitle) {
+      if (!fullTitle) return '';
+      let clean = fullTitle.trim();
+      if (clean.toLowerCase().includes('shadow slave')) return 'shadow slave';
+      if (clean.includes('ကောင်းကင်ဘုံကို')) return 'ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်';
+      return clean.split(/::|-|\.\.|chapter/i)[0].trim().toLowerCase();
+    }
+
     async function loadChapter() {
       if (!currentId) return;
 
@@ -110,12 +125,13 @@
         const snapshot = await get(child(dbRef, category));
         if (snapshot.exists()) {
           const data = snapshot.val();
-          const keys = Object.keys(data);
+          const allKeys = Object.keys(data);
           const currentPost = data[currentId];
 
           if (currentPost) {
             const rawTitle = currentPost.title || '';
-            
+            const targetBaseName = getBaseTitle(rawTitle);
+
             // ၁။ ပင်မ စာအုပ်အမည် ခွဲထုတ်ခြင်း
             let mainBookTitle = rawTitle.split(/::|-|\.\.|chapter/i)[0].trim();
             
@@ -125,10 +141,7 @@
               chapterOnlyTitle = rawTitle.replace(new RegExp(mainBookTitle, 'gi'), '').trim();
               chapterOnlyTitle = chapterOnlyTitle.replace(/^[:\-\s]+/, '').trim();
             }
-
-            if (!chapterOnlyTitle) {
-              chapterOnlyTitle = rawTitle;
-            }
+            if (!chapterOnlyTitle) chapterOnlyTitle = rawTitle;
 
             // UI တွင် တင်ဆက်ခြင်း
             document.getElementById('bookMainTitle').textContent = mainBookTitle;
@@ -137,36 +150,73 @@
             document.getElementById('breadChapter').textContent = chapterOnlyTitle;
             document.getElementById('chapterContent').textContent = currentPost.content || currentPost.summary || 'စာဖတ်ရန် အကြောင်းအရာ မရှိသေးပါ။';
 
-            // Novel List Link
+            // Back to Novel Link
             const novelUrl = `novels.html?category=${category}&id=${currentId}`;
-            document.getElementById('novelListBtn').href = novelUrl;
-            document.getElementById('bottomNovelListBtn').href = novelUrl;
-            
             const backToNovel = document.getElementById('backToNovel');
             backToNovel.href = novelUrl;
             backToNovel.textContent = mainBookTitle;
 
-            // Prev & Next Navigation Logic (Top & Bottom)
-            const currentIndex = keys.indexOf(currentId);
+            // ၃။ တူညီသော စာအုပ်အမည်ရှိသည့် Chapter များကိုသာ စစ်ထုတ်ခြင်း
+            const filteredKeys = allKeys.filter(key => {
+              const itemTitle = data[key].title || '';
+              return getBaseTitle(itemTitle) === targetBaseName;
+            });
+
+            // ၄။ Select Menu (Dropdown) ထဲသို့ Chapter များ ဖြည့်သွင်းခြင်း
+            const selectTop = document.getElementById('chapterSelectTop');
+            const selectBottom = document.getElementById('chapterSelectBottom');
+            
+            selectTop.innerHTML = '';
+            selectBottom.innerHTML = '';
+
+            filteredKeys.forEach(key => {
+              const item = data[key];
+              let optionText = item.title || key;
+
+              // Dropdown Option အဖြစ် ပေါင်းထည့်ခြင်း
+              const optTop = document.createElement('option');
+              optTop.value = key;
+              optTop.textContent = optionText;
+              if (key === currentId) optTop.selected = true;
+
+              const optBottom = document.createElement('option');
+              optBottom.value = key;
+              optBottom.textContent = optionText;
+              if (key === currentId) optBottom.selected = true;
+
+              selectTop.appendChild(optTop);
+              selectBottom.appendChild(optBottom);
+            });
+
+            // Dropdown Change Event Handling (တစ်ခုခု ရွေးလိုက်ပါက သက်ဆိုင်ရာ အခန်းသို့ သွားမည်)
+            const handleSelectChange = (e) => {
+              const selectedKey = e.target.value;
+              if (selectedKey) {
+                window.location.href = `read.html?category=${category}&id=${selectedKey}`;
+              }
+            };
+            selectTop.onchange = handleSelectChange;
+            selectBottom.onchange = handleSelectChange;
+
+            // ၅။ Prev & Next Chapter Navigation Logic
+            const currentIndex = filteredKeys.indexOf(currentId);
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             const bottomPrevBtn = document.getElementById('bottomPrevBtn');
             const bottomNextBtn = document.getElementById('bottomNextBtn');
 
             if (currentIndex > 0) {
-              const prevUrl = `read.html?category=${category}&id=${keys[currentIndex - 1]}`;
+              const prevUrl = `read.html?category=${category}&id=${filteredKeys[currentIndex - 1]}`;
               prevBtn.href = prevUrl;
               prevBtn.classList.remove('hidden');
-              
               bottomPrevBtn.href = prevUrl;
               bottomPrevBtn.classList.remove('hidden');
             }
-            
-            if (currentIndex < keys.length - 1) {
-              const nextUrl = `read.html?category=${category}&id=${keys[currentIndex + 1]}`;
+
+            if (currentIndex !== -1 && currentIndex < filteredKeys.length - 1) {
+              const nextUrl = `read.html?category=${category}&id=${filteredKeys[currentIndex + 1]}`;
               nextBtn.href = nextUrl;
               nextBtn.classList.remove('hidden');
-
               bottomNextBtn.href = nextUrl;
               bottomNextBtn.classList.remove('hidden');
             }
