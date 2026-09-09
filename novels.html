@@ -166,19 +166,59 @@
             const rawTitle = currentPost.title || '';
             const targetBaseName = getBaseTitle(rawTitle);
 
-            let mainBookTitle = rawTitle.split(/::|-|\.\.|chapter/i)[0].trim();
+            let mainBookTitle = rawTitle.split(/::|-|\.\.|chapter/i)[0].trim() || rawTitle;
 
+            // Matching keys ရှာဖွေခြင်း
+            const allKeys = Object.keys(data);
+            const filteredKeys = allKeys.filter(key => getBaseTitle(data[key].title) === targetBaseName);
+
+            // ၁။ ပုံ (Image) ကို ရှာဖွေဖော်ပြခြင်း
+            let coverUrl = currentPost.image || currentPost.imageUrl || currentPost.img || '';
+            
+            // လက်ရှိ post မှာ ပုံမပါရင် ဒီဝတ္ထုရဲ့ အခြား အခန်းတွေမှာ ပုံပါသလား ရှာမည်
+            if (!coverUrl && filteredKeys.length > 0) {
+              for (let k of filteredKeys) {
+                const imgFound = data[k].image || data[k].imageUrl || data[k].img;
+                if (imgFound) {
+                  coverUrl = imgFound;
+                  break;
+                }
+              }
+            }
+
+            const coverImgEl = document.getElementById('novelCover');
+            if (coverUrl) {
+              coverImgEl.src = coverUrl;
+              coverImgEl.classList.remove('hidden');
+            } else {
+              // ပုံလုံးဝမရှိပါက Placeholder ပုံ ပြပေးရန်
+              coverImgEl.src = 'https://via.placeholder.com/200x260?text=No+Cover';
+              coverImgEl.classList.remove('hidden');
+            }
+
+            // ၂။ Summary ကို ရှာဖွေဖော်ပြခြင်း
+            let summaryText = currentPost.summary || currentPost.description || '';
+            
+            if (!summaryText && filteredKeys.length > 0) {
+              for (let k of filteredKeys) {
+                if (data[k].summary || data[k].description) {
+                  summaryText = data[k].summary || data[k].description;
+                  break;
+                }
+              }
+            }
+
+            // Summary မရှိသေးပါက Content အစပိုင်း စာလုံး ၂၀၀ ကိုဖြတ်ပြီး Summary အဖြစ်သုံးမည်
+            if (!summaryText) {
+              const mainContent = currentPost.content || '';
+              summaryText = mainContent.length > 200 ? mainContent.substring(0, 200) + '...' : mainContent;
+            }
+
+            // UI ပေါ်သို့ အချက်အလက်များ တပ်ဆင်ခြင်း
             document.getElementById('headerNovelTitle').textContent = mainBookTitle;
             document.getElementById('novelTitle').textContent = mainBookTitle;
             document.getElementById('novelAuthor').textContent = currentPost.author || 'translate by Hunter';
-            document.getElementById('novelSummary').textContent = currentPost.summary || currentPost.content || 'အကြောင်းအရာ မရှိသေးပါ။';
-            
-            if (currentPost.image || currentPost.img) {
-              document.getElementById('novelCover').src = currentPost.image || currentPost.img;
-            }
-
-            const allKeys = Object.keys(data);
-            const filteredKeys = allKeys.filter(key => getBaseTitle(data[key].title) === targetBaseName);
+            document.getElementById('novelSummary').textContent = summaryText || 'အကြောင်းအရာ ဖော်ပြချက် မရှိသေးပါ။';
 
             // Read First Button Link set
             if (filteredKeys.length > 0) {
