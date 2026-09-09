@@ -1,4 +1,143 @@
-<!DOCTYPE html>
+<!<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>စာအုပ်အသေးစိတ် - Literature Garden</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
+    body { font-family: 'Padauk', sans-serif; }
+  </style>
+</head>
+<body class="bg-[#1e1b4b] text-white min-h-screen flex flex-col">
+
+  <header class="bg-[#2e2a72] border-b border-[#3b358c] sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="newnovels.html" class="text-amber-400 hover:text-amber-300 flex items-center gap-2 text-sm font-bold">
+        <i class="fa-solid fa-arrow-left"></i> စာအုပ်စင်သို့
+      </a>
+      <span class="text-lg font-bold text-amber-400">စာပေဥယျာဉ်</span>
+      <div class="w-16"></div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-4xl w-full mx-auto p-4 md:p-6 my-4">
+    <div id="loading" class="text-center py-20 text-gray-400">
+      <i class="fa-solid fa-spinner fa-spin text-4xl text-amber-400 mb-3"></i>
+      <p>အချက်အလက်များ ရယူနေပါသည်...</p>
+    </div>
+
+    <div id="bookContainer" class="hidden space-y-6">
+      <!-- Book Header Card -->
+      <div class="bg-[#24205a]/90 border border-[#3b358c] rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col md:flex-row gap-6 items-center md:items-start">
+        <img id="bookCover" src="" class="w-40 h-56 md:w-48 md:h-64 object-cover rounded-xl border-2 border-amber-400/40 shadow-lg">
+        
+        <div class="flex-1 text-center md:text-left space-y-3">
+          <h1 id="bookTitle" class="text-2xl md:text-3xl font-bold text-amber-400"></h1>
+          <p id="bookAuthor" class="text-sm text-gray-300 flex items-center justify-center md:justify-start gap-2">
+            <i class="fa-solid fa-pen-nib text-amber-400"></i> <span></span>
+          </p>
+          <div class="border-t border-[#3b358c]/60 pt-3">
+            <h3 class="text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1">အကျဉ်းချုပ်</h3>
+            <p id="bookSummary" class="text-sm text-gray-300 leading-relaxed"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter List Section -->
+      <div class="bg-[#24205a]/90 border border-[#3b358c] rounded-2xl p-6 md:p-8 shadow-2xl">
+        <h2 class="text-lg md:text-xl font-bold text-amber-400 border-b border-[#3b358c]/60 pb-3 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-list-ol"></i> အခန်းစဉ်များ (Chapter List)
+        </h2>
+
+        <div id="chapterList" class="space-y-2">
+          <!-- Chapters will be rendered here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-[#2e2a72]/60 border-t border-[#3b358c] py-4 text-center text-xs text-gray-400 mt-auto">
+    <p>© 2026 Literature Garden. All rights reserved.</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
+      authDomain: "my-new-projects-e2d79.firebaseapp.com",
+      databaseURL: "https://my-new-projects-e2d79-default-rtdb.firebaseio.com",
+      projectId: "my-new-projects-e2d79",
+      storageBucket: "my-new-projects-e2d79.firebasestorage.app",
+      messagingSenderId: "544924460381",
+      appId: "1:544924460381:web:711d1427a2caaaaaf6b4b4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get('id');
+
+    const loadingEl = document.getElementById('loading');
+    const bookContainer = document.getElementById('bookContainer');
+
+    if (!bookId) {
+      loadingEl.innerHTML = `<p class="text-rose-400">စာအုပ် ID မရှိပါ။</p>`;
+    } else {
+      get(ref(db, `novels/${bookId}`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          const book = snapshot.val();
+
+          document.getElementById('bookCover').src = book.coverImage || 'https://via.placeholder.com/300x400/1e1b4b/amber400?text=No+Cover';
+          document.getElementById('bookTitle').textContent = book.title;
+          document.getElementById('bookAuthor').querySelector('span').textContent = book.author || 'အမည်မသိ';
+          document.getElementById('bookSummary').textContent = book.summary || 'အကျဉ်းချုပ် မရှိပါ။';
+
+          const chapterListEl = document.getElementById('chapterList');
+          chapterListEl.innerHTML = '';
+
+          if (book.chapters) {
+            const chapters = Object.keys(book.chapters).map(key => ({
+              id: key,
+              ...book.chapters[key]
+            })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+            chapters.forEach((chap) => {
+              const displayTitle = chap.subTitle ? `${chap.chapterTitle} - ${chap.subTitle}` : chap.chapterTitle;
+
+              const chapItem = `
+                <a href="read.html?bookId=${bookId}&chapId=${chap.id}" 
+                   class="flex items-center justify-between p-3.5 bg-[#18153d] hover:bg-[#2e2a72] border border-[#3b358c]/60 rounded-xl transition duration-200 group">
+                  <div class="flex items-center gap-3">
+                    <i class="fa-regular fa-file-lines text-amber-400 group-hover:scale-110 transition"></i>
+                    <span class="text-sm font-medium text-gray-200 group-hover:text-amber-300">${displayTitle}</span>
+                  </div>
+                  <span class="text-xs text-gray-400 flex items-center gap-2">
+                    ${chap.date || ''} <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                  </span>
+                </a>
+              `;
+              chapterListEl.insertAdjacentHTML('beforeend', chapItem);
+            });
+          } else {
+            chapterListEl.innerHTML = `<p class="text-sm text-gray-400 py-4 text-center">အခန်းများ မရှိသေးပါ။</p>`;
+          }
+
+          loadingEl.classList.add('hidden');
+          bookContainer.classList.remove('hidden');
+        } else {
+          loadingEl.innerHTML = `<p class="text-rose-400">စာအုပ် မတွေ့ရှိပါ။</p>`;
+        }
+      });
+    }
+  </script>
+</body>
+</html> html>
 <html lang="my">
 <head>
   <meta charset="UTF-8">
