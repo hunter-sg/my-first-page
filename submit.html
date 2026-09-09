@@ -3,122 +3,147 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>စာမူတင်ရန် - Literature Garden</title>
+  <title>Upload Novel Chapter</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-indigo-950 text-white min-h-screen flex flex-col font-sans">
+<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
 
-  <!-- Header Section -->
-  <header class="bg-indigo-900 border-b border-indigo-800 sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 w-full max-w-2xl shadow-xl">
+    <h2 class="text-xl font-bold text-amber-400 mb-6 flex items-center gap-2">
+      <i class="fa-solid fa-pen-nib"></i> စာမူသစ် / အခန်းသစ် တင်ရန်
+    </h2>
+
+    <form id="uploadForm" class="space-y-5">
       
-      <!-- Logo -->
-      <a href="index.html" class="flex items-center space-x-2">
-        <div class="w-10 h-10 rounded-full border-2 border-amber-400 overflow-hidden flex items-center justify-center bg-indigo-950">
-          <i class="fa-solid fa-book-open text-amber-400 text-lg"></i>
-        </div>
-        <span class="text-xl font-bold text-amber-400 tracking-wide">စာပေဥယျာဉ်</span>
-      </a>
-
-      <!-- Right Controls (Clock & Menu Button) -->
-      <div class="flex items-center space-x-3">
-        <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
-          <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
-          <span id="dateDisplay" class="font-medium">00/00/0000</span>
-        </div>
-
-        <button id="menuToggleBtn" class="text-white text-xl p-2 focus:outline-none hover:text-amber-400 transition">
-          <i class="fa-solid fa-bars" id="menuIcon"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Dropdown Navigation Links -->
-    <nav id="menuList" class="hidden bg-indigo-950/95 border-t border-indigo-800/80 px-4 py-4 space-y-3">
-      <a href="index.html" class="block px-3 py-2 text-white hover:text-amber-400 rounded hover:bg-indigo-900/50">ပင်မ</a>
-      <a href="knowledges.html" class="block px-3 py-2 text-white hover:text-amber-400 rounded hover:bg-indigo-900/50">သုတရသ</a>
-      <a href="newnovels.html" class="block px-3 py-2 text-white hover:text-amber-400 rounded hover:bg-indigo-900/50">ဝတ္ထု</a>
-      <a href="sports.html" class="block px-3 py-2 text-white hover:text-amber-400 rounded hover:bg-indigo-900/50">အားကစား</a>
-      <a href="poems.html" class="block px-3 py-2 text-white hover:text-amber-400 rounded hover:bg-indigo-900/50">ကဗျာ</a>
-      <a href="submit.html" class="block bg-amber-500 text-slate-950 font-bold text-center px-4 py-2 rounded-lg transition mt-2">
-        <i class="fa-solid fa-pen-to-square mr-1"></i> စာမူတင်ရန်
-      </a>
-    </nav>
-  </header>
-
-  <!-- Main Content Form -->
-  <main class="flex-1 max-w-2xl w-full mx-auto p-4 md:p-6">
-    <div class="bg-indigo-900/40 border border-indigo-800/80 backdrop-blur rounded-2xl p-6 md:p-8 shadow-xl">
-      
-      <div class="flex items-center gap-3 border-b border-indigo-800/80 pb-4 mb-6">
-        <i class="fa-solid fa-pen-to-square text-amber-400 text-2xl"></i>
-        <h1 class="text-xl md:text-2xl font-bold text-amber-400">စာမူအသစ် တင်သွင်းရန်</h1>
+      <!-- စာမူခေါင်းစဉ် (Novel Title) -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5">
+          စာမူခေါင်းစဉ် (Novel Title) <span class="text-rose-500">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="novelTitle" 
+          placeholder="ဥပမာ - ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်" 
+          required 
+          class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition"
+        >
       </div>
 
-      <form id="postForm" class="space-y-5">
-        <!-- Title -->
+      <!-- Chapter Number / Title (သီးခြား ခွဲထုတ်ထားသည့် Input Field) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs font-semibold text-gray-300 mb-1">စာမူခေါင်းစဉ် *</label>
-          <input type="text" id="postTitle" required placeholder="ခေါင်းစဉ် ရေးပါ..." class="w-full bg-indigo-950 border border-indigo-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400 transition">
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">
+            အခန်း / Chapter <span class="text-rose-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="chapterTitle" 
+            placeholder="ဥပမာ - Chapter 1 (သို့) အခန်း (၁)" 
+            required 
+            class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition"
+          >
         </div>
 
-        <!-- Category & Author -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold text-gray-300 mb-1">ကဏ္ဍ (Category) *</label>
-            <select id="postCategory" class="w-full bg-indigo-950 border border-indigo-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400 transition">
-              <option value="knowledges">သုတရသ</option>
-              <option value="newnovels">ဝတ္ထု</option>
-              <option value="sports">အားကစား</option>
-              <option value="poems">ကဗျာ</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-gray-300 mb-1">စာရေးသူ နာမည် *</label>
-            <input type="text" id="postAuthor" required placeholder="နာမည်..." class="w-full bg-indigo-950 border border-indigo-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400 transition">
-          </div>
-        </div>
-
-        <!-- Summary (ဝတ္ထု အကျဉ်းချုပ်) -->
         <div>
-          <label class="block text-xs font-semibold text-gray-300 mb-1">ဝတ္ထု အကျဉ်းချုပ် (Summary) <span class="text-amber-400/80 font-normal">(ဝတ္ထုဖြစ်ပါက ရေးပေးရန်)</span></label>
-          <textarea id="postSummary" rows="3" placeholder="ဝတ္ထု၏ အကျဉ်းချုပ်ကို ရေးပါ..." class="w-full bg-indigo-950 border border-indigo-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400 transition leading-relaxed"></textarea>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">
+            အခန်းခေါင်းစဉ် (Sub-title - Optional)
+          </label>
+          <input 
+            type="text" 
+            id="chapterSubtitle" 
+            placeholder="ဥပမာ - ရွှေရောင်ကောင်းကင် ကမ္ဘာ" 
+            class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition"
+          >
         </div>
+      </div>
 
-        <!-- Image Link -->
+      <!-- Category & Author -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs font-semibold text-gray-300 mb-1">Cover Image ရွေးချယ်ရန်</label>
-          <input type="file" id="postImageFile" accept="image/*" class="w-full bg-indigo-950 border border-indigo-800 rounded-lg px-3.5 py-2 text-sm text-white file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-600 focus:outline-none transition">
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">
+            ကဏ္ဍ (Category) <span class="text-rose-500">*</span>
+          </label>
+          <select 
+            id="category" 
+            required 
+            class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition text-slate-300"
+          >
+            <option value="newnovels">သုတရသ (New Novels)</option>
+            <option value="translated">ဘာသာပြန် ဝတ္ထုများ</option>
+            <option value="original">ပင်ကိုရေး ဝတ္ထုများ</option>
+          </select>
         </div>
 
-        <!-- Content -->
         <div>
-          <label class="block text-xs font-semibold text-gray-300 mb-1">စာမူ အကြောင်းအရာ *</label>
-          <textarea id="postContent" rows="6" required placeholder="စာမူ အပြည့်အစုံ ရေးပါ..." class="w-full bg-indigo-950 border border-indigo-800 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400 transition leading-relaxed"></textarea>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">
+            စာရေးသူ / ဘာသာပြန်သူ နာမည် <span class="text-rose-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="author" 
+            placeholder="translate by Hunter" 
+            required 
+            class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-2.5 text-sm outline-none transition"
+          >
         </div>
+      </div>
 
-        <!-- Submit Button -->
-        <button type="submit" id="submitBtn" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-lg transition flex items-center justify-center gap-2 shadow-lg">
-          <i class="fa-solid fa-paper-plane"></i> စာမူ တင်မည်
-        </button>
-      </form>
+      <!-- Summary -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5">
+          ဝတ္ထု အကျဉ်းချုပ် (Summary) <span class="text-amber-500 text-[10px]">(ဝတ္ထု ပထမဆုံး အခန်းတင်ပါက ရေးပေးရန်)</span>
+        </label>
+        <textarea 
+          id="summary" 
+          rows="3" 
+          placeholder="ဝတ္ထု၏ အကြောင်းအရာ အကျဉ်းချုပ်ကို ရေးပါ..." 
+          class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl p-3 text-sm outline-none transition"
+        ></textarea>
+      </div>
 
-    </div>
-  </main>
+      <!-- Content / Chapter Story Details -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5">
+          အခန်း စာမူအပြည့်အစုံ (Chapter Content) <span class="text-rose-500">*</span>
+        </label>
+        <textarea 
+          id="content" 
+          rows="6" 
+          placeholder="ဤအခန်း၏ ဝတ္ထု စာသားများကို ရေးပါ..." 
+          required 
+          class="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl p-3 text-sm outline-none transition"
+        ></textarea>
+      </div>
 
-  <!-- Footer -->
-  <footer class="bg-indigo-900/60 border-t border-indigo-800 py-4 text-center text-xs text-gray-400 mt-8">
-    <p>© 2026 Literature Garden. All rights reserved.</p>
-  </footer>
+      <!-- Cover Image -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Cover Image ရွေးချယ်ရန်</label>
+        <input 
+          type="file" 
+          id="coverImage" 
+          accept="image/*"
+          class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer bg-slate-950 border border-slate-700 rounded-xl p-1"
+        >
+      </div>
 
-  <!-- Firebase v10 Modular Script -->
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        id="submitBtn" 
+        class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm shadow-lg shadow-amber-500/10 mt-6"
+      >
+        <i class="fa-solid fa-cloud-arrow-up"></i> စာမူတင်မည်
+      </button>
+
+    </form>
+  </div>
+
+  <!-- Firebase Script Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Firebase Project Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
       authDomain: "my-new-projects-e2d79.firebaseapp.com",
@@ -129,100 +154,56 @@
       appId: "1:544924460381:web:711d1427a2caaaaaf6b4b4"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Live Clock Function
-    function updateClock() {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const seconds = String(now.getSeconds()).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const year = now.getFullYear();
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-      const timeEl = document.getElementById('timeDisplay');
-      const dateEl = document.getElementById('dateDisplay');
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> တင်နေပါသည်...`;
 
-      if (timeEl) timeEl.textContent = `${hours}:${minutes}:${seconds}`;
-      if (dateEl) dateEl.textContent = `${day}/${month}/${year}`;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+      const novelTitle = document.getElementById('novelTitle').value.trim();
+      const chapterTitle = document.getElementById('chapterTitle').value.trim();
+      const chapterSubtitle = document.getElementById('chapterSubtitle').value.trim();
+      const category = document.getElementById('category').value;
+      const author = document.getElementById('author').value.trim();
+      const summary = document.getElementById('summary').value.trim();
+      const content = document.getElementById('content').value.trim();
 
-    // Navigation Toggle Logic
-    const menuToggleBtn = document.getElementById('menuToggleBtn');
-    const menuList = document.getElementById('menuList');
-    const menuIcon = document.getElementById('menuIcon');
+      // ခေါင်းစဉ်နှစ်ခုပေါင်းစပ်ခြင်း (ဥပမာ - ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်: Chapter 1 - နိဒါန်း)
+      let fullDisplayTitle = novelTitle;
+      if (chapterTitle) fullDisplayTitle += `: ${chapterTitle}`;
+      if (chapterSubtitle) fullDisplayTitle += ` - ${chapterSubtitle}`;
 
-    if (menuToggleBtn && menuList) {
-      menuToggleBtn.addEventListener('click', () => {
-        menuList.classList.toggle('hidden');
-        if (menuIcon) {
-          menuIcon.classList.toggle('fa-bars');
-          menuIcon.classList.toggle('fa-xmark');
-        }
-      });
-    }
+      const postData = {
+        bookTitle: novelTitle,          // ဝတ္ထုအမည် သီးသန့်
+        chapter: chapterTitle,           // Chapter နံပါတ် သီးသန့်
+        subTitle: chapterSubtitle,       // အခန်းခေါင်းစဉ် သီးသန့်
+        title: fullDisplayTitle,         // အပြည့်အစုံ
+        author: author,
+        category: category,
+        summary: summary,
+        content: content,
+        timestamp: Date.now()
+      };
 
-    // Image File ကို Base64 String ပြောင်းပေးသည့် Function
-    const convertBase64 = (file) => {
-      return new Promise((resolve, reject) => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = () => resolve(fileReader.result);
-        fileReader.onerror = (error) => reject(error);
-      });
-    };
+      try {
+        const categoryRef = ref(db, category);
+        const newPostRef = push(categoryRef);
+        await set(newPostRef, postData);
 
-    // Form Submit Handler
-    const postForm = document.getElementById('postForm');
-    const submitBtn = document.getElementById('submitBtn');
-
-    if (postForm) {
-      postForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> စာမူ သိမ်းဆည်းနေသည်...';
-
-        try {
-          const fileInput = document.getElementById('postImageFile');
-          let imageUrl = 'photo_2026-09-07_21-25-15.jpg'; // Default Image
-
-          // ပုံရွေးထားပါက Base64 ပြောင်းခြင်း
-          if (fileInput && fileInput.files[0]) {
-            imageUrl = await convertBase64(fileInput.files[0]);
-          }
-
-          // Database သို့ Data ပို့ခြင်း
-          const category = document.getElementById('postCategory').value;
-          const newPost = {
-            title: document.getElementById('postTitle').value,
-            author: document.getElementById('postAuthor').value,
-            summary: document.getElementById('postSummary').value, // <--- Summary ထည့်သွင်းထားသည်
-            image: imageUrl,
-            content: document.getElementById('postContent').value,
-            date: new Date().toLocaleDateString('en-GB'),
-            likes: 0,
-            views: 0,
-            createdAt: Date.now()
-          };
-
-          await push(ref(db, category), newPost);
-          alert('စာမူ အောင်မြင်စွာ တင်ပြီးပါပြီ!');
-          window.location.href = 'index.html';
-
-        } catch (err) {
-          console.error("Error submitting post: ", err);
-          alert('စာမူ တင်၍ မရပါ: ' + err.message);
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> စာမူ တင်မည်';
-        }
-      });
-    }
+        alert('စာမူ အောင်မြင်စွာ တင်ပြီးပါပြီ။');
+        document.getElementById('uploadForm').reset();
+      } catch (err) {
+        console.error("Upload Error:", err);
+        alert('စာမူတင်ရာတွင် အမှားအယွင်းရှိနေပါသည်။');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> စာမူတင်မည်`;
+      }
+    });
   </script>
 </body>
 </html>
