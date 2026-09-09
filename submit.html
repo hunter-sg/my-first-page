@@ -90,7 +90,6 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -104,27 +103,31 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const storage = getStorage(app);
+
+    // FileReader ဖြင့် တိုက်ရိုက် Base64 ပြောင်းလဲပေးသည့် Function
+    function getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
 
     document.getElementById('uploadForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ပုံနှင့် စာမူ တင်နေပါသည်...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> တင်နေပါသည်...`;
 
       const category = document.getElementById('category').value;
       const fileInput = document.getElementById('coverImage');
-      let imageUrl = "";
+      let imageBase64 = "";
 
       try {
-        // ပုံ ရွေးထားပါက Firebase Storage ထဲသို့ တိုက်ရိုက် Upload တင်မည်
         if (fileInput.files.length > 0) {
-          const file = fileInput.files[0];
-          const imgRef = storageRef(storage, `covers/${Date.now()}_${file.name}`);
-          
-          const uploadResult = await uploadBytes(imgRef, file);
-          imageUrl = await getDownloadURL(uploadResult.ref);
+          imageBase64 = await getBase64(fileInput.files[0]);
         }
 
         const rawTitle = document.getElementById('novelTitle').value.trim();
@@ -138,7 +141,7 @@
           category: category,
           summary: document.getElementById('summary').value.trim(),
           content: document.getElementById('content').value.trim(),
-          coverImage: imageUrl,
+          coverImage: imageBase64,
           timestamp: Date.now()
         };
 
@@ -146,12 +149,12 @@
         const newPostRef = push(categoryRef);
         await set(newPostRef, postData);
 
-        alert('စာမူ နှင့် ပုံ အောင်မြင်စွာ တင်ပြီးပါပြီ။');
+        alert('အောင်မြင်စွာ တင်ပြီးပါပြီ။');
         window.location.href = 'index.html';
 
       } catch (err) {
         console.error("Upload Error:", err);
-        alert('စာမူတင်ရာတွင် အမှားအယွင်းရှိနေပါသည်: ' + err.message);
+        alert('အမှားအယွင်းရှိပါသည်: ' + err.message);
         btn.disabled = false;
         btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> စာမူတင်မည်`;
       }
