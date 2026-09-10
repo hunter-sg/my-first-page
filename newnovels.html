@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="my">
 <head>
-  <meta  charset="UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ဝတ္ထုများ - စာပေဥယျာဉ်</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -73,13 +73,18 @@
     </div>
   </main>
 
+  <!-- Novel Detail & Interaction Modal -->
+  <div id="novelModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div id="modalContent" class="w-full flex justify-center"></div>
+  </div>
+
   <footer class="bg-indigo-950 text-indigo-200 py-4 text-center text-xs mt-10">
     <p>© 2026 စာပေဥယျာဉ်. All rights reserved.</p>
   </footer>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -94,6 +99,8 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
     const novelsGrid = document.getElementById('novelsGrid');
+
+    let allNovels = {};
 
     // Live Clock
     function updateClock() {
@@ -127,6 +134,7 @@
       onValue(novelsRef, (snapshot) => {
         novelsGrid.innerHTML = '';
         const data = snapshot.val();
+        allNovels = data || {};
 
         if (!data) {
           novelsGrid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-xs">ဝတ္ထုများ မရှိသေးပါ။</div>`;
@@ -135,12 +143,14 @@
 
         Object.entries(data).forEach(([id, novel]) => {
           const chapterCount = novel.chapters ? Object.keys(novel.chapters).length : 0;
+          const likesCount = novel.likes || 0;
+          const viewsCount = novel.views || 0;
           const coverImage = novel.coverImage 
             ? `<img src="${novel.coverImage}" class="w-full h-48 md:h-56 object-cover rounded-t-xl" />`
             : `<div class="w-full h-48 md:h-56 bg-indigo-100 flex items-center justify-center text-indigo-500 rounded-t-xl"><i class="fa-solid fa-book-open text-4xl"></i></div>`;
 
           novelsGrid.innerHTML += `
-            <a href="novels.html?id=${id}" class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition overflow-hidden flex flex-col justify-between group">
+            <div onclick="openNovelModal('${id}')" class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition overflow-hidden flex flex-col justify-between group cursor-pointer">
               <div>
                 <div class="relative overflow-hidden">
                   ${coverImage}
@@ -154,19 +164,184 @@
                 </div>
               </div>
               <div class="px-3 py-2 bg-gray-50 border-t border-gray-100 flex justify-between items-center text-[10px] text-gray-400">
-                <span class="truncate">ရေးသူ - ${novel.author}</span>
-                <i class="fa-solid fa-chevron-right text-indigo-500"></i>
+                <span class="truncate">ရေးသူ - ${novel.author || 'မသိရပါ'}</span>
+                <div class="flex items-center gap-2">
+                  <span>👁️ ${viewsCount}</span>
+                  <span>❤️ ${likesCount}</span>
+                </div>
               </div>
-            </a>
+            </div>
           `;
         });
       });
     }
 
+    // Open Modal for Details, Likes, Views, and Comments
+    window.openNovelModal = function(novelId) {
+      const novel = allNovels[novelId];
+      if (!novel) return;
+
+      // Increment Views
+      const novelRef = ref(database, `novels/${novelId}`);
+      runTransaction(novelRef, (n) => {
+        if (n) {
+          n.views = (n.views || 0) + 1;
+        }
+        return n;
+      });
+
+      const modalContainer = document.getElementById('novelModal');
+      const modalContent = document.getElementById('modalContent');
+
+      // Render Comments
+      let commentsHtml = '';
+      if (novel.comments && Object.keys(novel.comments).length > 0) {
+        Object.values(novel.comments).forEach(c => {
+          commentsHtml += `
+            <div class="bg-gray-100/70 p-2.5 rounded-lg text-xs space-y-0.5">
+              <div class="flex justify-between font-bold text-indigo-950 text-[11px]">
+                <span>${c.name || 'ဧည့်သည်'}</span>
+                <span class="text-gray-400 text-[10px] font-normal">${c.date || ''}</span>
+              </div>
+              <p class="text-gray-700">${c.text}</p>
+            </div>
+          `;
+        });
+      } else {
+        commentsHtml = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
+      }
+
+      const coverHtml = novel.coverImage 
+        ? `<img src="${novel.coverImage}" class="w-28 h-36 object-cover rounded-lg border border-gray-100 shadow-sm flex-shrink-0" />`
+        : `<div class="w-28 h-36 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-500 flex-shrink-0"><i class="fa-solid fa-book-open text-3xl"></i></div>`;
+
+      modalContent.innerHTML = `
+        <div class="bg-white rounded-2xl max-w-2xl w-full h-[90vh] flex flex-col overflow-hidden">
+          <!-- Header -->
+          <div class="bg-indigo-50/70 px-4 py-3 border-b border-indigo-100 flex justify-between items-start flex-shrink-0">
+            <div>
+              <h2 class="text-sm md:text-base font-bold text-gray-800">${novel.title}</h2>
+              <p class="text-[11px] text-indigo-600 font-semibold">ရေးသားသူ - ${novel.author || 'မသိရပါ'}</p>
+            </div>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-lg p-1 transition flex-shrink-0">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Body -->
+          <div class="p-4 md:p-5 overflow-y-auto space-y-4 flex-grow">
+            <div class="flex gap-4 items-start">
+              ${coverHtml}
+              <div class="space-y-2 flex-grow">
+                <p class="text-xs text-gray-600 leading-relaxed">${novel.summary || 'အကျဉ်းချုပ် မရှိသေးပါ။'}</p>
+                <div class="flex items-center gap-4 text-xs text-gray-500 pt-2">
+                  <span>👁️ <span id="viewCount">${(novel.views || 0) + 1}</span> ကြည့်ရှုသူ</span>
+                  <button onclick="likeNovel('${novelId}')" class="flex items-center gap-1 hover:text-red-500 text-red-600 font-semibold transition bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
+                    ❤️ <span id="likeCount">${novel.likes || 0}</span> သဘောကျသည်
+                  </button>
+                </div>
+                <div class="pt-2">
+                  <a href="novels.html?id=${novelId}" class="inline-flex items-center gap-1.5 bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-4 py-2 rounded-lg font-bold transition">
+                    <i class="fa-solid fa-book-open"></i> ဝတ္ထုဖတ်ရှုရန်
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="border-t border-gray-100 pt-3 space-y-3">
+              <h4 class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                <i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ
+              </h4>
+
+              <!-- Comment Form -->
+              <div class="space-y-2 bg-indigo-50/40 p-3 rounded-xl border border-indigo-50">
+                <input type="text" id="commentName" placeholder="သင့်နာမည် ရေးပါ..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500">
+                <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးရန်..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                <button onclick="addNovelComment('${novelId}')" class="bg-indigo-900 text-white text-xs px-3.5 py-1.5 rounded-lg font-semibold hover:bg-indigo-800 transition float-right">
+                  မှတ်ချက် ပို့မည်
+                </button>
+                <div class="clear-both"></div>
+              </div>
+
+              <!-- Comment List -->
+              <div class="space-y-2 mt-2">
+                ${commentsHtml}
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="px-4 py-2.5 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0">
+            <button onclick="closeModal()" class="bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-5 py-2 rounded-lg font-bold transition">
+              ပိတ်မည်
+            </button>
+          </div>
+        </div>
+      `;
+
+      modalContainer.classList.remove('hidden');
+      modalContainer.classList.add('flex');
+    };
+
+    // Like Novel Function
+    window.likeNovel = async function(novelId) {
+      try {
+        const novelRef = ref(database, `novels/${novelId}`);
+        await runTransaction(novelRef, (novel) => {
+          if (novel) {
+            novel.likes = (novel.likes || 0) + 1;
+          }
+          return novel;
+        });
+
+        const likeElem = document.getElementById('likeCount');
+        if (likeElem) {
+          likeElem.textContent = parseInt(likeElem.textContent || 0) + 1;
+        }
+      } catch (err) {
+        console.error("Like ပေး၍ မရပါ: ", err);
+      }
+    };
+
+    // Add Comment Function
+    window.addNovelComment = async function(novelId) {
+      const nameInput = document.getElementById('commentName');
+      const textInput = document.getElementById('commentText');
+
+      if (!textInput.value.trim()) {
+        alert("မှတ်ချက် စာသား ရေးပေးပါ!");
+        return;
+      }
+
+      const commentData = {
+        name: nameInput.value.trim() || 'ဧည့်သည်',
+        text: textInput.value.trim(),
+        date: new Date().toLocaleDateString('en-GB')
+      };
+
+      try {
+        await push(ref(database, `novels/${novelId}/comments`), commentData);
+        alert("မှတ်ချက် တင်ပြီးပါပြီ!");
+        closeModal();
+      } catch (err) {
+        alert("မှတ်ချက် တင်၍ မရပါ: " + err.message);
+      }
+    };
+
+    // Close Modal
+    window.closeModal = function() {
+      const modalContainer = document.getElementById('novelModal');
+      if (modalContainer) {
+        modalContainer.classList.add('hidden');
+        modalContainer.classList.remove('flex');
+      }
+    };
+
     // Search
     window.searchNovels = function() {
       const input = document.getElementById('searchInput').value.toLowerCase();
-      const cards = novelsGrid.querySelectorAll('a');
+      const cards = novelsGrid.querySelectorAll('#novelsGrid > div');
       cards.forEach(card => {
         const text = card.innerText.toLowerCase();
         card.style.display = text.includes(input) ? "" : "none";
