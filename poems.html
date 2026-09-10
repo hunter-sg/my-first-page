@@ -36,7 +36,7 @@
           <span class="p-2 bg-amber-100 text-amber-800 rounded-lg text-sm"><i class="fa-solid fa-scroll"></i></span>
           ကဗျာများ
         </h2>
-        <p class="text-xs text-gray-500 mt-1">ခေတ်ပေါ်နှင့် ရိုးရာ ကဗျာများ</p>
+        <p class="text-xs text-gray-500 mt-1">ခေတ်ပေါ်နှင့် ရိုးရာ ကဗျာများ</p>
       </div>
       <a href="submit.html" class="hidden sm:inline-flex items-center gap-1.5 bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-3.5 py-2 rounded-lg font-bold transition">
         <i class="fa-solid fa-pen-to-square"></i> စာမူတင်ရန်
@@ -61,7 +61,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -109,7 +109,9 @@
           content: val.content || '',
           date: val.date || '',
           image: val.image || val.imageUrl || val.img || '',
-          comments: val.comments || {}
+          comments: val.comments || {},
+          likes: val.likes || 0,
+          views: val.views || 0
         });
       });
 
@@ -130,7 +132,13 @@
               </div>
               <h3 class="text-xs font-bold text-gray-800 truncate mb-1">${post.title}</h3>
               <p class="text-[11px] text-gray-500 truncate mb-1">${post.content}</p>
-              <span class="text-[10px] text-indigo-600 font-semibold">ရေးသားသူ - ${post.author}</span>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-[10px] text-indigo-600 font-semibold">ရေးသားသူ - ${post.author}</span>
+                <div class="flex items-center gap-2 text-[10px] text-gray-400">
+                  <span>👁️ ${post.views}</span>
+                  <span>❤️ ${post.likes}</span>
+                </div>
+              </div>
             </div>
           </div>
         `;
@@ -142,11 +150,20 @@
       const post = allPosts.find(p => p.id === postId);
       if (!post) return;
 
+      // Views အရေအတွက် တိုးရန်
+      const postRef = ref(database, `poems/${postId}`);
+      runTransaction(postRef, (p) => {
+        if (p) {
+          p.views = (p.views || 0) + 1;
+        }
+        return p;
+      });
+
       const modalContainer = document.getElementById('postModal');
       const modalContent = document.getElementById('modalContent');
 
       const imageHtml = post.image 
-        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm"><img src="${post.image}" class="w-full h-auto max-h-64 object-cover" /></div>`
+        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm"><img src="${post.image}" class="max-h-52 mx-auto object-contain rounded-lg" alt="Post" /></div>`
         : '';
 
       let commentsHtml = '';
@@ -176,6 +193,14 @@
                 <span class="text-[11px] text-gray-400">• ${post.date}</span>
               </div>
               <h2 class="text-sm md:text-base font-bold text-gray-800 leading-snug">${post.title}</h2>
+              
+              <!-- Likes & Views Section -->
+              <div class="flex items-center gap-4 text-xs text-gray-500 mt-2">
+                <span>👁️ <span id="viewCount">${(post.views || 0) + 1}</span> ကြည့်ရှုသူ</span>
+                <button onclick="likePost('${post.id}')" class="flex items-center gap-1 hover:text-red-500 text-red-600 font-semibold transition bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
+                  ❤️ <span id="likeCount">${post.likes || 0}</span> သဘောကျသည်
+                </button>
+              </div>
             </div>
             <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-lg p-1 transition flex-shrink-0"><i class="fa-solid fa-xmark"></i></button>
           </div>
@@ -233,9 +258,10 @@
         modalContainer.classList.remove('flex');
       }
     };
+
     window.likePost = async function(postId) {
       try {
-        const postRef = ref(db, `sports/${postId}`); // သို့မဟုတ် မိမိ Category အလိုက်
+        const postRef = ref(database, `poems/${postId}`);
         await runTransaction(postRef, (post) => {
           if (post) {
             post.likes = (post.likes || 0) + 1;
@@ -243,7 +269,6 @@
           return post;
         });
 
-    // UI မာ အရေအတွက် တိုက်ရိုက် တိုးပေးရန်
         const likeElem = document.getElementById('likeCount');
         if (likeElem) {
           likeElem.textContent = parseInt(likeElem.textContent || 0) + 1;
@@ -252,7 +277,6 @@
         console.error("Like ပေး၍ မရပါ: ", err);
       }
     };
-    
   </script>
 </body>
 </html>
