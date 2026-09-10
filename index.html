@@ -163,6 +163,7 @@
                 author: val.author || 'မသိရပါ',
                 content: val.content || '',
                 date: val.date || '',
+                timestamp: val.timestamp || 0,
                 image: val.image || val.imageUrl || val.img || '',
                 likes: val.likes || 0,
                 views: val.views || 0,
@@ -197,7 +198,31 @@
         return;
       }
 
-      allPosts.sort((a, b) => b.id.localeCompare(a.id));
+      // နောက်ဆုံးတင်ခဲ့သော စာမူ အသစ်များကို အပေါ်ဆုံးတွင် ပေါ်စေရန် ပြင်ဆင်ထားခြင်း
+      allPosts.sort((a, b) => {
+        if (a.timestamp && b.timestamp) {
+          return b.timestamp - a.timestamp;
+        }
+        
+        // Date (DD/MM/YYYY) ကို တိတိကျကျ စစ်ဆေး၍ စီပေးခြင်း
+        const parseDate = (dStr) => {
+          if (!dStr) return 0;
+          const parts = dStr.split('/');
+          if (parts.length === 3) {
+            return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
+          }
+          return new Date(dStr).getTime() || 0;
+        };
+
+        const timeA = parseDate(a.date);
+        const timeB = parseDate(b.date);
+
+        if (timeA !== timeB) {
+          return timeB - timeA;
+        }
+
+        return b.id.localeCompare(a.id);
+      });
 
       allPosts.forEach(post => {
         const imageMarkup = post.image 
