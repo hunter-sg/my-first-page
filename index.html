@@ -19,35 +19,35 @@
         <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
       </a>
 
-      <!-- Search Bar & Live Date/Time -->
-      <div class="flex items-center gap-2 flex-1 max-w-xs md:max-w-md mx-2">
-        <div class="relative w-full">
-          <input type="text" id="searchInput" onkeyup="searchPosts()" placeholder="ရှာဖွေရန်..." class="w-full bg-indigo-950/80 text-white placeholder-indigo-300 text-xs rounded-full pl-8 pr-3 py-1.5 border border-indigo-700/60 focus:outline-none focus:border-amber-400 transition">
-          <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-indigo-400 text-xs"></i>
-        </div>
-        <!-- Live Date & Time Box -->
-        <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
-          <span id="timeDisplay" class="font-bold text-amber-300">12:34:52</span>
-          <span id="dateDisplay" class="font-medium">08/09/2026</span>
-        </div>
+      <!-- Live Clock -->
+      <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
+        <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
+        <span id="dateDisplay" class="font-medium">00/00/0000</span>
       </div>
 
       <!-- Mobile Menu Button -->
-      <button id="menuBtn" class="text-white text-base focus:outline-none md:hidden">
-        <i id="menuIcon" class="fa-solid fa-bars"></i>
+      <button id="menuToggleBtn" class="text-amber-400 text-lg p-1 focus:outline-none">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
       </button>
+    </div>
 
-      <!-- Navigation Links -->
-      <nav id="menuList" class="hidden md:flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 text-sm">
-        <a href="index.html" class="px-3 py-2 text-amber-400 font-bold">ပင်မ</a>
-        <a href="knowledges.html" class="px-3 py-2 text-white hover:text-amber-400">သုတရသ</a>
-        <a href="newnovels.html" class="px-3 py-2 text-white hover:text-amber-400">ဝတ္ထု</a>
-        <a href="sports.html" class="px-3 py-2 text-white hover:text-amber-400">အားကစား</a>
-        <a href="poems.html" class="px-3 py-2 text-white hover:text-amber-400">ကဗျာ</a>
-  
-        <!-- စာမူတင်ရန် Button -->
-        <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-pen-to-square"></i> စာမူတင်ရန်
+    <!-- Mobile Dropdown Menu Box (အောက်သို့ သီးသန့် ကျလာမည့် Box) -->
+    <div id="mobileMenu" class="hidden bg-indigo-950 border-t border-indigo-800 px-4 py-3 shadow-xl">
+      <nav class="flex flex-col space-y-2 text-sm">
+        <a href="index.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
+          <i class="fa-solid fa-house text-amber-400"></i> ပင်မစာမျက်နှာ
+        </a>
+        <a href="newnovels.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
+          <i class="fa-solid fa-book text-amber-400"></i> ဝတ္ထုစင်
+        </a>
+        <a href="knowledges.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb text-amber-400"></i> သုတရသ
+        </a>
+        <a href="sports.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
+          <i class="fa-solid fa-football text-amber-400"></i> အားကစား
+        </a>
+        <a href="poems.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
+          <i class="fa-solid fa-feather text-amber-400"></i> ကဗျာ
         </a>
       </nav>
     </div>
