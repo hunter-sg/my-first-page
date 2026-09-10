@@ -260,79 +260,84 @@
       const modalContainer = document.getElementById('postModal');
       const modalContent = document.getElementById('modalContent');
 
+      // ပုံ အရွယ်အစားကို အချိုးကျ မြင်ရအောင် ပြင်ထားပါသည်
       const imageHtml = post.image 
-        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm"><img src="${post.image}" class="w-full h-auto max-h-64 object-cover" /></div>`
+        ? `<div class="mb-4 overflow-hidden rounded-xl border border-gray-100 shadow-sm flex justify-center bg-black/5">
+             <img src="${post.image}" class="w-full max-h-[450px] object-contain rounded-xl" />
+           </div>`
         : '';
 
       let commentsHtml = '';
       if (post.comments && Object.keys(post.comments).length > 0) {
         Object.values(post.comments).forEach(c => {
           commentsHtml += `
-            <div class="bg-gray-100/70 p-2.5 rounded-lg text-xs space-y-0.5">
-              <div class="flex justify-between font-bold text-indigo-950 text-[11px]">
+            <div class="bg-gray-100/70 p-3 rounded-lg text-xs md:text-sm space-y-1">
+              <div class="flex justify-between font-bold text-indigo-950">
                 <span>${c.name || 'ဧည့်သည်'}</span>
-                <span class="text-gray-400 text-[10px] font-normal">${c.date || ''}</span>
+                <span class="text-gray-400 text-xs font-normal">${c.date || ''}</span>
               </div>
-              <p class="text-gray-700">${c.text}</p>
+              <p class="text-gray-700 leading-relaxed">${c.text}</p>
             </div>
           `;
         });
       } else {
-        commentsHtml = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
+        commentsHtml = `<p class="text-xs text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
       }
 
+      // max-w-4xl ဖြင့် Sight line ကို မြင်ကွင်းကျယ် ပြင်ပေးထားပါသည်
       modalContent.innerHTML = `
-        <div class="bg-white rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[90vh]">
+        <div class="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[92vh]">
           
-          <div class="bg-indigo-50/70 px-4 py-3 border-b border-indigo-100 flex justify-between items-start flex-shrink-0">
+          <div class="bg-indigo-50/70 px-5 py-4 border-b border-indigo-100 flex justify-between items-start flex-shrink-0">
             <div class="pr-2">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-[10px] px-2 py-0.5 bg-indigo-100 text-indigo-800 font-bold rounded">${post.categoryName}</span>
-                <span class="text-[11px] text-gray-500 font-medium">ရေးသားသူ - ${post.author}</span>
-                <span class="text-[11px] text-gray-400">• ${post.date}</span>
+              <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span class="text-xs px-2.5 py-0.5 bg-indigo-100 text-indigo-800 font-bold rounded-md">${post.categoryName}</span>
+                <span class="text-xs md:text-sm text-gray-600 font-medium">ရေးသားသူ - ${post.author}</span>
+                <span class="text-xs text-gray-400">• ${post.date}</span>
               </div>
-              <h2 class="text-sm md:text-base font-bold text-gray-800 leading-snug">${post.title}</h2>
+              <h2 class="text-base md:text-xl font-bold text-gray-800 leading-snug">${post.title}</h2>
             </div>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-lg p-1 transition flex-shrink-0"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl p-1 transition flex-shrink-0"><i class="fa-solid fa-xmark"></i></button>
           </div>
 
-          <div class="p-4 md:p-5 overflow-y-auto max-h-[70vh] space-y-4">
+          <div class="p-5 md:p-6 overflow-y-auto max-h-[78vh] space-y-5">
             ${imageHtml}
-            <div class="bg-gray-50/70 p-4 rounded-xl border border-gray-100 text-xs md:text-sm text-gray-700 leading-relaxed space-y-3">
+            <div class="bg-gray-50/70 p-4 md:p-6 rounded-xl border border-gray-100 text-sm md:text-base text-gray-800 leading-relaxed md:leading-loose space-y-4">
               <p class="whitespace-pre-line">${post.content}</p>
             </div>
 
-            <div class="flex items-center justify-between text-xs px-2 py-1 text-gray-500 border-y border-gray-100">
-              <button onclick="handleLike('${post.category}', '${post.id}')" class="flex items-center gap-1.5 text-red-500 font-bold hover:bg-red-50 px-2 py-1 rounded-lg transition">
+            <div class="flex items-center justify-between text-xs md:text-sm px-2 py-2 text-gray-500 border-y border-gray-100">
+              <button onclick="handleLike('${post.category}', '${post.id}')" class="flex items-center gap-1.5 text-red-500 font-bold hover:bg-red-50 px-3 py-1.5 rounded-lg transition">
                 <i class="fa-solid fa-heart"></i> ကြိုက်နှစ်သက်သူ (${post.likes})
               </button>
-              <span class="flex items-center gap-1.5 text-indigo-600">
+              <span class="flex items-center gap-1.5 text-indigo-600 font-medium">
                 <i class="fa-solid fa-eye"></i> ကြည့်ရှုသူ (${post.views + 1})
               </span>
             </div>
 
-            <div class="border-t border-gray-100 pt-3 space-y-3">
-              <h4 class="text-xs font-bold text-gray-800 flex items-center gap-1.5"><i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ</h4>
+            <div class="border-t border-gray-100 pt-4 space-y-4">
+              <h4 class="text-xs md:text-sm font-bold text-gray-800 flex items-center gap-2"><i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ</h4>
               
-              <div class="space-y-2 bg-indigo-50/40 p-3 rounded-xl border border-indigo-50">
-                <input type="text" id="commentName" placeholder="သင့်နာမည် ရေးပါ..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500">
-                <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးရန်..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
-                <button onclick="addComment('${post.category}', '${post.id}')" class="bg-indigo-900 text-white text-xs px-3.5 py-1.5 rounded-lg font-semibold hover:bg-indigo-800 transition float-right">မှတ်ချက် ပို့မည်</button>
+              <div class="space-y-2 bg-indigo-50/40 p-3.5 rounded-xl border border-indigo-50">
+                <input type="text" id="commentName" placeholder="သင့်နာမည် ရေးပါ..." class="w-full text-xs md:text-sm p-2.5 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500">
+                <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးရန်..." class="w-full text-xs md:text-sm p-2.5 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                <button onclick="addComment('${post.category}', '${post.id}')" class="bg-indigo-900 text-white text-xs md:text-sm px-4 py-2 rounded-lg font-semibold hover:bg-indigo-800 transition float-right">မှတ်ချက် ပို့မည်</button>
                 <div class="clear-both"></div>
               </div>
 
-              <div class="space-y-2 mt-2">${commentsHtml}</div>
+              <div class="space-y-2.5 mt-3">${commentsHtml}</div>
             </div>
           </div>
 
-          <div class="px-4 py-2.5 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0">
-            <button onclick="closeModal()" class="bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-5 py-2 rounded-lg font-bold transition">ပိတ်မည်</button>
+          <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0">
+            <button onclick="closeModal()" class="bg-indigo-900 hover:bg-indigo-800 text-white text-xs md:text-sm px-6 py-2 rounded-lg font-bold transition">ပိတ်မည်</button>
           </div>
         </div>
       `;
 
       modalContainer.classList.remove('hidden');
       modalContainer.classList.add('flex');
+    };
     };
 
     // Add Comment
