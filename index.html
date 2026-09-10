@@ -108,13 +108,9 @@
     // Live Date & Time Updater
     function updateClock() {
       const now = new Date();
-    
-      // Time (HH:MM:SS)
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
-    
-      // Date (DD/MM/YYYY)
       const day = String(now.getDate()).padStart(2, '0');
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const year = now.getFullYear();
@@ -198,12 +194,14 @@
         return;
       }
 
-      // နောက်ဆုံးတင်ခဲ့သော စာမူများကို အပေါ်ဆုံးတွင် ပေါ်စေရန် စီစစ်ခြင်း
+      // တိကျသော Sort Logic: timestamp (သို့) date (သို့) Firebase Push ID ဖြင့် စီခြင်း
       allPosts.sort((a, b) => {
-        if (a.timestamp && b.timestamp) {
-          return b.timestamp - a.timestamp;
+        // ၁။ timestamp ရှိလျှင် အကြီးဆုံး (အသစ်ဆုံး) ကို အပေါ်ထားမည်
+        if (a.timestamp || b.timestamp) {
+          return (b.timestamp || 0) - (a.timestamp || 0);
         }
 
+        // ၂။ ရက်စွဲ (DD/MM/YYYY) ဖြင့် နှိုင်းယှဉ်မည်
         const parseDate = (dStr) => {
           if (!dStr) return 0;
           const parts = dStr.split('/');
@@ -220,7 +218,8 @@
           return timeB - timeA;
         }
 
-        return b.id.localeCompare(a.id);
+        // ၃။ Firebase Key အလိုက် အသစ်ဆုံးကို အပေါ်တင်ရန် ID ဖြင့် ပြောင်းပြန်စီခြင်း
+        return a.id.localeCompare(b.id);
       });
 
       allPosts.forEach(post => {
