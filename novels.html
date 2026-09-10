@@ -65,7 +65,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -89,7 +89,7 @@
     if (!bookId) {
       loadingEl.innerHTML = `<p class="text-rose-400">စာအုပ် ID မရှိပါ။</p>`;
     } else {
-      onValue(ref(db, `novels/${bookId}`)),(snapshot) => {
+      get(ref(db, `novels/${bookId}`)).then((snapshot) => {
         if (snapshot.exists()) {
           const book = snapshot.val();
 
