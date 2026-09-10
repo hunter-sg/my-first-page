@@ -266,6 +266,13 @@
         commentsHtml = `<p class="text-xs text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
       }
 
+      // Novel/Book ဖြစ်ပါက novels.html?id=... သို့ သွားရန် Read First ခလုတ် ပြပေးပါမည်
+      const readFirstBtn = (post.category === 'novels')
+        ? `<a href="novels.html?id=${post.id}" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm mb-4">
+            <i class="fa-solid fa-book-open-reader"></i> စတင်ဖတ်ရှုမည် (Read First)
+           </a>`
+        : '';
+
       modalContent.innerHTML = `
         <div class="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[92vh]">
           
@@ -283,6 +290,8 @@
 
           <div class="p-5 md:p-6 overflow-y-auto max-h-[78vh] space-y-5">
             ${imageHtml}
+            ${readFirstBtn}
+            
             <div class="bg-gray-50/70 p-4 md:p-6 rounded-xl border border-gray-100 text-sm md:text-base text-gray-800 leading-relaxed md:leading-loose space-y-4">
               <p class="whitespace-pre-line">${post.content}</p>
             </div>
@@ -310,7 +319,7 @@
             </div>
           </div>
 
-          <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0">
+          <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-end flex-shrink-0 gap-2">
             <button onclick="closeModal()" class="bg-indigo-900 hover:bg-indigo-800 text-white text-xs md:text-sm px-6 py-2 rounded-lg font-bold transition">ပိတ်မည်</button>
           </div>
         </div>
