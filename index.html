@@ -254,7 +254,9 @@
       const modalContent = document.getElementById('modalContent');
 
       const imageHtml = post.image 
-        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm"><img src="${post.image}" class="w-full h-auto max-h-64 object-cover" /></div>`
+        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm flex justify-center bg-gray-50">
+             <img src="${post.image}" class="max-h-48 w-auto object-contain rounded-lg" alt="Post Image">
+           </div>`
         : '';
 
       let commentsHtml = '';
