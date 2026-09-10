@@ -61,7 +61,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -111,7 +111,9 @@
           content: val.content || '',
           date: val.date || '',
           image: val.image || val.imageUrl || val.img || '',
-          comments: val.comments || {}
+          comments: val.comments || {},
+          likes: val.likes || 0,
+          views: val.views || 0
         });
       });
 
@@ -136,7 +138,13 @@
               <p class="text-[11px] text-gray-500 truncate mb-1">
                 ${post.content}
               </p>
-              <span class="text-[10px] text-indigo-600 font-semibold">ရေးသားသူ - ${post.author}</span>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-[10px] text-indigo-600 font-semibold">ရေးသားသူ - ${post.author}</span>
+                <div class="flex items-center gap-2 text-[10px] text-gray-400">
+                  <span>👁️ ${post.views}</span>
+                  <span>❤️ ${post.likes}</span>
+                </div>
+              </div>
             </div>
           </div>
         `;
@@ -147,6 +155,15 @@
     window.openModal = function(postId) {
       const post = sportsPosts.find(p => p.id === postId);
       if (!post) return;
+
+      // Views အရေအတွက် တိုးရန်
+      const postRef = ref(database, `sports/${postId}`);
+      runTransaction(postRef, (p) => {
+        if (p) {
+          p.views = (p.views || 0) + 1;
+        }
+        return p;
+      });
 
       const modalContainer = document.getElementById('postModal');
       const modalContent = document.getElementById('modalContent');
@@ -176,7 +193,6 @@
       }
 
       modalContent.innerHTML = `
-        <!-- မူရင်း code နေရာတွင် -->
           <div class="bg-white rounded-2xl max-w-5xl w-full h-[90vh] flex flex-col overflow-hidden">
           
           <!-- Header -->
@@ -188,6 +204,14 @@
                 <span class="text-[11px] text-gray-400">• ${post.date}</span>
               </div>
               <h2 class="text-sm md:text-base font-bold text-gray-800 leading-snug">${post.title}</h2>
+              
+              <!-- Likes & Views Section -->
+              <div class="flex items-center gap-4 text-xs text-gray-500 mt-2">
+                <span>👁️ <span id="viewCount">${(post.views || 0) + 1}</span> ကြည့်ရှုသူ</span>
+                <button onclick="likePost('${post.id}')" class="flex items-center gap-1 hover:text-red-500 text-red-600 font-semibold transition bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
+                  ❤️ <span id="likeCount">${post.likes || 0}</span> သဘောကျသည်
+                </button>
+              </div>
             </div>
             <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-lg p-1 transition flex-shrink-0">
               <i class="fa-solid fa-xmark"></i>
@@ -270,6 +294,26 @@
       if (modalContainer) {
         modalContainer.classList.add('hidden');
         modalContainer.classList.remove('flex');
+      }
+    };
+
+    // Like Function
+    window.likePost = async function(postId) {
+      try {
+        const postRef = ref(database, `sports/${postId}`);
+        await runTransaction(postRef, (post) => {
+          if (post) {
+            post.likes = (post.likes || 0) + 1;
+          }
+          return post;
+        });
+
+        const likeElem = document.getElementById('likeCount');
+        if (likeElem) {
+          likeElem.textContent = parseInt(likeElem.textContent || 0) + 1;
+        }
+      } catch (err) {
+        console.error("Like ပေး၍ မရပါ: ", err);
       }
     };
   </script>
