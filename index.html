@@ -45,7 +45,7 @@
         <a href="sports.html" class="px-3 py-2 text-white hover:text-amber-400">အားကစား</a>
         <a href="poems.html" class="px-3 py-2 text-white hover:text-amber-400">ကဗျာ</a>
   
-        <!-- စာမူတင်ရန် Button -->
+  <!-- စာမူတင်ရန် Button -->
         <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
           <i class="fa-solid fa-pen-to-square"></i> စာမူတင်ရန်
         </a>
@@ -108,13 +108,13 @@
     // Live Date & Time Updater
     function updateClock() {
       const now = new Date();
-      
-      // Time (HH:MM:SS)
+    
+    // Time (HH:MM:SS)
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
-      
-      // Date (DD/MM/YYYY)
+    
+    // Date (DD/MM/YYYY)
       const day = String(now.getDate()).padStart(2, '0');
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const year = now.getFullYear();
@@ -140,18 +140,22 @@
     }
 
     const categories = ['knowledges', 'newnovels', 'sports', 'poems'];
-    let categoryDataStore = {};
+    let allPosts = [];
 
     // Load Posts from all categories
     function loadAllPosts() {
+      allPosts = [];
+      let loadedCategories = 0;
+
       categories.forEach(category => {
         onValue(ref(database, category), (snapshot) => {
           const data = snapshot.val();
-          categoryDataStore[category] = [];
+          
+          allPosts = allPosts.filter(p => p.category !== category);
 
           if (data) {
             Object.entries(data).forEach(([key, val]) => {
-              categoryDataStore[category].push({
+              allPosts.push({
                 id: key,
                 category: category,
                 categoryName: getCategoryName(category),
@@ -159,7 +163,6 @@
                 author: val.author || 'မသိရပါ',
                 content: val.content || '',
                 date: val.date || '',
-                timestamp: val.timestamp || 0,
                 image: val.image || val.imageUrl || val.img || '',
                 likes: val.likes || 0,
                 views: val.views || 0,
@@ -168,9 +171,10 @@
             });
           }
 
-          renderPosts();
-        }, (error) => {
-          console.error("Firebase Read Error:", error);
+          loadedCategories++;
+          if (loadedCategories >= categories.length) {
+            renderPosts();
+          }
         });
       });
     }
@@ -186,31 +190,16 @@
     }
 
     function renderPosts() {
-      // Category အားလုံးမှ ပို့စ်များကို စုစည်းခြင်း
-      let combinedPosts = [];
-      Object.values(categoryDataStore).forEach(list => {
-        combinedPosts = combinedPosts.concat(list);
-      });
-
       postsContainer.innerHTML = '';
 
-      if (combinedPosts.length === 0) {
+      if (allPosts.length === 0) {
         postsContainer.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-xs">စာမူများ မရှိသေးပါ။</div>`;
         return;
       }
 
-      // စာမူများကို နောက်ဆုံးတင်ခဲ့သည့် အချိန်အတိုင်း စီခြင်း (Timestamp ရှိရင် Timestamp ၊ မရှိရင် ID သို့ Date)
-      combinedPosts.sort((a, b) => {
-        if (a.timestamp && b.timestamp) {
-          return b.timestamp - a.timestamp;
-        }
-        return b.id.localeCompare(a.id);
-      });
+      allPosts.sort((a, b) => b.id.localeCompare(a.id));
 
-      // Window အောက်သို့ allPosts ကို global ထည့်ထားပေးခြင်း (Modal အတွက်)
-      window.allPosts = combinedPosts;
-
-      combinedPosts.forEach(post => {
+      allPosts.forEach(post => {
         const imageMarkup = post.image 
           ? `<img src="${post.image}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-gray-100" />`
           : `<div class="w-20 h-20 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 flex-shrink-0 border border-indigo-100"><i class="fa-solid fa-book-open text-xl"></i></div>`;
@@ -253,8 +242,7 @@
 
     // Open Modal
     window.openModal = function(category, postId) {
-      const postsList = window.allPosts || [];
-      const post = postsList.find(p => p.id === postId && p.category === category);
+      const post = allPosts.find(p => p.id === postId && p.category === category);
       if (!post) return;
 
       const viewsRef = ref(database, `${category}/${postId}/views`);
@@ -266,9 +254,7 @@
       const modalContent = document.getElementById('modalContent');
 
       const imageHtml = post.image 
-        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm flex justify-center bg-gray-50">
-             <img src="${post.image}" class="max-h-48 w-auto object-contain rounded-lg" alt="Post Image">
-           </div>`
+        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm"><img src="${post.image}" class="w-full h-auto max-h-64 object-cover" /></div>`
         : '';
 
       let commentsHtml = '';
@@ -289,7 +275,7 @@
       }
 
       modalContent.innerHTML = `
-        <div class="bg-white rounded-2xl max-w-5xl w-full h-[90vh] flex flex-col overflow-hidden">
+        <div class="bg-white rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[90vh]">
           
           <div class="bg-indigo-50/70 px-4 py-3 border-b border-indigo-100 flex justify-between items-start flex-shrink-0">
             <div class="pr-2">
