@@ -1,85 +1,84 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="my">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>စာပေဥယျာဉ် - ဝတ္ထုများ</title>
+  <title>ဝတ္ထုအသေးစိတ် - စာပေဥယျာဉ်</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
+    body { font-family: 'Padauk', sans-serif; }
+  </style>
 </head>
-<body class="bg-[#120e28] text-gray-200 min-h-screen flex flex-col justify-between font-sans">
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col justify-between">
 
-  <!-- Navigation Header -->
-  <header class="bg-[#1e1740]/90 backdrop-blur-md border-b border-[#3b358c]/60 text-white sticky top-0 z-40 shadow-lg">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-3">
-      
-      <!-- Logo -->
-      <a href="index.html" class="flex items-center gap-2.5 flex-shrink-0">
-        <img src="photo_2026-09-07_21-25-15.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-amber-400/50 object-cover shadow-sm">
-        <h1 class="text-base md:text-lg font-bold text-amber-400 tracking-wide">စာပေဥယျာဥ်</h1>
+  <!-- Header Navigation -->
+  <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-2">
+      <a href="index.html" class="flex items-center gap-2 flex-shrink-0">
+        <img src="photo_2026-09-07_21-25-15.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-amber-400/50 object-cover">
+        <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
       </a>
 
-      <!-- Search Box -->
-      <div class="flex items-center gap-2 flex-1 max-w-xs md:max-w-md mx-2">
-        <div class="relative w-full">
-          <input type="text" id="searchInput" onkeyup="searchPosts()" placeholder="ဝတ္ထုများ ရှာရန်..." class="w-full bg-[#120e28]/80 text-white placeholder-gray-400 text-xs rounded-full pl-9 pr-3 py-2 border border-[#3b358c] focus:outline-none focus:border-amber-400 transition">
-          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-xs"></i>
-        </div>
+      <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
+        <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
+        <span id="dateDisplay" class="font-medium">00/00/0000</span>
       </div>
 
-      <!-- Mobile Menu Button -->
-      <button id="menuBtn" class="text-white text-lg focus:outline-none md:hidden">
-        <i id="menuIcon" class="fa-solid fa-bars"></i>
-      </button>
-
-      <!-- Desktop Nav Links -->
-      <nav id="menuList" class="hidden md:flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 text-xs font-semibold">
-        <a href="index.html" class="px-3 py-2 text-gray-300 hover:text-amber-400 transition">ပင်မ</a>
-        <a href="knowledges.html" class="px-3 py-2 text-gray-300 hover:text-amber-400 transition">သုတရသ</a>
-        <a href="novels.html" class="px-3 py-2 text-amber-400 font-bold border-b-2 border-amber-400">ဝတ္ထု</a>
-        <a href="sports.html" class="px-3 py-2 text-gray-300 hover:text-amber-400 transition">အားကစား</a>
-        <a href="poems.html" class="px-3 py-2 text-gray-300 hover:text-amber-400 transition">ကဗျာ</a>
-        <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 transition shadow-md">
-          <i class="fa-solid fa-pen-to-square"></i> စာမူတင်ရန်
+      <nav class="flex items-center space-x-3 text-sm">
+        <a href="newnovels.html" class="text-amber-400 hover:underline flex items-center gap-1 text-xs md:text-sm">
+          <i class="fa-solid fa-arrow-left"></i> ဝတ္ထုစင်သို့
         </a>
       </nav>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="container mx-auto my-6 px-4 flex-grow max-w-5xl">
+  <!-- Main Content Area -->
+  <main class="container mx-auto my-6 px-4 flex-grow max-w-4xl">
     
-    <!-- Title Card -->
-    <div class="bg-[#24205a]/90 border border-[#3b358c] rounded-2xl p-5 shadow-2xl mb-6 flex items-center justify-between">
-      <h2 class="text-lg md:text-xl font-bold text-amber-400 flex items-center gap-2.5">
-        <span class="p-2 bg-[#1e1740] text-amber-400 rounded-xl border border-[#3b358c] text-base"><i class="fa-solid fa-book"></i></span>
-        ဝတ္ထု စာမူများ
-      </h2>
-      <span id="totalNovels" class="text-xs bg-[#1e1740] text-gray-300 px-3 py-1 rounded-full border border-[#3b358c]">စုစုပေါင်း - ၀</span>
-    </div>
-
-    <!-- Posts Container Grid -->
-    <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="col-span-full text-center py-12 text-gray-400 text-xs">
-        <i class="fa-solid fa-spinner fa-spin text-xl text-amber-400 mb-2 block"></i> ဝတ္ထုများကို ရယူနေပါသည်...
+    <!-- Novel Details Header Card -->
+    <div id="novelHeader" class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-gray-100 mb-6 flex flex-col sm:flex-row gap-5 items-start">
+      <div id="novelCover" class="w-full sm:w-36 h-52 bg-indigo-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100 flex items-center justify-center">
+        <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-xl"></i>
+      </div>
+      
+      <div class="flex-1">
+        <h1 id="novelTitle" class="text-xl md:text-2xl font-bold text-gray-800 mb-2">ဝတ္ထုအမည် ရယူနေသည်...</h1>
+        <p id="novelAuthor" class="text-xs text-indigo-600 font-semibold mb-4">ရေးသားသူ - ...</p>
+        
+        <div class="bg-gray-50/80 p-3.5 rounded-xl border border-gray-100 mb-4">
+          <h3 class="text-xs font-bold text-gray-700 mb-1 flex items-center gap-1.5">
+            <i class="fa-solid fa-align-left text-indigo-500"></i> အကျဉ်းချုပ် (Summary)
+          </h3>
+          <p id="novelSummary" class="text-xs text-gray-600 leading-relaxed whitespace-pre-line">...</p>
+        </div>
       </div>
     </div>
+
+    <!-- Chapter List Section -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+      <h2 class="text-sm md:text-base font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+        <i class="fa-solid fa-list-ol text-indigo-600"></i>
+        အခန်းများ စာရင်း (Chapter Lists)
+      </h2>
+
+      <div id="chaptersList" class="space-y-2">
+        <div class="text-center py-6 text-gray-400 text-xs">
+          <i class="fa-solid fa-spinner fa-spin mr-1"></i> အခန်းများကို ရယူနေပါသည်...
+        </div>
+      </div>
+    </div>
+
   </main>
 
-  <!-- Novel Detail Modal Popup -->
-  <div id="postModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div id="modalContent" class="w-full flex justify-center"></div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="bg-[#1e1740]/60 border-t border-[#3b358c] py-4 text-center text-xs text-gray-400 mt-10">
-    <p>© 2026 Literature Garden. All rights reserved.</p>
+  <footer class="bg-indigo-950 text-indigo-200 py-4 text-center text-xs mt-10">
+    <p>© 2026 စာပေဥယျာဉ်. All rights reserved.</p>
   </footer>
 
-  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, runTransaction, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -93,223 +92,92 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
-    const category = 'newnovels'; // Firebase Table Name
-    let categoryPosts = [];
 
-    // Mobile Menu Toggle
-    const menuBtn = document.getElementById('menuBtn');
-    const menuList = document.getElementById('menuList');
-    const menuIcon = document.getElementById('menuIcon');
-    if (menuBtn) {
-      menuBtn.onclick = () => {
-        menuList.classList.toggle('hidden');
-        menuIcon.className = menuList.classList.contains('hidden') ? "fa-solid fa-bars" : "fa-solid fa-xmark";
-      };
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+
+      document.getElementById('timeDisplay').textContent = `${hours}:${minutes}:${seconds}`;
+      document.getElementById('dateDisplay').textContent = `${day}/${month}/${year}`;
     }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    // Load Novel Posts from Firebase
-    function loadCategoryPosts() {
-      onValue(ref(database, category), (snapshot) => {
-        const data = snapshot.val();
-        categoryPosts = [];
-        if (data) {
-          Object.entries(data).forEach(([key, val]) => {
-            categoryPosts.push({
-              id: key,
-              category: category,
-              categoryName: 'ဝတ္ထု',
-              title: val.title || 'ခေါင်းစဉ်မရှိ',
-              author: val.author || 'မသိရပါ',
-              content: val.content || '',
-              date: val.date || '',
-              image: val.image || val.imageUrl || val.img || '',
-              likes: val.likes || 0,
-              views: val.views || 0,
-              comments: val.comments || {}
-            });
-          });
-        }
-        document.getElementById('totalNovels').innerText = `စုစုပေါင်း - ${categoryPosts.length}`;
-        renderPosts();
-      });
-    }
+    // Get Book ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get('id');
 
-    // Render Cards Grid
-    function renderPosts() {
-      const postsContainer = document.getElementById('postsContainer');
-      postsContainer.innerHTML = '';
-      if (categoryPosts.length === 0) {
-        postsContainer.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400 text-xs bg-[#24205a]/60 rounded-2xl border border-[#3b358c]">ဝတ္ထု စာမူများ မရှိသေးပါ။</div>`;
+    async function loadNovelDetails() {
+      if (!bookId) {
+        alert("ဝတ္ထု ရွေးချယ်မှု မှားယွင်းနေပါသည်။");
+        window.location.href = "newnovels.html";
         return;
       }
 
-      categoryPosts.sort((a, b) => b.id.localeCompare(a.id));
+      try {
+        const novelSnapshot = await get(ref(database, `novels/${bookId}`));
+        if (!novelSnapshot.exists()) {
+          alert("ဝတ္ထု ရှာမတွေ့ပါ။");
+          window.location.href = "newnovels.html";
+          return;
+        }
 
-      categoryPosts.forEach(post => {
-        const imageMarkup = post.image 
-          ? `<img src="${post.image}" class="w-20 h-24 rounded-xl object-cover flex-shrink-0 border border-[#3b358c]" />`
-          : `<div class="w-20 h-24 bg-[#1e1740] rounded-xl flex items-center justify-center text-amber-400 flex-shrink-0 border border-[#3b358c]"><i class="fa-solid fa-book-open text-2xl"></i></div>`;
+        const novel = novelSnapshot.val();
 
-        postsContainer.innerHTML += `
-          <div onclick="openModal('${post.id}')" class="bg-[#24205a]/80 p-3.5 rounded-2xl border border-[#3b358c] shadow-lg hover:border-amber-400/50 transition cursor-pointer flex gap-3.5 items-center">
-            ${imageMarkup}
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2 mb-1">
-                <span class="text-[10px] px-2 py-0.5 bg-amber-500/10 text-amber-400 font-bold rounded border border-amber-400/20">ဝတ္ထု</span>
-                <span class="text-[11px] text-gray-400"><i class="fa-regular fa-clock mr-1"></i>${post.date}</span>
-              </div>
-              <h3 class="text-xs md:text-sm font-bold text-amber-400 truncate mb-1">${post.title}</h3>
-              <p class="text-[11px] text-gray-300 truncate mb-2 leading-relaxed">${post.content}</p>
-              <div class="flex items-center justify-between text-[11px] text-gray-400 border-t border-[#3b358c]/60 pt-2">
-                <span class="text-gray-300 font-medium truncate"><i class="fa-solid fa-pen-nib text-amber-400 text-[10px] mr-1"></i>${post.author}</span>
-                <div class="flex items-center gap-3 flex-shrink-0">
-                  <span class="flex items-center gap-1 hover:text-red-400 transition" onclick="event.stopPropagation(); handleLike('${post.id}')">
-                    <i class="fa-solid fa-heart text-red-400"></i> ${post.likes}
+        // Display Book Details
+        document.getElementById('novelTitle').textContent = novel.title;
+        document.getElementById('novelAuthor').textContent = `ရေးသားသူ - ${novel.author}`;
+        document.getElementById('novelSummary').textContent = novel.summary || 'အကျဉ်းချုပ် မရှိသေးပါ။';
+
+        const coverContainer = document.getElementById('novelCover');
+        if (novel.coverImage) {
+          coverContainer.innerHTML = `<img src="${novel.coverImage}" class="w-full h-full object-cover" />`;
+        } else {
+          coverContainer.innerHTML = `<i class="fa-solid fa-book-open text-indigo-400 text-3xl"></i>`;
+        }
+
+        // Display Chapters
+        const chaptersList = document.getElementById('chaptersList');
+        chaptersList.innerHTML = '';
+
+        if (novel.chapters && Object.keys(novel.chapters).length > 0) {
+          const sortedChapters = Object.entries(novel.chapters).sort((a, b) => (a[1].createdAt || 0) - (b[1].createdAt || 0));
+
+          sortedChapters.forEach(([chapId, chap]) => {
+            const subTitleText = chap.subTitle ? ` - ${chap.subTitle}` : '';
+            chaptersList.innerHTML += `
+              <a href="read.html?cat=novels&bookId=${bookId}&chapId=${chapId}" class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition group">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-800 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                    <i class="fa-regular fa-file-lines"></i>
                   </span>
-                  <span class="flex items-center gap-1 text-gray-400">
-                    <i class="fa-solid fa-eye text-indigo-400"></i> ${post.views}
-                  </span>
+                  <div>
+                    <h4 class="text-xs md:text-sm font-bold text-gray-800 group-hover:text-indigo-900 transition">
+                      ${chap.chapterTitle}${subTitleText}
+                    </h4>
+                    <span class="text-[10px] text-gray-400">${chap.date || ''}</span>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        `;
-      });
+                <i class="fa-solid fa-chevron-right text-xs text-gray-300 group-hover:text-indigo-600 transition"></i>
+              </a>
+            `;
+          });
+        } else {
+          chaptersList.innerHTML = `<div class="text-center py-6 text-gray-400 text-xs">အခန်းများ မရှိသေးပါ။</div>`;
+        }
+
+      } catch (err) {
+        console.error("Error loading novel:", err);
+      }
     }
 
-    // Like Action
-    window.handleLike = function(postId) {
-      const postRef = ref(database, `${category}/${postId}/likes`);
-      runTransaction(postRef, (currentLikes) => (currentLikes || 0) + 1);
-    };
-
-    // Open Read Modal
-    window.openModal = function(postId) {
-      const post = categoryPosts.find(p => p.id === postId);
-      if (!post) return;
-
-      runTransaction(ref(database, `${category}/${postId}/views`), (v) => (v || 0) + 1);
-
-      const modalContainer = document.getElementById('postModal');
-      const modalContent = document.getElementById('modalContent');
-      const imageHtml = post.image ? `<div class="mb-4 overflow-hidden rounded-xl border border-[#3b358c]"><img src="${post.image}" class="w-full h-auto max-h-64 object-cover" /></div>` : '';
-
-      let commentsHtml = '';
-      if (post.comments && Object.keys(post.comments).length > 0) {
-        Object.values(post.comments).forEach(c => {
-          commentsHtml += `
-            <div class="bg-[#120e28]/80 p-2.5 rounded-xl border border-[#3b358c]/50 text-xs space-y-1">
-              <div class="flex justify-between font-bold text-amber-400 text-[11px]">
-                <span>${c.name || 'ဧည့်သည်'}</span>
-                <span class="text-gray-400 text-[10px] font-normal">${c.date || ''}</span>
-              </div>
-              <p class="text-gray-300">${c.text}</p>
-            </div>`;
-        });
-      } else {
-        commentsHtml = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
-      }
-
-      modalContent.innerHTML = `
-        <div class="bg-[#1e1740] rounded-2xl max-w-xl w-full overflow-hidden shadow-2xl border border-[#3b358c] flex flex-col max-h-[90vh]">
-          
-          <!-- Header -->
-          <div class="bg-[#24205a] px-4 py-3 border-b border-[#3b358c] flex justify-between items-start flex-shrink-0">
-            <div class="pr-2">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-[10px] px-2 py-0.5 bg-amber-500/10 text-amber-400 font-bold rounded border border-amber-400/20">ဝတ္ထု</span>
-                <span class="text-[11px] text-gray-300"><i class="fa-solid fa-pen-nib text-amber-400 text-[10px] mr-1"></i>${post.author}</span>
-                <span class="text-[11px] text-gray-400">• ${post.date}</span>
-              </div>
-              <h2 class="text-sm md:text-base font-bold text-amber-400 leading-snug">${post.title}</h2>
-            </div>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-white text-lg p-1 transition flex-shrink-0"><i class="fa-solid fa-xmark"></i></button>
-          </div>
-
-          <!-- Body Container -->
-          <div class="p-4 md:p-5 overflow-y-auto max-h-[70vh] space-y-4">
-            ${imageHtml}
-            
-            <!-- Novel Story Content -->
-            <div class="bg-[#120e28]/60 p-4 rounded-xl border border-[#3b358c]/60 text-xs md:text-sm text-gray-200 leading-relaxed space-y-3">
-              <p class="whitespace-pre-line">${post.content}</p>
-            </div>
-
-            <!-- Read Button & Likes/Views Bar -->
-            <div class="flex items-center justify-between text-xs px-2 py-2 border-y border-[#3b358c]">
-              <button onclick="handleLike('${post.id}')" class="flex items-center gap-1.5 text-red-400 font-bold hover:bg-red-500/10 px-2.5 py-1 rounded-lg transition">
-                <i class="fa-solid fa-heart"></i> ကြိုက်နှစ်သက်သူ (${post.likes})
-              </button>
-              
-              <!-- Direct to Read Chapter Page -->
-              <a href="read.html?id=${post.id}" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition text-xs shadow-md">
-                <i class="fa-solid fa-book-open"></i> အပြည့်အစုံဖတ်ရန်
-              </a>
-
-              <span class="flex items-center gap-1.5 text-indigo-400">
-                <i class="fa-solid fa-eye"></i> ကြည့်ရှုသူ (${post.views + 1})
-              </span>
-            </div>
-
-            <!-- Comment Box Section -->
-            <div class="border-t border-[#3b358c] pt-3 space-y-3">
-              <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5"><i class="fa-regular fa-comments"></i> မှတ်ချက်များ</h4>
-              <div class="space-y-2 bg-[#24205a]/60 p-3 rounded-xl border border-[#3b358c]/60">
-                <input type="text" id="commentName" placeholder="သင့်နာမည် ရေးပါ..." class="w-full text-xs p-2.5 rounded-lg bg-[#120e28] border border-[#3b358c] text-white outline-none focus:border-amber-400">
-                <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးရန်..." class="w-full text-xs p-2.5 rounded-lg bg-[#120e28] border border-[#3b358c] text-white outline-none focus:border-amber-400"></textarea>
-                <button onclick="addComment('${post.id}')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs px-4 py-1.5 rounded-lg font-bold transition float-right">မှတ်ချက် ပို့မည်</button>
-                <div class="clear-both"></div>
-              </div>
-              <div class="space-y-2 mt-2">${commentsHtml}</div>
-            </div>
-          </div>
-
-          <!-- Modal Footer -->
-          <div class="px-4 py-2.5 bg-[#24205a] border-t border-[#3b358c] flex justify-end flex-shrink-0">
-            <button onclick="closeModal()" class="bg-[#120e28] hover:bg-[#120e28]/80 border border-[#3b358c] text-white text-xs px-5 py-2 rounded-lg font-bold transition">ပိတ်မည်</button>
-          </div>
-        </div>
-      `;
-      modalContainer.classList.remove('hidden');
-      modalContainer.classList.add('flex');
-    };
-
-    // Add Comment
-    window.addComment = async function(postId) {
-      const nameInput = document.getElementById('commentName');
-      const textInput = document.getElementById('commentText');
-      if (!textInput.value.trim()) return alert("မှတ်ချက် စာသား ရေးပေးပါ!");
-      try {
-        await push(ref(database, `${category}/${postId}/comments`), {
-          name: nameInput.value.trim() || 'ဧည့်သည်',
-          text: textInput.value.trim(),
-          date: new Date().toLocaleDateString('en-GB')
-        });
-        alert("မှတ်ချက် တင်ပြီးပါပြီ!");
-        closeModal();
-      } catch (err) {
-        alert("မှတ်ချက် တင်၍ မရပါ: " + err.message);
-      }
-    };
-
-    // Close Modal
-    window.closeModal = function() {
-      const modalContainer = document.getElementById('postModal');
-      if (modalContainer) {
-        modalContainer.classList.add('hidden');
-        modalContainer.classList.remove('flex');
-      }
-    };
-
-    // Search Filter
-    window.searchPosts = function() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      document.querySelectorAll('#postsContainer > div').forEach(card => {
-        card.style.display = card.innerText.toLowerCase().includes(input) ? "" : "none";
-      });
-    };
-
-    loadCategoryPosts();
+    loadNovelDetails();
   </script>
 </body>
 </html>
