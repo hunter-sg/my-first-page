@@ -27,8 +27,8 @@
         </div>
         <!-- Live Date & Time Box -->
         <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
-          <span id="timeDisplay" class="font-bold text-amber-300">--:--:--</span>
-          <span id="dateDisplay" class="font-medium">--/--/----</span>
+          <span id="timeDisplay" class="font-bold text-amber-300">12:34:52</span>
+          <span id="dateDisplay" class="font-medium">08/09/2026</span>
         </div>
       </div>
 
@@ -108,9 +108,13 @@
     // Live Date & Time Updater
     function updateClock() {
       const now = new Date();
+      
+      // Time (HH:MM:SS)
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
+      
+      // Date (DD/MM/YYYY)
       const day = String(now.getDate()).padStart(2, '0');
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const year = now.getFullYear();
@@ -135,102 +139,78 @@
       };
     }
 
-    let allPostsMap = {};
+    const categories = ['knowledges', 'newnovels', 'sports', 'poems'];
+    let categoryDataStore = {};
 
-    // Root / မှ သို့မဟုတ် ကဏ္ဍအသီးသီးမှ Data များကို တိုက်ရိုက်ယူခြင်း
+    // Load Posts from all categories
     function loadAllPosts() {
-      const rootRef = ref(database, '/');
-      
-      onValue(rootRef, (snapshot) => {
-        const rootData = snapshot.val();
-        console.log("Firebase Data Received:", rootData);
+      categories.forEach(category => {
+        onValue(ref(database, category), (snapshot) => {
+          const data = snapshot.val();
+          categoryDataStore[category] = [];
 
-        if (!rootData) {
-          postsContainer.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-xs">စာမူများ မရှိသေးပါ။</div>`;
-          return;
-        }
-
-        let tempPosts = [];
-
-        // Database အတွင်းရှိ Node များအားလုံးကို ပတ်ကြည့်ခြင်း
-        Object.keys(rootData).forEach(catKey => {
-          const categoryData = rootData[catKey];
-          
-          if (categoryData && typeof categoryData === 'object') {
-            Object.entries(categoryData).forEach(([postId, val]) => {
-              if (val && typeof val === 'object' && val.title) {
-                tempPosts.push({
-                  id: postId,
-                  category: catKey,
-                  categoryName: getCategoryName(catKey),
-                  title: val.title || 'ခေါင်းစဉ်မရှိ',
-                  author: val.author || 'မသိရပါ',
-                  content: val.content || '',
-                  date: val.date || '',
-                  timestamp: val.timestamp || 0,
-                  image: val.image || val.imageUrl || val.img || '',
-                  likes: val.likes || 0,
-                  views: val.views || 0,
-                  comments: val.comments || {}
-                });
-              }
+          if (data) {
+            Object.entries(data).forEach(([key, val]) => {
+              categoryDataStore[category].push({
+                id: key,
+                category: category,
+                categoryName: getCategoryName(category),
+                title: val.title || 'ခေါင်းစဉ်မရှိ',
+                author: val.author || 'မသိရပါ',
+                content: val.content || '',
+                date: val.date || '',
+                timestamp: val.timestamp || 0,
+                image: val.image || val.imageUrl || val.img || '',
+                likes: val.likes || 0,
+                views: val.views || 0,
+                comments: val.comments || {}
+              });
             });
           }
-        });
 
-        renderPosts(tempPosts);
-      }, (error) => {
-        console.error("Firebase Error:", error);
-        postsContainer.innerHTML = `<div class="col-span-full text-center py-10 text-red-400 text-xs">Data ရယူရာတွင် အမှားအယွင်းရှိနေပါသည်။ (${error.message})</div>`;
+          renderPosts();
+        }, (error) => {
+          console.error("Firebase Read Error:", error);
+        });
       });
     }
 
     function getCategoryName(cat) {
-      const lower = cat.toLowerCase();
-      if (lower.includes('knowledge')) return 'သုတရသ';
-      if (lower.includes('novel')) return 'ဝတ္ထု';
-      if (lower.includes('sport')) return 'အားကစား';
-      if (lower.includes('poem')) return 'ကဗျာ';
-      return 'အခြား';
+      switch(cat) {
+        case 'knowledges': return 'သုတရသ';
+        case 'newnovels': return 'ဝတ္ထု';
+        case 'sports': return 'အားကစား';
+        case 'poems': return 'ကဗျာ';
+        default: return 'အခြား';
+      }
     }
 
-    function renderPosts(posts) {
+    function renderPosts() {
+      // Category အားလုံးမှ ပို့စ်များကို စုစည်းခြင်း
+      let combinedPosts = [];
+      Object.values(categoryDataStore).forEach(list => {
+        combinedPosts = combinedPosts.concat(list);
+      });
+
       postsContainer.innerHTML = '';
 
-      if (!posts || posts.length === 0) {
+      if (combinedPosts.length === 0) {
         postsContainer.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-xs">စာမူများ မရှိသေးပါ။</div>`;
         return;
       }
 
-      // စာမူများ စီစဉ်ခြင်း
-      posts.sort((a, b) => {
-        if (a.timestamp || b.timestamp) {
-          return (b.timestamp || 0) - (a.timestamp || 0);
+      // စာမူများကို နောက်ဆုံးတင်ခဲ့သည့် အချိန်အတိုင်း စီခြင်း (Timestamp ရှိရင် Timestamp ၊ မရှိရင် ID သို့ Date)
+      combinedPosts.sort((a, b) => {
+        if (a.timestamp && b.timestamp) {
+          return b.timestamp - a.timestamp;
         }
-
-        const parseDate = (dStr) => {
-          if (!dStr) return 0;
-          const parts = dStr.split('/');
-          if (parts.length === 3) {
-            return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
-          }
-          return new Date(dStr).getTime() || 0;
-        };
-
-        const timeA = parseDate(a.date);
-        const timeB = parseDate(b.date);
-
-        if (timeA !== timeB) {
-          return timeB - timeA;
-        }
-
-        return a.id.localeCompare(b.id);
+        return b.id.localeCompare(a.id);
       });
 
-      // Window object သို့ posts သိမ်းဆည်းထားခြင်း
-      window.currentPosts = posts;
+      // Window အောက်သို့ allPosts ကို global ထည့်ထားပေးခြင်း (Modal အတွက်)
+      window.allPosts = combinedPosts;
 
-      posts.forEach(post => {
+      combinedPosts.forEach(post => {
         const imageMarkup = post.image 
           ? `<img src="${post.image}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-gray-100" />`
           : `<div class="w-20 h-20 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 flex-shrink-0 border border-indigo-100"><i class="fa-solid fa-book-open text-xl"></i></div>`;
@@ -273,8 +253,8 @@
 
     // Open Modal
     window.openModal = function(category, postId) {
-      const posts = window.currentPosts || [];
-      const post = posts.find(p => p.id === postId && p.category === category);
+      const postsList = window.allPosts || [];
+      const post = postsList.find(p => p.id === postId && p.category === category);
       if (!post) return;
 
       const viewsRef = ref(database, `${category}/${postId}/views`);
