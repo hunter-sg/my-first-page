@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>စာဖတ်ရန် - Literature Garden</title>
+  <title>စာဖတ်ရန် - စာပေဥယျာဉ်</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -11,54 +11,109 @@
     body { font-family: 'Padauk', sans-serif; }
   </style>
 </head>
-<body class="bg-[#1e1b4b] text-white min-h-screen flex flex-col select-none">
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col justify-between">
 
-  <header class="bg-[#2e2a72] border-b border-[#3b358c] sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a id="backBtn" href="javascript:history.back()" class="text-amber-400 hover:text-amber-300 flex items-center gap-2 text-sm font-bold">
-        <i class="fa-solid fa-arrow-left"></i> နောက်သို့
+  <!-- Header Navigation -->
+  <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-2">
+      <a href="index.html" class="flex items-center gap-2 flex-shrink-0">
+        <img src="photo_2026-09-07_21-25-15.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-amber-400/50 object-cover">
+        <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
       </a>
-      <span class="text-lg font-bold text-amber-400">စာပေဥယျာဉ်</span>
-      <div class="w-16"></div>
+
+      <!-- Live Clock -->
+      <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
+        <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
+        <span id="dateDisplay" class="font-medium">00/00/0000</span>
+      </div>
+
+      <!-- Navigation Link -->
+      <nav class="flex items-center space-x-3 text-sm">
+        <button onclick="goBack()" class="text-amber-400 hover:underline flex items-center gap-1 text-xs md:text-sm cursor-pointer">
+          <i class="fa-solid fa-arrow-left"></i> နောက်သို့
+        </button>
+      </nav>
     </div>
   </header>
 
-  <main class="flex-1 max-w-3xl w-full mx-auto p-4 md:p-6 my-4">
-    <div id="loading" class="text-center py-20 text-gray-400">
-      <i class="fa-solid fa-spinner fa-spin text-4xl text-amber-400 mb-3"></i>
-      <p>စာမူ ရယူနေပါသည်...</p>
-    </div>
-
-    <article id="readerContainer" class="hidden bg-[#24205a]/90 border border-[#3b358c] rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
-      <div class="border-b border-[#3b358c]/60 pb-5 text-center">
-        <h1 id="bookTitle" class="text-xl md:text-2xl font-bold text-amber-400 mb-2"></h1>
-        <h2 id="chapterTitle" class="text-base md:text-lg font-medium text-amber-200 mb-3"></h2>
+  <!-- Main Content Area -->
+  <main class="container mx-auto my-6 px-4 flex-grow max-w-3xl">
+    
+    <div class="bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-100">
+      
+      <!-- Article Header -->
+      <div class="border-b border-gray-100 pb-4 mb-6">
+        <div class="flex items-center gap-2 mb-2">
+          <span id="postCategory" class="text-[10px] px-2 py-0.5 bg-indigo-100 text-indigo-800 font-bold rounded">
+            ...
+          </span>
+          <span id="postDate" class="text-[11px] text-gray-400">• ...</span>
+        </div>
         
-        <div class="flex items-center justify-center gap-4 text-xs text-gray-300">
-          <span id="authorName" class="flex items-center gap-1"></span>
-          <span>•</span>
-          <span id="postDate" class="flex items-center gap-1"></span>
+        <h1 id="postTitle" class="text-lg md:text-2xl font-bold text-gray-800 leading-snug mb-2">
+          စာမူ ရယူနေသည်...
+        </h1>
+        
+        <p id="postAuthor" class="text-xs text-indigo-600 font-semibold">
+          ရေးသားသူ - ...
+        </p>
+      </div>
+
+      <!-- Optional Cover Image -->
+      <div id="imageContainer" class="mb-6 hidden">
+        <img id="postImage" src="" class="w-full max-h-80 object-cover rounded-xl border border-gray-100" />
+      </div>
+
+      <!-- Article Content -->
+      <div id="postContent" class="text-sm md:text-base text-gray-700 leading-relaxed whitespace-pre-line space-y-4 mb-8">
+        <div class="text-center py-10 text-gray-400 text-xs">
+          <i class="fa-solid fa-spinner fa-spin mr-1"></i> စာမူကို ရယူနေပါသည်...
         </div>
       </div>
 
-      <div id="storyContent" class="text-gray-100 text-base md:text-lg leading-relaxed whitespace-pre-line tracking-wide font-normal py-2">
+      <!-- Like & View Counter Section -->
+      <div class="flex items-center justify-between text-xs px-3 py-2 bg-gray-50 rounded-xl border border-gray-100 mb-8">
+        <button id="likeBtn" class="flex items-center gap-1.5 text-red-500 font-bold hover:bg-red-50 px-3 py-1.5 rounded-lg transition">
+          <i class="fa-solid fa-heart"></i> ကြိုက်နှစ်သက်သူ (<span id="likesCount">0</span>)
+        </button>
+        <span class="flex items-center gap-1.5 text-indigo-600">
+          <i class="fa-solid fa-eye"></i> ကြည့်ရှုသူ (<span id="viewsCount">0</span>)
+        </span>
       </div>
 
-      <div class="border-t border-[#3b358c]/60 pt-6 flex items-center justify-between">
-        <a id="chapterListLink" href="#" class="bg-[#18153d] hover:bg-[#2e2a72] border border-[#3b358c] text-amber-400 text-xs font-bold px-4 py-2.5 rounded-lg transition flex items-center gap-2">
-          <i class="fa-solid fa-list-ol"></i> အခန်းစဉ်များသို့
-        </a>
+      <!-- Comments Section -->
+      <div class="border-t border-gray-100 pt-6 space-y-4">
+        <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ
+        </h3>
+
+        <!-- Add Comment Form -->
+        <div class="space-y-2 bg-indigo-50/40 p-3.5 rounded-xl border border-indigo-50">
+          <input type="text" id="commentName" placeholder="သင့်နာမည် ရေးပါ..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500">
+          <textarea id="commentText" rows="3" placeholder="မှတ်ချက် ရေးရန်..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+          <button id="submitCommentBtn" class="bg-indigo-900 text-white text-xs px-4 py-2 rounded-lg font-semibold hover:bg-indigo-800 transition float-right">
+            မှတ်ချက် ပို့မည်
+          </button>
+          <div class="clear-both"></div>
+        </div>
+
+        <!-- Comments List -->
+        <div id="commentsList" class="space-y-2 mt-4">
+          <p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>
+        </div>
       </div>
-    </article>
+
+    </div>
+
   </main>
 
-  <footer class="bg-[#2e2a72]/60 border-t border-[#3b358c] py-4 text-center text-xs text-gray-400 mt-auto">
-    <p>© 2026 Literature Garden. All rights reserved.</p>
+  <footer class="bg-indigo-950 text-indigo-200 py-4 text-center text-xs mt-10">
+    <p>© 2026 စာပေဥယျာဉ်. All rights reserved.</p>
   </footer>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, get, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -71,41 +126,170 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    const database = getDatabase(app);
 
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+
+      document.getElementById('timeDisplay').textContent = `${hours}:${minutes}:${seconds}`;
+      document.getElementById('dateDisplay').textContent = `${day}/${month}/${year}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Get URL Parameters
     const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('cat');
+    const postId = urlParams.get('id');
     const bookId = urlParams.get('bookId');
     const chapId = urlParams.get('chapId');
 
-    const loadingEl = document.getElementById('loading');
-    const readerContainer = document.getElementById('readerContainer');
+    let dbPath = '';
 
-    if (bookId && chapId) {
-      get(ref(db, `novels/${bookId}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-          const book = snapshot.val();
-          const chap = book.chapters ? book.chapters[chapId] : null;
-
-          if (chap) {
-            document.getElementById('bookTitle').textContent = book.title;
-            document.getElementById('chapterTitle').textContent = chap.subTitle ? `${chap.chapterTitle} - ${chap.subTitle}` : chap.chapterTitle;
-            document.getElementById('authorName').innerHTML = `<i class="fa-solid fa-pen-nib text-amber-400"></i> ${book.author || 'အမည်မသိ'}`;
-            document.getElementById('postDate').innerHTML = `<i class="fa-regular fa-calendar"></i> ${chap.date || ''}`;
-            document.getElementById('storyContent').textContent = chap.content || '';
-            document.getElementById('chapterListLink').href = `bookdetail.html?id=${bookId}`;
-
-            loadingEl.classList.add('hidden');
-            readerContainer.classList.remove('hidden');
-          } else {
-            loadingEl.innerHTML = `<p class="text-rose-400">အခန်းကို မတွေ့ရှိပါ။</p>`;
-          }
-        } else {
-          loadingEl.innerHTML = `<p class="text-rose-400">စာအုပ်ကို မတွေ့ရှိပါ။</p>`;
-        }
-      });
-    } else {
-      loadingEl.innerHTML = `<p class="text-rose-400">သတ်မှတ်ချက်များ မပြည့်စုံပါ။</p>`;
+    // URL ကလာတဲ့ Parameter ပေါ်မူတည်ပြီး Path ခွဲခြားခြင်း
+    if (category === 'novels' && bookId && chapId) {
+      dbPath = `novels/${bookId}/chapters/${chapId}`;
+    } else if (category && postId) {
+      dbPath = `${category}/${postId}`;
     }
+
+    async function loadReadContent() {
+      if (!dbPath) {
+        alert("စာမူ လမ်းကြောင်း မှားယွင်းနေပါသည်။");
+        window.location.href = "index.html";
+        return;
+      }
+
+      try {
+        const snapshot = await get(ref(database, dbPath));
+        if (!snapshot.exists()) {
+          alert("စာမူ ရှာမတွေ့ပါ။");
+          window.location.href = "index.html";
+          return;
+        }
+
+        const data = snapshot.val();
+
+        // Increment View Count
+        const viewsRef = ref(database, `${dbPath}/views`);
+        runTransaction(viewsRef, (views) => (views || 0) + 1);
+
+        // Render Article Header & Details
+        if (category === 'novels') {
+          // စာအုပ်ရဲ့ အမည်ကို ပြန်ဆွဲယူမည်
+          const bookSnapshot = await get(ref(database, `novels/${bookId}`));
+          const bookData = bookSnapshot.exists() ? bookSnapshot.val() : {};
+          
+          document.getElementById('postCategory').textContent = 'ဝတ္ထု';
+          document.getElementById('postTitle').textContent = `${bookData.title || ''} - ${data.chapterTitle || ''} ${data.subTitle ? '(' + data.subTitle + ')' : ''}`;
+          document.getElementById('postAuthor').textContent = `ရေးသားသူ - ${bookData.author || 'မသိရပါ'}`;
+        } else {
+          document.getElementById('postCategory').textContent = getCategoryName(category);
+          document.getElementById('postTitle').textContent = data.title || 'ခေါင်းစဉ်မရှိ';
+          document.getElementById('postAuthor').textContent = `ရေးသားသူ - ${data.author || 'မသိရပါ'}`;
+        }
+
+        document.getElementById('postDate').textContent = `• ${data.date || ''}`;
+        document.getElementById('postContent').textContent = data.content || '';
+        document.getElementById('likesCount').textContent = data.likes || 0;
+        document.getElementById('viewsCount').textContent = (data.views || 0) + 1;
+
+        // Image
+        if (data.image || data.imageUrl || data.img) {
+          const imgEl = document.getElementById('postImage');
+          imgEl.src = data.image || data.imageUrl || data.img;
+          document.getElementById('imageContainer').classList.remove('hidden');
+        }
+
+        // Render Comments
+        renderComments(data.comments);
+
+      } catch (err) {
+        console.error("Error loading content:", err);
+      }
+    }
+
+    function getCategoryName(cat) {
+      switch(cat) {
+        case 'knowledges': return 'သုတရသ';
+        case 'sports': return 'အားကစား';
+        case 'poems': return 'ကဗျာ';
+        default: return 'အခြား';
+      }
+    }
+
+    function renderComments(comments) {
+      const listEl = document.getElementById('commentsList');
+      listEl.innerHTML = '';
+
+      if (comments && Object.keys(comments).length > 0) {
+        Object.values(comments).forEach(c => {
+          listEl.innerHTML += `
+            <div class="bg-gray-100/70 p-2.5 rounded-lg text-xs space-y-0.5">
+              <div class="flex justify-between font-bold text-indigo-950 text-[11px]">
+                <span>${c.name || 'ဧည့်သည်'}</span>
+                <span class="text-gray-400 text-[10px] font-normal">${c.date || ''}</span>
+              </div>
+              <p class="text-gray-700">${c.text}</p>
+            </div>
+          `;
+        });
+      } else {
+        listEl.innerHTML = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
+      }
+    }
+
+    // Like Action
+    document.getElementById('likeBtn').onclick = () => {
+      const likesRef = ref(database, `${dbPath}/likes`);
+      runTransaction(likesRef, (currentLikes) => {
+        const updated = (currentLikes || 0) + 1;
+        document.getElementById('likesCount').textContent = updated;
+        return updated;
+      });
+    };
+
+    // Submit Comment
+    document.getElementById('submitCommentBtn').onclick = async () => {
+      const nameInput = document.getElementById('commentName');
+      const textInput = document.getElementById('commentText');
+
+      if (!textInput.value.trim()) return alert("မှတ်ချက် စာသား ရေးပေးပါ!");
+
+      try {
+        await push(ref(database, `${dbPath}/comments`), {
+          name: nameInput.value.trim() || 'ဧည့်သည်',
+          text: textInput.value.trim(),
+          date: new Date().toLocaleDateString('en-GB')
+        });
+        alert("မှတ်ချက် တင်ပြီးပါပြီ!");
+        textInput.value = '';
+        
+        // Refresh comments list
+        const snap = await get(ref(database, `${dbPath}/comments`));
+        if (snap.exists()) renderComments(snap.val());
+      } catch (err) {
+        alert("မှတ်ချက် တင်၍ မရပါ: " + err.message);
+      }
+    };
+
+    // Back button behavior
+    window.goBack = function() {
+      if (document.referrer && document.referrer.includes(window.location.hostname)) {
+        window.history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    };
+
+    loadReadContent();
   </script>
 </body>
 </html>
