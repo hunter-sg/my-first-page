@@ -233,6 +233,18 @@
         modalContainer.classList.remove('flex');
       }
     };
+    function likePost(postId) {
+      const postRef = firebase.database().ref(`sports/${postId}`);
+  
+      postRef.child('likes').transaction((likes) => (likes || 0) + 1)
+        .then(() => {
+      // UI ပေါ်တွင် တိုက်ရိုက် update လုပ်ပေးရန်
+          const likeElem = document.getElementById('likeCount');
+          if (likeElem) {
+            likeElem.textContent = parseInt(likeElem.textContent) + 1;
+          }
+        });
+    }
   </script>
 </body>
 </html>
