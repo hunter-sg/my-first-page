@@ -148,7 +148,7 @@
       };
     }
 
-    const categories = ['knowledges', 'newnovels','novels', 'sports', 'poems'];
+    const categories = ['knowledges', 'novels', 'sports', 'poems'];
     const postsByCategory = {};
     let allPosts = [];
 
@@ -165,11 +165,12 @@
                 id: key,
                 category: category,
                 categoryName: getCategoryName(category),
-                title: val.title || 'ခေါင်းစဉ်မရှိ',
+                // novel စာအုပ်များအတွက် bookTitle, summary, coverImage များကိုပါ စစ်ပေးထားပါသည်
+                title: val.title || val.bookTitle || 'ခေါင်းစဉ်မရှိ',
                 author: val.author || 'မသိရပါ',
-                content: val.content || '',
+                content: val.content || val.summary || '',
                 date: val.date || '',
-                image: val.image || val.imageUrl || val.img || '',
+                image: val.image || val.imageUrl || val.img || val.coverImage || '',
                 likes: val.likes || 0,
                 views: val.views || 0,
                 comments: val.comments || {}
@@ -187,7 +188,7 @@
     function getCategoryName(cat) {
       switch(cat) {
         case 'knowledges': return 'သုတရသ';
-        case 'newnovels': return 'ဝတ္ထု';
+        case 'novels': return 'ဝတ္ထု';
         case 'sports': return 'အားကစား';
         case 'poems': return 'ကဗျာ';
         default: return 'အခြား';
@@ -378,6 +379,7 @@
       });
     };
 
+    // Function ခေါ်ယူသည့် လိုင်းထည့်ပေးထားပါသည်
     loadAllPosts();
   </script>
 </body>
