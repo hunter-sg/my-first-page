@@ -233,18 +233,26 @@
         modalContainer.classList.remove('flex');
       }
     };
-    function likePost(postId) {
-      const postRef = firebase.database().ref(`sports/${postId}`);
-  
-      postRef.child('likes').transaction((likes) => (likes || 0) + 1)
-        .then(() => {
-      // UI ပေါ်တွင် တိုက်ရိုက် update လုပ်ပေးရန်
-          const likeElem = document.getElementById('likeCount');
-          if (likeElem) {
-            likeElem.textContent = parseInt(likeElem.textContent) + 1;
+    window.likePost = async function(postId) {
+      try {
+        const postRef = ref(db, `sports/${postId}`); // သို့မဟုတ် မိမိ Category အလိုက်
+        await runTransaction(postRef, (post) => {
+          if (post) {
+            post.likes = (post.likes || 0) + 1;
           }
+          return post;
         });
-    }
+
+    // UI မာ အရေအတွက် တိုက်ရိုက် တိုးပေးရန်
+        const likeElem = document.getElementById('likeCount');
+        if (likeElem) {
+          likeElem.textContent = parseInt(likeElem.textContent || 0) + 1;
+        }
+      } catch (err) {
+        console.error("Like ပေး၍ မရပါ: ", err);
+      }
+    };
+    
   </script>
 </body>
 </html>
