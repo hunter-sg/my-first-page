@@ -11,19 +11,45 @@
 
   <!-- Header -->
   <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-      <a href="index.html" class="text-xl font-bold tracking-wide flex items-center gap-2">
-        <i class="fa-solid fa-futbol text-amber-400"></i> စာပေဥယျာဉ်
+    <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-2">
+      
+      <!-- Logo & Brand -->
+      <a href="index.html" class="flex items-center gap-2 flex-shrink-0">
+        <img src="photo_2026-09-07_21-25-15.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-amber-400/50 object-cover">
+        <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
       </a>
-      <button id="menuBtn" class="text-white text-lg focus:outline-none md:hidden">
-        <i id="menuIcon" class="fa-solid fa-bars"></i>
+
+      <!-- search bar and Live Clock -->
+      
+      <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
+        <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
+        <span id="dateDisplay" class="font-medium">00/00/0000</span>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="menuToggleBtn" class="text-amber-400 text-lg p-1 focus:outline-none">
+        <i class="fa-solid fa-bars" id="menuIcon"></i>
       </button>
-      <nav id="menuList" class="hidden md:flex space-x-6 text-xs font-semibold">
-        <a href="index.html" class="hover:text-indigo-200">ပင်မ</a>
-        <a href="knowledges.html" class="hover:text-indigo-200">သုတရသ</a>
-        <a href="newnovels.html" class="hover:text-indigo-200">ဝတ္ထု</a>
-        <a href="sports.html" class="text-amber-400 font-bold border-b-2 border-amber-400 pb-0.5">အားကစား</a>
-        <a href="poems.html" class="hover:text-indigo-200">ကဗျာ</a>
+    </div>
+
+    <!-- Mobile Dropdown Menu Box (အောက်သို့ သီးသန့် ကျလာမည့် Box) -->
+    <div id="mobileMenu" class="hidden bg-indigo-950 border-t border-indigo-800 px-4 py-3 shadow-xl">
+      <nav class="flex flex-col space-y-2 text-sm">
+        <a href="index.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
+          <i class="fa-solid fa-house text-amber-400"></i> ပင်မစာမျက်နှာ
+        </a>
+        <a href="newnovels.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
+          <i class="fa-solid fa-book text-amber-400"></i> ဝတ္ထုစင်
+        </a>
+        <a href="knowledges.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb text-amber-400"></i> သုတရသ
+        </a>
+        <a href="sports.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
+          <i class="fa-solid fa-football text-amber-400"></i> အားကစား
+        </a>
+        <a href="poems.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
+          <i class="fa-solid fa-feather text-amber-400"></i> ကဗျာ
+        </a>
       </nav>
     </div>
   </header>
