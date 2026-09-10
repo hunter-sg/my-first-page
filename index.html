@@ -89,14 +89,16 @@
 
   <!-- Firebase & Logic Script -->
   <script type="module">
+    <script type="module">
     document.getElementById('menuToggleBtn').addEventListener('click', () => {
       const mobileMenu = document.getElementById('mobileMenu');
       const menuIcon = document.getElementById('menuIcon');
-  
+      
       mobileMenu.classList.toggle('hidden');
       menuIcon.classList.toggle('fa-bars');
       menuIcon.classList.toggle('fa-xmark');
     });
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
@@ -114,16 +116,12 @@
     const database = getDatabase(app);
     const postsContainer = document.getElementById('postsContainer');
 
-    // Live Date & Time Updater
+    // Live Clock
     function updateClock() {
       const now = new Date();
-    
-      // Time (HH:MM:SS)
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
-    
-      // Date (DD/MM/YYYY)
       const day = String(now.getDate()).padStart(2, '0');
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const year = now.getFullYear();
@@ -137,22 +135,11 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Mobile Menu Toggle
-    const menuBtn = document.getElementById('menuBtn');
-    const menuList = document.getElementById('menuList');
-    const menuIcon = document.getElementById('menuIcon');
-    if (menuBtn) {
-      menuBtn.onclick = () => {
-        menuList.classList.toggle('hidden');
-        menuIcon.className = menuList.classList.contains('hidden') ? "fa-solid fa-bars" : "fa-solid fa-xmark";
-      };
-    }
-
     const categories = ['knowledges', 'novels', 'sports', 'poems'];
     const postsByCategory = {};
     let allPosts = [];
 
-    // Load Posts from all categories
+    // Load Posts
     function loadAllPosts() {
       categories.forEach(category => {
         onValue(ref(database, category), (snapshot) => {
@@ -165,7 +152,6 @@
                 id: key,
                 category: category,
                 categoryName: getCategoryName(category),
-                // novel စာအုပ်များအတွက် bookTitle, summary, coverImage များကိုပါ စစ်ပေးထားပါသည်
                 title: val.title || val.bookTitle || 'ခေါင်းစဉ်မရှိ',
                 author: val.author || 'မသိရပါ',
                 content: val.content || val.summary || '',
@@ -178,7 +164,6 @@
             });
           }
 
-          // Combine all categories posts
           allPosts = Object.values(postsByCategory).flat();
           renderPosts();
         });
@@ -203,7 +188,6 @@
         return;
       }
 
-      // Sort posts by ID descending (Firebase push keys are time-ordered)
       allPosts.sort((a, b) => b.id.localeCompare(a.id));
 
       allPosts.forEach(post => {
@@ -247,7 +231,7 @@
       });
     };
 
-    // Open Modal
+    // Open Modal (မြင်ကွင်းကျယ်)
     window.openModal = function(category, postId) {
       const post = allPosts.find(p => p.id === postId && p.category === category);
       if (!post) return;
@@ -260,7 +244,6 @@
       const modalContainer = document.getElementById('postModal');
       const modalContent = document.getElementById('modalContent');
 
-      // ပုံ အရွယ်အစားကို အချိုးကျ မြင်ရအောင် ပြင်ထားပါသည်
       const imageHtml = post.image 
         ? `<div class="mb-4 overflow-hidden rounded-xl border border-gray-100 shadow-sm flex justify-center bg-black/5">
              <img src="${post.image}" class="w-full max-h-[450px] object-contain rounded-xl" />
@@ -284,7 +267,6 @@
         commentsHtml = `<p class="text-xs text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
       }
 
-      // max-w-4xl ဖြင့် Sight line ကို မြင်ကွင်းကျယ် ပြင်ပေးထားပါသည်
       modalContent.innerHTML = `
         <div class="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[92vh]">
           
@@ -338,7 +320,6 @@
       modalContainer.classList.remove('hidden');
       modalContainer.classList.add('flex');
     };
-    };
 
     // Add Comment
     window.addComment = async function(category, postId) {
@@ -369,22 +350,6 @@
       }
     };
 
-    // Search Posts
-    window.searchPosts = function() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const postCards = document.querySelectorAll('#postsContainer > div');
-
-      postCards.forEach(card => {
-        const text = card.innerText.toLowerCase();
-        if (text.includes(input)) {
-          card.style.display = "";
-        } else {
-          card.style.display = "none";
-        }
-      });
-    };
-
-    // Function ခေါ်ယူသည့် လိုင်းထည့်ပေးထားပါသည်
     loadAllPosts();
   </script>
 </body>
