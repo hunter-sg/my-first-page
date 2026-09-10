@@ -3,54 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>စာအုပ်စင် - စာပေဥယျာဉ်</title>
+  <title>ဝတ္ထုများ - စာပေဥယျာဉ်</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
+    body { font-family: 'Padauk', sans-serif; }
+  </style>
 </head>
-<body class="bg-[#0f1021] text-gray-100 font-sans min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col justify-between">
 
-  <!-- Header -->
-  <header class="bg-[#15162e] border-b border-[#2a2d54] p-4 sticky top-0 z-50 shadow-md">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 font-bold shadow">
-          <i class="fa-solid fa-book-open text-lg"></i>
+  <!-- Header Navigation -->
+  <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-2">
+      <a href="index.html" class="flex items-center gap-2 flex-shrink-0">
+        <img src="photo_2026-09-07_21-25-15.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-amber-400/50 object-cover">
+        <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
+      </a>
+
+      <!-- Search & Clock -->
+      <div class="flex items-center gap-2 flex-1 max-w-xs md:max-w-md mx-2">
+        <div class="relative w-full">
+          <input type="text" id="searchInput" onkeyup="searchNovels()" placeholder="ဝတ္ထု ရှာဖွေရန်..." class="w-full bg-indigo-950/80 text-white placeholder-indigo-300 text-xs rounded-full pl-8 pr-3 py-1.5 border border-indigo-700/60 focus:outline-none focus:border-amber-400 transition">
+          <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-indigo-400 text-xs"></i>
         </div>
-        <h1 class="text-xl font-bold text-amber-500 tracking-wide">စာပေဥယျာဉ်</h1>
-      </div>
-      
-      <div class="flex items-center gap-4">
-        <div id="liveClock" class="bg-[#1a1c38] border border-[#2a2d54] text-amber-400 text-xs px-3 py-1.5 rounded-lg text-center font-mono">
-          --:--:--
+        <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
+          <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
+          <span id="dateDisplay" class="font-medium">00/00/0000</span>
         </div>
-        <button class="text-gray-300 hover:text-amber-500 text-xl">
-          <i class="fa-solid fa-bars"></i>
-        </button>
       </div>
+
+      <button id="menuBtn" class="text-white text-base focus:outline-none md:hidden">
+        <i id="menuIcon" class="fa-solid fa-bars"></i>
+      </button>
+
+      <nav id="menuList" class="hidden md:flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 text-sm">
+        <a href="index.html" class="px-3 py-2 text-white hover:text-amber-400">ပင်မ</a>
+        <a href="knowledges.html" class="px-3 py-2 text-white hover:text-amber-400">သုတရသ</a>
+        <a href="newnovels.html" class="px-3 py-2 text-amber-400 font-bold">ဝတ္ထု</a>
+        <a href="sports.html" class="px-3 py-2 text-white hover:text-amber-400">အားကစား</a>
+        <a href="poems.html" class="px-3 py-2 text-white hover:text-amber-400">ကဗျာ</a>
+        <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-pen-to-square"></i> စာမူတင်ရန်
+        </a>
+      </nav>
     </div>
   </header>
 
-  <!-- Main Grid Section -->
-  <main class="max-w-7xl mx-auto w-full p-4 sm:p-6 flex-grow">
-    <!-- Card Container (ဖုန်းမှာ ၂ ကွက်၊ Tablet မှာ ၃/၄ ကွက်၊ Desktop မှာ ၅ ကွက် ပြပါမည်) -->
-    <div id="booksContainer" class="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-10 gap-3 sm:gap-4">
-      <!-- Loading Placeholder -->
-      <div class="col-span-full text-center py-12 text-gray-400">
-        <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-amber-500"></i>
-        <p class="text-sm">စာအုပ်များ ရယူနေပါသည်...</p>
+  <!-- Main Content -->
+  <main class="container mx-auto my-6 px-4 flex-grow max-w-5xl">
+    <div class="bg-white rounded-2xl p-4 md:p-5 shadow-sm border border-gray-100 mb-6 flex items-center justify-between">
+      <div>
+        <h2 class="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2">
+          <span class="p-2 bg-indigo-100 text-indigo-800 rounded-lg text-sm"><i class="fa-solid fa-book"></i></span>
+          ဝတ္ထုစင် (Novel Library)
+        </h2>
+        <p class="text-xs text-gray-500 mt-1">တင်ဆက်ထားသော ဝတ္ထုရှည်များနှင့် အခန်းဆက်ဝတ္ထုများ</p>
+      </div>
+      <a href="submit.html" class="hidden sm:inline-flex items-center gap-1.5 bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-3.5 py-2 rounded-lg font-bold transition">
+        <i class="fa-solid fa-plus"></i> ဝတ္ထုသစ်တင်ရန်
+      </a>
+    </div>
+
+    <!-- Novel Grid Container -->
+    <div id="novelsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
+      <div class="col-span-full text-center py-10 text-gray-400 text-xs">
+        <i class="fa-solid fa-spinner fa-spin text-lg mr-2"></i> ဝတ္ထုများကို ရယူနေပါသည်...
       </div>
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-[#15162e] border-t border-[#2a2d54] text-gray-500 text-center py-4 text-xs mt-auto">
-    © 2026 Literature Garden. All rights reserved.
+  <footer class="bg-indigo-950 text-indigo-200 py-4 text-center text-xs mt-10">
+    <p>© 2026 စာပေဥယျာဉ်. All rights reserved.</p>
   </footer>
 
-  <!-- Firebase Logic -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
@@ -63,131 +92,88 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    const database = getDatabase(app);
+    const novelsGrid = document.getElementById('novelsGrid');
 
     // Live Clock
     function updateClock() {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString();
-      const dateStr = now.toLocaleDateString();
-      const clockEl = document.getElementById('liveClock');
-      if (clockEl) {
-        clockEl.innerHTML = `${timeStr}<br>${dateStr}`;
-      }
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+
+      document.getElementById('timeDisplay').textContent = `${hours}:${minutes}:${seconds}`;
+      document.getElementById('dateDisplay').textContent = `${day}/${month}/${year}`;
     }
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Base Title ဖြတ်ထုတ်ရန် Helper
-    function getBaseTitle(fullTitle) {
-      if (!fullTitle) return '';
-      let clean = fullTitle.trim();
-      if (clean.toLowerCase().includes('shadow slave')) return 'shadow slave';
-      if (clean.includes('ကောင်းကင်ဘုံကို')) return 'ကောင်းကင်ဘုံကိုဓါးပြတိုက်မယ်';
-      return clean.split(/::|-|\.\.|chapter/i)[0].trim().toLowerCase();
+    // Mobile Menu
+    const menuBtn = document.getElementById('menuBtn');
+    const menuList = document.getElementById('menuList');
+    if (menuBtn) {
+      menuBtn.onclick = () => {
+        menuList.classList.toggle('hidden');
+        document.getElementById('menuIcon').className = menuList.classList.contains('hidden') ? "fa-solid fa-bars" : "fa-solid fa-xmark";
+      };
     }
 
-    async function loadBooks() {
-      const dbRef = ref(db);
-      const container = document.getElementById('booksContainer');
+    // Load Novels from Firebase
+    function loadNovels() {
+      const novelsRef = ref(database, 'novels');
+      onValue(novelsRef, (snapshot) => {
+        novelsGrid.innerHTML = '';
+        const data = snapshot.val();
 
-      try {
-        const snapshot = await get(child(dbRef, 'newnovels'));
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          const keys = Object.keys(data);
-
-          // Group posts by Novel Title
-          const booksMap = {};
-
-          keys.forEach(key => {
-            const item = data[key];
-            const rawTitle = item.title || '';
-            const baseTitle = getBaseTitle(rawTitle);
-            const mainName = rawTitle.split(/::|-|\.\.|chapter/i)[0].trim() || rawTitle;
-
-            if (!booksMap[baseTitle]) {
-              booksMap[baseTitle] = {
-                id: key,
-                title: mainName,
-                author: item.author || 'Hunter',
-                summary: item.summary || item.description || '',
-                coverUrl: item.image || item.imageUrl || item.img || item.cover || '',
-                latestChapter: rawTitle.split(/::|-|\.\./)[1]?.trim() || ''
-              };
-            } else {
-              // ပုံမရှိသေးပါက နောက်အခန်းများမှ ပုံရှာယူမည်
-              if (!booksMap[baseTitle].coverUrl && (item.image || item.imageUrl || item.img || item.cover)) {
-                booksMap[baseTitle].coverUrl = item.image || item.imageUrl || item.img || item.cover;
-              }
-              if (!booksMap[baseTitle].summary && (item.summary || item.description)) {
-                booksMap[baseTitle].summary = item.summary || item.description;
-              }
-            }
-          });
-
-          container.innerHTML = ''; // Clear loading
-
-          Object.values(booksMap).forEach(book => {
-            const coverImage = book.coverUrl || 'https://via.placeholder.com/200x300?text=No+Cover';
-            const summaryText = book.summary || 'အကြောင်းအရာ ဖော်ပြချက် မရှိသေးပါ။';
-
-            const cardHtml = `
-              <div class="bg-[#1a1c38] border border-[#2a2d54] rounded-xl overflow-hidden shadow-md flex flex-col justify-between hover:border-amber-500/50 transition">
-                
-                <!-- Novel Cover Image -->
-                <div class="relative w-full aspect-[2/3] overflow-hidden bg-slate-800">
-                  <img src="${coverImage}" alt="${book.title}" class="w-full h-full object-cover">
-                  ${book.latestChapter ? `
-                    <span class="absolute top-1.5 right-1.5 bg-amber-500 text-slate-950 font-bold text-[10px] px-2 py-0.5 rounded-full shadow">
-                      ${book.latestChapter}
-                    </span>
-                  ` : ''}
-                </div>
-
-                <!-- Info Details -->
-                <div class="p-2.5 sm:p-3 flex flex-col flex-grow justify-between gap-2">
-                  <div>
-                    <h3 class="text-amber-400 font-bold text-xs sm:text-sm line-clamp-1 mb-1" title="${book.title}">
-                      ${book.title}
-                    </h3>
-                    
-                    <p class="text-gray-400 text-[10px] sm:text-[11px] flex items-center gap-1 mb-1.5">
-                      <i class="fa-solid fa-feather text-amber-500"></i>
-                      <span class="truncate">${book.author}</span>
-                    </p>
-
-                    <p class="text-gray-300 text-[10px] sm:text-[11px] line-clamp-2 leading-tight opacity-80">
-                      ${summaryText}
-                    </p>
-                  </div>
-
-                  <!-- Action Button -->
-                  <div class="pt-2 border-t border-slate-700/50 mt-1">
-                    <a href="novels.html?category=newnovels&id=${book.id}" 
-                       class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-1.5 px-2 rounded-lg flex items-center justify-center gap-1.5 transition text-[11px] sm:text-xs shadow">
-                      <i class="fa-solid fa-book-open"></i>
-                      <span>စာအုပ်ကြည့်ရန်</span>
-                    </a>
-                  </div>
-                </div>
-
-              </div>
-            `;
-
-            container.insertAdjacentHTML('beforeend', cardHtml);
-          });
-
-        } else {
-          container.innerHTML = '<div class="col-span-full text-center text-gray-400 py-10">စာအုပ်များ မရှိသေးပါ။</div>';
+        if (!data) {
+          novelsGrid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400 text-xs">ဝတ္ထုများ မရှိသေးပါ။</div>`;
+          return;
         }
-      } catch (err) {
-        console.error("Error loading books:", err);
-        container.innerHTML = '<div class="col-span-full text-center text-red-400 py-10">အချက်အလက်များ ဆွဲယူရာတွင် အမှားအယွင်းရှိနေပါသည်။</div>';
-      }
+
+        Object.entries(data).forEach(([id, novel]) => {
+          const chapterCount = novel.chapters ? Object.keys(novel.chapters).length : 0;
+          const coverImage = novel.coverImage 
+            ? `<img src="${novel.coverImage}" class="w-full h-48 md:h-56 object-cover rounded-t-xl" />`
+            : `<div class="w-full h-48 md:h-56 bg-indigo-100 flex items-center justify-center text-indigo-500 rounded-t-xl"><i class="fa-solid fa-book-open text-4xl"></i></div>`;
+
+          novelsGrid.innerHTML += `
+            <a href="novels.html?id=${id}" class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition overflow-hidden flex flex-col justify-between group">
+              <div>
+                <div class="relative overflow-hidden">
+                  ${coverImage}
+                  <span class="absolute top-2 right-2 bg-indigo-900/80 backdrop-blur-md text-amber-300 text-[10px] px-2 py-0.5 rounded-full font-bold">
+                    ${chapterCount} အခန်း
+                  </span>
+                </div>
+                <div class="p-3">
+                  <h3 class="text-xs md:text-sm font-bold text-gray-800 line-clamp-1 group-hover:text-indigo-600 transition mb-1">${novel.title}</h3>
+                  <p class="text-[11px] text-gray-500 line-clamp-2 mb-2">${novel.summary || 'အကျဉ်းချုပ် မရှိသေးပါ။'}</p>
+                </div>
+              </div>
+              <div class="px-3 py-2 bg-gray-50 border-t border-gray-100 flex justify-between items-center text-[10px] text-gray-400">
+                <span class="truncate">ရေးသူ - ${novel.author}</span>
+                <i class="fa-solid fa-chevron-right text-indigo-500"></i>
+              </div>
+            </a>
+          `;
+        });
+      });
     }
 
-    loadBooks();
+    // Search
+    window.searchNovels = function() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const cards = novelsGrid.querySelectorAll('a');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(input) ? "" : "none";
+      });
+    };
+
+    loadNovels();
   </script>
 </body>
 </html>
