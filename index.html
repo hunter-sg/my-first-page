@@ -45,7 +45,7 @@
         <a href="sports.html" class="px-3 py-2 text-white hover:text-amber-400">အားကစား</a>
         <a href="poems.html" class="px-3 py-2 text-white hover:text-amber-400">ကဗျာ</a>
   
-  <!-- စာမူတင်ရန် Button -->
+        <!-- စာမူတင်ရန် Button -->
         <a href="submit.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
           <i class="fa-solid fa-pen-to-square"></i> စာမူတင်ရန်
         </a>
@@ -109,12 +109,12 @@
     function updateClock() {
       const now = new Date();
     
-    // Time (HH:MM:SS)
+      // Time (HH:MM:SS)
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const seconds = String(now.getSeconds()).padStart(2, '0');
     
-    // Date (DD/MM/YYYY)
+      // Date (DD/MM/YYYY)
       const day = String(now.getDate()).padStart(2, '0');
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const year = now.getFullYear();
@@ -140,22 +140,19 @@
     }
 
     const categories = ['knowledges', 'newnovels', 'sports', 'poems'];
+    const postsByCategory = {};
     let allPosts = [];
 
     // Load Posts from all categories
     function loadAllPosts() {
-      allPosts = [];
-      let loadedCategories = 0;
-
       categories.forEach(category => {
         onValue(ref(database, category), (snapshot) => {
           const data = snapshot.val();
-          
-          allPosts = allPosts.filter(p => p.category !== category);
+          postsByCategory[category] = [];
 
           if (data) {
             Object.entries(data).forEach(([key, val]) => {
-              allPosts.push({
+              postsByCategory[category].push({
                 id: key,
                 category: category,
                 categoryName: getCategoryName(category),
@@ -171,10 +168,9 @@
             });
           }
 
-          loadedCategories++;
-          if (loadedCategories >= categories.length) {
-            renderPosts();
-          }
+          // Combine all categories posts
+          allPosts = Object.values(postsByCategory).flat();
+          renderPosts();
         });
       });
     }
@@ -197,6 +193,7 @@
         return;
       }
 
+      // Sort posts by ID descending (Firebase push keys are time-ordered)
       allPosts.sort((a, b) => b.id.localeCompare(a.id));
 
       allPosts.forEach(post => {
