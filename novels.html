@@ -142,34 +142,39 @@
           coverContainer.innerHTML = `<i class="fa-solid fa-book-open text-indigo-400 text-3xl"></i>`;
         }
 
+        
         // Display Chapters
         const chaptersList = document.getElementById('chaptersList');
         chaptersList.innerHTML = '';
 
         if (novel.chapters && Object.keys(novel.chapters).length > 0) {
-          const sortedChapters = Object.entries(novel.chapters).sort((a, b) => (a[1].createdAt || 0) - (b[1].createdAt || 0));
+            const sortedChapters = Object.entries(novel.chapters); // sorting ရှိလျှင် ဆက်ထားပါ
+    
+            sortedChapters.forEach(([chapId, chap]) => {
+                chaptersList.innerHTML += `
+                    <a href="read.html?cat=newnovels&id=${novelId}&chapter=${chapId}" 
+                       class="flex items-center justify-between p-2.5 bg-indigo-50/30 hover:bg-indigo-100/50 rounded-xl border border-indigo-100/60 transition group mb-2">
+                
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="w-7 h-7 bg-indigo-100 text-indigo-700 rounded-lg flex items-center justify-center flex-shrink-0 text-xs">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <h3 class="text-xs font-bold text-gray-800 truncate group-hover:text-indigo-900">
+                                    ${chap.title || chapId}
+                                </h3>
+                                <span class="text-[10px] text-gray-400 block leading-none mt-0.5">
+                                    ${chap.date || ''}
+                                </span>
+                            </div>
+                        </div>
 
-          sortedChapters.forEach(([chapId, chap]) => {
-            const subTitleText = chap.subTitle ? ` - ${chap.subTitle}` : '';
-            chaptersList.innerHTML += `
-              <a href="read.html?cat=novels&bookId=${bookId}&chapId=${chapId}" class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition group">
-                <div class="flex items-center gap-2.5">
-                  <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-800 font-bold text-xs flex items-center justify-center flex-shrink-0">
-                    <i class="fa-regular fa-file-lines"></i>
-                  </span>
-                  <div>
-                    <h4 class="text-xs md:text-sm font-bold text-gray-800 group-hover:text-indigo-900 transition">
-                      ${chap.chapterTitle}${subTitleText}
-                    </h4>
-                    <span class="text-[10px] text-gray-400">${chap.date || ''}</span>
-                  </div>
-                </div>
-                <i class="fa-solid fa-chevron-right text-xs text-gray-300 group-hover:text-indigo-600 transition"></i>
-              </a>
-            `;
-          });
+                        <i class="fa-solid fa-chevron-right text-indigo-300 text-xs group-hover:text-indigo-600 transition flex-shrink-0"></i>
+                    </a>
+                `;
+            });
         } else {
-          chaptersList.innerHTML = `<div class="text-center py-6 text-gray-400 text-xs">အခန်းများ မရှိသေးပါ။</div>`;
+            chaptersList.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">အခန်းများ မရှိသေးပါ။</p>`;
         }
 
       } catch (err) {
