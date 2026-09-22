@@ -237,7 +237,7 @@
 
         try {
           const base64Img = await convertAndCompressBase64(file, 450, 0.6);
-          const imgTag = `\n<img src="${base64Img}" class="w-full rounded-lg my-4 cursor-pointer">\n`;
+          const imgTag = `\n<img src="${base64Img}" class="max-w-[320px] w-full mx-auto rounded-lg my-4 cursor-pointer hover:opacity-90 transition">\n`;
           
           const startPos = postContent.selectionStart;
           const endPos = postContent.selectionEnd;
