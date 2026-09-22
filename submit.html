@@ -115,11 +115,24 @@
         </div>
 
         <div>
-          <label class="block text-sm font-semibold text-gray-200 mb-1">
-            စာမူအပြည့်အစုံ <span class="text-rose-500">*</span>
-          </label>
-          <textarea id="postContent" rows="6" required placeholder="ဤအခန်း၏ စာသားများကို ရေးပါ..." 
-            class="w-full bg-[#18153d] border border-[#3b358c] rounded-lg p-4 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-amber-400 transition leading-relaxed"></textarea>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-sm font-semibold text-gray-200">
+              စာမူအပြည့်အစုံ <span class="text-rose-500">*</span>
+            </label>
+          </div>
+
+          <!-- စာမူထဲ ပုံထည့်သွင်းရန် Tool Bar -->
+          <div class="bg-[#18153d] border border-[#3b358c] rounded-t-lg p-2 flex items-center gap-2">
+            <input type="text" id="inlineImageUrl" placeholder="ပုံ လင့်ခ် (Image URL) ထည့်ပါ..." 
+              class="flex-1 bg-[#24205a] border border-[#3b358c] rounded px-3 py-1.5 text-xs text-gray-200 placeholder-gray-400 focus:outline-none focus:border-amber-400">
+            <button type="button" id="insertImgBtn" 
+              class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded text-xs transition flex items-center gap-1">
+              <i class="fa-solid fa-image"></i> ပုံ ထည့်မည်
+            </button>
+          </div>
+
+          <textarea id="postContent" rows="8" required placeholder="ဤအခန်း၏ စာသားများကို ရေးပါ..." 
+            class="w-full bg-[#18153d] border border-[#3b358c] rounded-b-lg p-4 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-amber-400 transition leading-relaxed"></textarea>
         </div>
 
         <button type="submit" id="submitBtn" 
@@ -181,6 +194,30 @@
           menuIcon.classList.toggle('fa-bars');
           menuIcon.classList.toggle('fa-xmark');
         }
+      });
+    }
+
+    // စာမူထဲ ပုံလင့်ခ် ထည့်သွင်းပေးသည့် Function
+    const insertImgBtn = document.getElementById('insertImgBtn');
+    const inlineImageUrl = document.getElementById('inlineImageUrl');
+    const postContent = document.getElementById('postContent');
+
+    if (insertImgBtn && inlineImageUrl && postContent) {
+      insertImgBtn.addEventListener('click', () => {
+        const url = inlineImageUrl.value.trim();
+        if (!url) {
+          alert('ကျေးဇူးပြု၍ ပုံလင့်ခ် (Image URL) ထည့်ပါ။');
+          return;
+        }
+
+        const imgTag = `\n<img src="${url}" class="w-full rounded-lg my-4">\n`;
+        const startPos = postContent.selectionStart;
+        const endPos = postContent.selectionEnd;
+
+        // Cursor တည်ရှိသည့်နေရာ၌ img tag ကို ညှပ်ထည့်မည်
+        postContent.value = postContent.value.substring(0, startPos) + imgTag + postContent.value.substring(endPos);
+        inlineImageUrl.value = '';
+        postContent.focus();
       });
     }
 
