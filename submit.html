@@ -121,14 +121,11 @@
             </label>
           </div>
 
-          <!-- စာမူထဲ ပုံထည့်သွင်းရန် Tool Bar -->
-          <div class="bg-[#18153d] border border-[#3b358c] rounded-t-lg p-2 flex items-center gap-2">
-            <input type="text" id="inlineImageUrl" placeholder="ပုံ လင့်ခ် (Image URL) ထည့်ပါ..." 
-              class="flex-1 bg-[#24205a] border border-[#3b358c] rounded px-3 py-1.5 text-xs text-gray-200 placeholder-gray-400 focus:outline-none focus:border-amber-400">
-            <button type="button" id="insertImgBtn" 
-              class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded text-xs transition flex items-center gap-1">
-              <i class="fa-solid fa-image"></i> ပုံ ထည့်မည်
-            </button>
+          <!-- စာမူထဲ ဖုန်း/PC ထဲမှ ဓာတ်ပုံဖိုင် တိုက်ရိုက် ရွေးချယ်ရန် Tool Bar -->
+          <div class="bg-[#18153d] border border-[#3b358c] rounded-t-lg p-2 flex items-center justify-between gap-2">
+            <span class="text-xs text-amber-300 font-semibold"><i class="fa-solid fa-image"></i> စာမူထဲ ပုံထည့်ရန် -</span>
+            <input type="file" id="inlineImageFile" accept="image/*" 
+              class="text-xs text-gray-300 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer focus:outline-none">
           </div>
 
           <textarea id="postContent" rows="8" required placeholder="ဤအခန်း၏ စာသားများကို ရေးပါ..." 
@@ -197,30 +194,6 @@
       });
     }
 
-    // စာမူထဲ ပုံလင့်ခ် ထည့်သွင်းပေးသည့် Function
-    const insertImgBtn = document.getElementById('insertImgBtn');
-    const inlineImageUrl = document.getElementById('inlineImageUrl');
-    const postContent = document.getElementById('postContent');
-
-    if (insertImgBtn && inlineImageUrl && postContent) {
-      insertImgBtn.addEventListener('click', () => {
-        const url = inlineImageUrl.value.trim();
-        if (!url) {
-          alert('ကျေးဇူးပြု၍ ပုံလင့်ခ် (Image URL) ထည့်ပါ။');
-          return;
-        }
-
-        const imgTag = `\n<img src="${url}" class="w-full rounded-lg my-4">\n`;
-        const startPos = postContent.selectionStart;
-        const endPos = postContent.selectionEnd;
-
-        // Cursor တည်ရှိသည့်နေရာ၌ img tag ကို ညှပ်ထည့်မည်
-        postContent.value = postContent.value.substring(0, startPos) + imgTag + postContent.value.substring(endPos);
-        inlineImageUrl.value = '';
-        postContent.focus();
-      });
-    }
-
     const convertAndCompressBase64 = (file, maxWidth = 400, quality = 0.6) => {
       return new Promise((resolve, reject) => {
         const fileReader = new FileReader();
@@ -253,6 +226,31 @@
       });
     };
 
+    // စာမူထဲ ဖုန်း/PC ထဲမှ ရွေးချယ်လိုက်သော ပုံကို Compress လုပ်၍ တိုက်ရိုက်ထည့်ပေးသည့် Event
+    const inlineImageFile = document.getElementById('inlineImageFile');
+    const postContent = document.getElementById('postContent');
+
+    if (inlineImageFile && postContent) {
+      inlineImageFile.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+          const base64Img = await convertAndCompressBase64(file, 450, 0.6);
+          const imgTag = `\n<img src="${base64Img}" class="w-full rounded-lg my-4 cursor-pointer">\n`;
+          
+          const startPos = postContent.selectionStart;
+          const endPos = postContent.selectionEnd;
+
+          postContent.value = postContent.value.substring(0, startPos) + imgTag + postContent.value.substring(endPos);
+          inlineImageFile.value = '';
+          postContent.focus();
+        } catch (err) {
+          alert('ပုံထည့်သွင်း၍ မရပါ: ' + err.message);
+        }
+      });
+    }
+
     const postForm = document.getElementById('postForm');
     const submitBtn = document.getElementById('submitBtn');
 
@@ -279,7 +277,6 @@
             imageUrl = await convertAndCompressBase64(fileInput.files[0]);
           }
 
-          // ဝတ္ထုသစ် ဖြစ်ပါက စာအုပ်အလိုက် Chapter ပေါင်းစပ်ပေးမည်
           if (category === 'newnovels') {
             const booksRef = ref(db, 'novels');
             const snapshot = await get(booksRef);
@@ -306,18 +303,15 @@
             };
 
             if (existingBookKey) {
-              // စာအုပ်ခေါင်းစဉ် တူပါက အဆိုပါ စာအုပ်၏ Chapters ထဲသို့ အသစ်ပေါင်းထည့်မည်
               const newChapterRef = push(ref(db, `novels/${existingBookKey}/chapters`));
               await set(newChapterRef, chapterObj);
 
-              // Cover Photo သို့မဟုတ် Summary အသစ်ပါက Update လုပ်ပေးမည်
               const updates = { updatedAt: Date.now() };
               if (imageUrl) updates.coverImage = imageUrl;
               if (summary) updates.summary = summary;
               await update(ref(db, `novels/${existingBookKey}`), updates);
 
             } else {
-              // စာအုပ်အသစ် ဖြစ်ပါက စာအုပ်သစ် တည်ဆောက်မည်
               const newBookRef = push(ref(db, 'novels'));
               const newBookId = newBookRef.key;
 
@@ -339,7 +333,6 @@
             window.location.href = 'newnovels.html';
 
           } else {
-            // knowledges, sports, poems များအတွက် သီးသန့် Direct Post
             const postObj = {
               title: title,
               author: author,
