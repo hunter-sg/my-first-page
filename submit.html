@@ -250,9 +250,10 @@
           // Image Element ကို တိုက်ရိုက် ဖန်တီး၍ Editor ထဲသို့ ထည့်သွင်းခြင်း
           const img = document.createElement('img');
           img.src = base64Img;
-          img.className = 'max-w-[320px] w-full mx-auto rounded-lg my-4 cursor-pointer hover:opacity-90 transition block';
-          
-          // Editor ထဲတွင် မောက်စ်/ကာဆာ ရှိနေသော နေရာ၌ ပုံ ထည့်ပေးခြင်း
+      // ပုံအရွယ်အစားကို ချုံ့ထားသော class ပြင်ဆင်ချက်
+          img.className = 'max-w-[200px] w-full mx-auto rounded-lg my-3 cursor-pointer hover:opacity-90 transition block';
+      
+      // Editor ထဲတွင် မောက်စ်/ကာဆာ ရှိနေသော နေရာ၌ ပုံ ထည့်ပေးခြင်း
           const selection = window.getSelection();
           if (selection.rangeCount > 0 && postContent.contains(selection.anchorNode)) {
             const range = selection.getRangeAt(0);
