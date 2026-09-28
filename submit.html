@@ -9,6 +9,14 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
     body { font-family: 'Padauk', sans-serif; }
+    
+    /* Contenteditable div အတွက် placeholder ပြသရန် styling */
+    [contenteditable="true"]:empty:before {
+      content: attr(placeholder);
+      color: #6b7280;
+      pointer-events: none;
+      display: block;
+    }
   </style>
 </head>
 <body class="bg-[#1e1b4b] text-white min-h-screen flex flex-col">
@@ -128,8 +136,9 @@
               class="text-xs text-gray-300 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer focus:outline-none">
           </div>
 
-          <textarea id="postContent" rows="8" required placeholder="ဤအခန်း၏ စာသားများကို ရေးပါ..." 
-            class="w-full bg-[#18153d] border border-[#3b358c] rounded-b-lg p-4 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-amber-400 transition leading-relaxed"></textarea>
+          <!-- Textarea အစား ပုံများ တိုက်ရိုက်ပေါ်နိုင်သော contenteditable div သို့ ပြောင်းထားပါသည် -->
+          <div id="postContent" contenteditable="true" placeholder="ဤအခန်း၏ စာသားများကို ရေးပါ..." 
+            class="w-full min-h-[220px] bg-[#18153d] border border-[#3b358c] rounded-b-lg p-4 text-sm text-gray-200 focus:outline-none focus:border-amber-400 transition leading-relaxed overflow-y-auto"></div>
         </div>
 
         <button type="submit" id="submitBtn" 
@@ -226,7 +235,7 @@
       });
     };
 
-    // စာမူထဲ ဖုန်း/PC ထဲမှ ရွေးချယ်လိုက်သော ပုံကို Compress လုပ်၍ တိုက်ရိုက်ထည့်ပေးသည့် Event
+    // စာမူထဲ ပုံရွေးလိုက်ပါက စာသားကုဒ်မပေါ်ဘဲ ပုံ တိုက်ရိုက် ပေါ်လာစေသည့် Logic
     const inlineImageFile = document.getElementById('inlineImageFile');
     const postContent = document.getElementById('postContent');
 
@@ -237,12 +246,22 @@
 
         try {
           const base64Img = await convertAndCompressBase64(file, 450, 0.6);
-          const imgTag = `\n<img src="${base64Img}" class="max-w-[320px] w-full mx-auto rounded-lg my-4 cursor-pointer hover:opacity-90 transition">\n`;
           
-          const startPos = postContent.selectionStart;
-          const endPos = postContent.selectionEnd;
+          // Image Element ကို တိုက်ရိုက် ဖန်တီး၍ Editor ထဲသို့ ထည့်သွင်းခြင်း
+          const img = document.createElement('img');
+          img.src = base64Img;
+          img.className = 'max-w-[320px] w-full mx-auto rounded-lg my-4 cursor-pointer hover:opacity-90 transition block';
+          
+          // Editor ထဲတွင် မောက်စ်/ကာဆာ ရှိနေသော နေရာ၌ ပုံ ထည့်ပေးခြင်း
+          const selection = window.getSelection();
+          if (selection.rangeCount > 0 && postContent.contains(selection.anchorNode)) {
+            const range = selection.getRangeAt(0);
+            range.insertNode(img);
+            range.collapse(false);
+          } else {
+            postContent.appendChild(img);
+          }
 
-          postContent.value = postContent.value.substring(0, startPos) + imgTag + postContent.value.substring(endPos);
           inlineImageFile.value = '';
           postContent.focus();
         } catch (err) {
@@ -258,6 +277,14 @@
       postForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        // Contenteditable Div မှ HTML Content ကို ယူခြင်း
+        const contentHtml = postContent.innerHTML.trim();
+        
+        if (!contentHtml || contentHtml === '<br>') {
+          alert('ကျေးဇူးပြု၍ စာမူအပြည့်အစုံ ရေးသားပါ');
+          return;
+        }
+
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> စာမူ သိမ်းဆည်းနေသည်...';
 
@@ -266,7 +293,7 @@
           const title = document.getElementById('postTitle').value.trim();
           const author = document.getElementById('postAuthor').value.trim();
           const summary = document.getElementById('postSummary').value.trim();
-          const content = document.getElementById('postContent').value.trim();
+          const content = contentHtml; // ပုံနှင့် စာသားများ ပါဝင်သော HTML ကို တိုက်ရိုက်ယူပါသည်
           const chapter = document.getElementById('postChapter').value.trim() || 'အခန်း (၁)';
           const subtitle = document.getElementById('postSubtitle').value.trim();
 
