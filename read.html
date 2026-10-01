@@ -47,7 +47,7 @@
     <!-- Article Main Container -->
     <article id="postDetails" class="hidden bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-100 space-y-6">
       
-      <!-- ၁။ နိဒါန်းပိုင်း (Intro & Summary Section) - အခန်းဖတ်လျှင် ဖျောက်မည် -->
+      <!-- ၁။ နိဒါန်းပိုင်း (Intro & Summary Section) -->
       <div id="introSection" class="space-y-6">
         <div class="border-b border-gray-100 pb-4">
           <h1 id="postTitle" class="text-lg md:text-2xl font-bold text-gray-800 mb-2"></h1>
@@ -65,20 +65,7 @@
         <div id="postContent" class="text-xs md:text-sm text-gray-700 leading-relaxed md:leading-loose space-y-4"></div>
       </div>
 
-      <!-- ၂။ အခန်းဖတ်ရန် သီးခြား Box (Active Chapter Reading Box) -->
-      <div id="activeChapterBox" class="hidden bg-amber-50/40 border border-amber-200/70 rounded-2xl p-4 md:p-6 space-y-4 shadow-sm scroll-mt-20">
-        <div class="flex justify-between items-center border-b border-amber-200/60 pb-3">
-          <h3 id="activeChapterTitle" class="font-bold text-sm md:text-base text-indigo-900"></h3>
-          <button onclick="closeChapterView()" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-lg font-bold transition">
-            <i class="fa-solid fa-xmark mr-1"></i> ပိတ်မည်
-          </button>
-        </div>
-        
-        <!-- အခန်း၏ စာသားနှင့် ပုံများ ပေါ်မည့်နေရာ -->
-        <div id="activeChapterContent" class="chapter-content text-xs md:text-sm text-gray-800 leading-relaxed md:leading-loose whitespace-pre-line pt-2"></div>
-      </div>
-
-      <!-- ၃။ အခန်းများ စာရင်း (Chapters List) -->
+      <!-- ၂။ အခန်းများ စာရင်း (Chapters List) -->
       <div id="chaptersContainer" class="hidden space-y-4 border-t border-gray-100 pt-6">
         <h3 class="text-sm md:text-base font-bold text-indigo-900 flex items-center gap-2">
           <i class="fa-solid fa-list-ol text-amber-500"></i> အခန်းများ စာရင်း
@@ -88,6 +75,33 @@
 
     </article>
   </main>
+
+  <!-- Pop-up / Modal ပုံစံဖြင့် စာဖတ်ရန် Active Chapter Modal Box -->
+  <div id="activeChapterBox" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-all">
+    <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl border border-amber-200 overflow-hidden animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center bg-indigo-900 text-white px-5 py-3.5 border-b border-indigo-800">
+        <h3 id="activeChapterTitle" class="font-bold text-sm md:text-base text-amber-400"></h3>
+        <button onclick="closeChapterView()" class="text-xs bg-indigo-800 hover:bg-indigo-700 text-gray-200 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1">
+          <i class="fa-solid fa-xmark"></i> ပိတ်မည်
+        </button>
+      </div>
+      
+      <!-- Modal Content Area (Scrollable) -->
+      <div class="p-5 md:p-6 overflow-y-auto flex-grow bg-amber-50/20">
+        <div id="activeChapterContent" class="chapter-content text-xs md:text-sm text-gray-800 leading-relaxed md:leading-loose whitespace-pre-line"></div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-gray-50 border-t border-gray-100 px-5 py-2.5 text-right">
+        <button onclick="closeChapterView()" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-1.5 rounded-lg font-bold transition">
+          ပိတ်မည်
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <footer class="bg-indigo-950 text-indigo-200 py-4 text-center text-xs mt-10">
     <p>© 2026 စာပေဥယျာဉ်. All rights reserved.</p>
@@ -168,13 +182,10 @@
       });
     }
 
-    // အခန်းတစ်ခန်းကို နှိပ်လိုက်လျှင် အထက်ပါ နိဒါန်းကို ဖျောက်ပြီး စာသားနှင့် ပုံများကို သီးခြားပြပေးမည့် Function
+    // အခန်းတစ်ခန်းကို နှိပ်လိုက်လျှင် Pop-up (Modal) ဖြင့် ပြသပေးမည့် Function
     window.readChapter = function(chId, chTitle) {
       const chapterData = globalChapters[chId];
       if (!chapterData) return;
-
-      // အပေါ်မှ နိဒါန်း (Intro Section) ကို ဖျောက်မည်
-      document.getElementById('introSection').classList.add('hidden');
 
       const activeBox = document.getElementById('activeChapterBox');
       const activeTitle = document.getElementById('activeChapterTitle');
@@ -182,20 +193,18 @@
 
       activeTitle.innerText = chTitle;
 
-      // စာမူထဲက HTML ပုံများ/စာသားများ အမှန်တကယ် ပေါ်စေရန် innerHTML သုံးခြင်း
       const contentText = chapterData.content || chapterData.text || 'စာသား မရှိသေးပါ။';
       activeContent.innerHTML = contentText;
 
+      // Pop-up မိုဒယ်ကို ဖော်ပြမည်၊ Background စခရင် မလှုပ်အောင် Scroll ပိတ်မည်
       activeBox.classList.remove('hidden');
-      
-      // စာဖတ်သည့် Box ဆီသို့ အပေါ်မှနေ၍ အလိုအလျောက် ရွှေ့ပေးမည်
-      activeBox.scrollIntoView({ behavior: 'smooth' });
+      document.body.style.overflow = 'hidden';
     };
 
-    // အခန်းဖတ်သည့် Box ကို ပိတ်လိုက်လျှင် အထက်ပါ နိဒါန်း ပြန်ပေါ်လာစေမည့် Function
+    // Pop-up ကို ပိတ်လိုက်လျှင်
     window.closeChapterView = function() {
       document.getElementById('activeChapterBox').classList.add('hidden');
-      document.getElementById('introSection').classList.remove('hidden');
+      document.body.style.overflow = 'auto'; // Background Scroll ပြန်ဖွင့်မည်
     };
   </script>
 </body>
