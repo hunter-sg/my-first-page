@@ -96,18 +96,7 @@
   </footer>
 
   <script type="module">
-    // စာမူ (Content) ထဲက img တွေကိုပဲ သီးသန့် ဖယ်ရှားပေးမည့် function
-    function removeBodyImages(htmlContent) {
-        if (!htmlContent) return '';
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = htmlContent;
-    
-        // စာမူထဲမှာ ပါတဲ့ img tag အားလုံးကို ရှာပြီး ဖျောက်ခြင်း
-        const images = tempDiv.querySelectorAll('img');
-        images.forEach(img => img.remove());
-    
-        return tempDiv.innerHTML;
-    }
+   
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
