@@ -13,9 +13,17 @@
     /* Contenteditable div အတွက် placeholder ပြသရန် styling */
     [contenteditable="true"]:empty:before {
       content: attr(placeholder);
-      color: #6b7280;
+      color: #9ca3af;
       pointer-events: none;
       display: block;
+    }
+    /* Contenteditable div ထဲရှိ စာသား အရောင်အားလုံးကို အဖြူရောင် (သို့) အလင်းရောင် အသေ သတ်မှတ်ခြင်း */
+    #postContent, #postContent * {
+      color: #f3f4f6 !important; /* စာသားအရောင်ကို အဖြူရောင်ပြောင်းသည် */
+    }
+    /* Textarea နှင့် Input box စာသားအရောင်များကိုလည်း အဖြူရောင် သတ်မှတ်ခြင်း */
+    input, textarea, select {
+      color: #f3f4f6 !important;
     }
   </style>
 </head>
@@ -238,7 +246,14 @@
     // စာမူထဲ ပုံရွေးလိုက်ပါက စာသားကုဒ်မပေါ်ဘဲ ပုံ တိုက်ရိုက် ပေါ်လာစေသည့် Logic
     const inlineImageFile = document.getElementById('inlineImageFile');
     const postContent = document.getElementById('postContent');
-
+    // အပြင်မှ စာသားများ Copy/Paste လုပ်သည့်အခါ မလိုအပ်သော အရောင်ဒီဇိုင်းများ (Inline CSS) များကို ဖျက်ပစ်မည်
+    if (postContent) {
+      postContent.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const text = e.clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, text);
+      });
+    }
     if (inlineImageFile && postContent) {
       inlineImageFile.addEventListener('change', async (e) => {
         const file = e.target.files[0];
