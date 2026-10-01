@@ -9,11 +9,6 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
     body { font-family: 'Padauk', sans-serif; }
-    
-    /* ကတ်ပြသသည့်နေရာအတွင်းရှိ စာမူ ပုံများကိုသာ ဖျောက်မည် */
-    .card-preview-text img {
-      display: none !important;
-    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col justify-between">
@@ -27,9 +22,11 @@
       </a>
 
       <!-- Search & Clock -->
-      <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
-        <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
-        <span id="dateDisplay" class="font-medium">00/00/0000</span>
+      
+        <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
+          <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
+          <span id="dateDisplay" class="font-medium">00/00/0000</span>
+        </div>
       </div>
 
       <button id="menuBtn" class="text-white text-base focus:outline-none md:hidden">
@@ -85,15 +82,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // စာသားအတွင်းပါရှိသော <img> tag များကို ဖယ်ရှားပေးမည့် function
-    function removeBodyImages(htmlContent) {
-        if (!htmlContent) return '';
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = htmlContent;
-        tempDiv.querySelectorAll('img').forEach(img => img.remove());
-        return tempDiv.innerHTML;
-    }
-
     const firebaseConfig = {
       apiKey: "AIzaSyAoDzQF0OUpI0EaHmoS_41bfBD3qyQIQp4",
       authDomain: "my-first-page-240a0.firebaseapp.com",
@@ -121,10 +109,8 @@
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const year = now.getFullYear();
 
-      const timeEl = document.getElementById('timeDisplay');
-      const dateEl = document.getElementById('dateDisplay');
-      if (timeEl) timeEl.textContent = `${hours}:${minutes}:${seconds}`;
-      if (dateEl) dateEl.textContent = `${day}/${month}/${year}`;
+      document.getElementById('timeDisplay').textContent = `${hours}:${minutes}:${seconds}`;
+      document.getElementById('dateDisplay').textContent = `${day}/${month}/${year}`;
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -132,13 +118,10 @@
     // Mobile Menu
     const menuBtn = document.getElementById('menuBtn');
     const menuList = document.getElementById('menuList');
-    if (menuBtn && menuList) {
+    if (menuBtn) {
       menuBtn.onclick = () => {
         menuList.classList.toggle('hidden');
-        const menuIcon = document.getElementById('menuIcon');
-        if (menuIcon) {
-          menuIcon.className = menuList.classList.contains('hidden') ? "fa-solid fa-bars" : "fa-solid fa-xmark";
-        }
+        document.getElementById('menuIcon').className = menuList.classList.contains('hidden') ? "fa-solid fa-bars" : "fa-solid fa-xmark";
       };
     }
 
@@ -163,9 +146,6 @@
             ? `<img src="${novel.coverImage}" class="w-full h-48 md:h-56 object-cover rounded-t-xl" />`
             : `<div class="w-full h-48 md:h-56 bg-indigo-100 flex items-center justify-center text-indigo-500 rounded-t-xl"><i class="fa-solid fa-book-open text-4xl"></i></div>`;
 
-          // Card Preview အတွက် စာသားထဲက ပုံများကို ရှင်းထုတ်ထားသော အကျဉ်းချုပ်
-          const cleanSummary = removeBodyImages(novel.summary || 'အကျဉ်းချုပ် မရှိသေးပါ။');
-
           novelsGrid.innerHTML += `
             <div onclick="openNovelModal('${id}')" class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition overflow-hidden flex flex-col justify-between group cursor-pointer">
               <div>
@@ -177,14 +157,14 @@
                 </div>
                 <div class="p-3">
                   <h3 class="text-xs md:text-sm font-bold text-gray-800 line-clamp-1 group-hover:text-indigo-600 transition mb-1">${novel.title}</h3>
-                  <div class="text-[11px] text-gray-500 line-clamp-2 mb-2 card-preview-text">${cleanSummary}</div>
+                  <p class="text-[11px] text-gray-500 line-clamp-2 mb-2">${novel.summary || 'အကျဉ်းချုပ် မရှိသေးပါ။'}</p>
                 </div>
               </div>
               <div class="px-3 py-2 bg-gray-50 border-t border-gray-100 flex justify-between items-center text-[10px] text-gray-400">
                 <span class="truncate">ရေးသူ - ${novel.author || 'မသိရပါ'}</span>
                 <div class="flex items-center gap-2">
                   <span>👁️ ${viewsCount}</span>
-                  <span>❤️️ ${likesCount}</span>
+                  <span>❤️ ${likesCount}</span>
                 </div>
               </div>
             </div>
@@ -250,10 +230,7 @@
             <div class="flex gap-4 items-start">
               ${coverHtml}
               <div class="space-y-2 flex-grow">
-                <!-- Modal Popup ထဲတွင် မူရင်း novel.summary ကို သုံးထားသဖြင့် ပုံရော စာသားပါ မူရင်းအတိုင်း ပြန်ပေါ်မည် -->
-                <div class="text-xs text-gray-600 leading-relaxed">
-                  ${novel.summary || 'အကျဉ်းချုပ် မရှိသေးပါ။'}
-                </div>
+                <p class="text-xs text-gray-600 leading-relaxed">${novel.summary || 'အကျဉ်းချုပ် မရှိသေးပါ။'}</p>
                 <div class="flex items-center gap-4 text-xs text-gray-500 pt-2">
                   <span>👁️ <span id="viewCount">${(novel.views || 0) + 1}</span> ကြည့်ရှုသူ</span>
                   <button onclick="likeNovel('${novelId}')" class="flex items-center gap-1 hover:text-red-500 text-red-600 font-semibold transition bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
@@ -358,7 +335,26 @@
       }
     };
 
+    // Search
+    window.searchNovels = function() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const cards = novelsGrid.querySelectorAll('#novelsGrid > div');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(input) ? "" : "none";
+      });
+    };
+
     loadNovels();
+    
+    document.getElementById('menuToggleBtn').addEventListener('click', () => {
+      const mobileMenu = document.getElementById('mobileMenu');
+      const menuIcon = document.getElementById('menuIcon');
+    
+      mobileMenu.classList.toggle('hidden');
+      menuIcon.classList.toggle('fa-bars');
+      menuIcon.classList.toggle('fa-xmark');
+    });
   </script>
 </body>
 </html>
