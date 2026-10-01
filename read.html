@@ -17,7 +17,7 @@
   <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
     <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-2">
       <a href="index.html" class="flex items-center gap-2 flex-shrink-0">
-        <img src="photo_2026-09-07_21-25-15.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-amber-400/50 object-cover">
+        <img src="photo\\\_2026-09-07\\\_21-25-15.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-amber-400/50 object-cover">
         <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
       </a>
 
@@ -30,7 +30,7 @@
       <!-- Navigation Link -->
       <nav class="flex items-center space-x-3 text-sm">
         <button onclick="goBack()" class="text-amber-400 hover:underline flex items-center gap-1 text-xs md:text-sm cursor-pointer">
-          <i class="fa-solid fa-arrow-left"></i> နောက်သို့
+          <i class="fa-solid fa-arrow-left"> နောက်သို့
         </button>
       </nav>
     </div>
@@ -38,22 +38,22 @@
 
   <!-- Main Content Area -->
   <main class="container mx-auto my-6 px-4 flex-grow max-w-3xl">
-    
+ 
     <div class="bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-100">
-      
+ 
       <!-- Article Header -->
       <div class="border-b border-gray-100 pb-4 mb-6">
         <div class="flex items-center gap-2 mb-2">
-          <span id="postCategory" class="text-[10px] px-2 py-0.5 bg-indigo-100 text-indigo-800 font-bold rounded">
+          <span id="postCategory" class="text-\\\[10px] px-2 py-0.5 bg-indigo-100 text-indigo-800 font-bold rounded">
             ...
           </span>
-          <span id="postDate" class="text-[11px] text-gray-400">• ...</span>
+          <span id="postDate" class="text-\\\[11px] text-gray-400">• ...</span>
         </div>
-        
+ 
         <h1 id="postTitle" class="text-lg md:text-2xl font-bold text-gray-800 leading-snug mb-2">
           စာမူ ရယူနေသည်...
         </h1>
-        
+ 
         <p id="postAuthor" class="text-xs text-indigo-600 font-semibold">
           ရေးသားသူ - ...
         </p>
@@ -65,26 +65,26 @@
       </div>
 
       <!-- Article Content -->
-      <div id="postContent" class="text-lg md:text-xl text-black font-medium leading-relaxed md:leading-loose whitespace-pre-line tracking-wide">
+      <div id="postContent" class="text-sm md:text-base text-gray-700 leading-relaxed whitespace-pre-line space-y-4 mb-8">
         <div class="text-center py-10 text-gray-400 text-xs">
-          <i class="fa-solid fa-spinner fa-spin mr-1"></i> စာမူကို ရယူနေပါသည်...
+          <i class="fa-solid fa-spinner fa-spin mr-1"> စာမူကို ရယူနေပါသည်...
         </div>
       </div>
 
-      <!-- Like & View Counter Section -->
+      <!-- Like \\\& View Counter Section -->
       <div class="flex items-center justify-between text-xs px-3 py-2 bg-gray-50 rounded-xl border border-gray-100 mb-8">
         <button id="likeBtn" class="flex items-center gap-1.5 text-red-500 font-bold hover:bg-red-50 px-3 py-1.5 rounded-lg transition">
-          <i class="fa-solid fa-heart"></i> ကြိုက်နှစ်သက်သူ (<span id="likesCount">0</span>)
+          <i class="fa-solid fa-heart"> ကြိုက်နှစ်သက်သူ (<span id="likesCount">0</span>)
         </button>
         <span class="flex items-center gap-1.5 text-indigo-600">
-          <i class="fa-solid fa-eye"></i> ကြည့်ရှုသူ (<span id="viewsCount">0</span>)
+          <i class="fa-solid fa-eye"> ကြည့်ရှုသူ (<span id="viewsCount">0</span>)
         </span>
       </div>
 
       <!-- Comments Section -->
       <div class="border-t border-gray-100 pt-6 space-y-4">
         <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
-          <i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ
+          <i class="fa-regular fa-comments text-indigo-600"> မှတ်ချက်များ
         </h3>
 
         <!-- Add Comment Form -->
@@ -99,7 +99,7 @@
 
         <!-- Comments List -->
         <div id="commentsList" class="space-y-2 mt-4">
-          <p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>
+          <p class="text-\\\[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>
         </div>
       </div>
 
@@ -116,14 +116,13 @@
     import { getDatabase, ref, get, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyAoDzQF0OUpI0EaHmoS_41bfBD3qyQIQp4",
-      authDomain: "my-first-page-240a0.firebaseapp.com",
-      databaseURL: "https://my-first-page-240a0-default-rtdb.firebaseio.com",
-      projectId: "my-first-page-240a0",
-      storageBucket: "my-first-page-240a0.firebasestorage.app",
-      messagingSenderId: "783682491493",
-      appId: "1:783682491493:web:27e1d4f925e14c60a2a28c",
-      measurementId: "G-YS5QKB3DQ"
+      apiKey: "AIzaSyBamZnSGBuILNFRyTUo_9e4xPpF01Fk9ww",
+      authDomain: "my-new-projects-e2d79.firebaseapp.com",
+      databaseURL: "https://my-new-projects-e2d79-default-rtdb.firebaseio.com",
+      projectId: "my-new-projects-e2d79",
+      storageBucket: "my-new-projects-e2d79.firebasestorage.app",
+      messagingSenderId: "544924460381",
+      appId: "1:544924460381:web:711d1427a2caaaaaf6b4b4"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -187,7 +186,7 @@
           // စာအုပ်ရဲ့ အမည်ကို ပြန်ဆွဲယူမည်
           const bookSnapshot = await get(ref(database, `novels/${bookId}`));
           const bookData = bookSnapshot.exists() ? bookSnapshot.val() : {};
-          
+ 
           document.getElementById('postCategory').textContent = 'ဝတ္ထု';
           document.getElementById('postTitle').textContent = `${bookData.title || ''} - ${data.chapterTitle || ''} ${data.subTitle ? '(' + data.subTitle + ')' : ''}`;
           document.getElementById('postAuthor').textContent = `ရေးသားသူ - ${bookData.author || 'မသိရပါ'}`;
@@ -234,16 +233,16 @@
         Object.values(comments).forEach(c => {
           listEl.innerHTML += `
             <div class="bg-gray-100/70 p-2.5 rounded-lg text-xs space-y-0.5">
-              <div class="flex justify-between font-bold text-indigo-950 text-[11px]">
+              <div class="flex justify-between font-bold text-indigo-950 text-\\\[11px]">
                 <span>${c.name || 'ဧည့်သည်'}</span>
-                <span class="text-gray-400 text-[10px] font-normal">${c.date || ''}</span>
+                <span class="text-gray-400 text-\\\[10px] font-normal">${c.date || ''}</span>
               </div>
               <p class="text-gray-700">${c.text}</p>
             </div>
           `;
         });
       } else {
-        listEl.innerHTML = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
+        listEl.innerHTML = `<p class="text-\\\[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
       }
     }
 
@@ -272,7 +271,7 @@
         });
         alert("မှတ်ချက် တင်ပြီးပါပြီ!");
         textInput.value = '';
-        
+ 
         // Refresh comments list
         const snap = await get(ref(database, `${dbPath}/comments`));
         if (snap.exists()) renderComments(snap.val());
