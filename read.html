@@ -9,6 +9,17 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
     body { font-family: 'Padauk', sans-serif; }
+
+    /* စာကိုယ်အတွင်းမှ ပုံများကို Size သေးအောင် ထိန်းပေးမည့် CSS */
+    .chapter-content img {
+      max-width: 280px !important;
+      height: auto !important;
+      margin: 12px auto !important;
+      display: block !important;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid #f3f4f6;
+    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col justify-between">
@@ -33,44 +44,48 @@
       <i class="fa-solid fa-spinner fa-spin text-xl mr-2"></i> စာမူကို ရယူနေပါသည်...
     </div>
 
-    <!-- Article Main Box -->
+    <!-- Article Main Container -->
     <article id="postDetails" class="hidden bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-100 space-y-6">
-      <!-- Title & Author Header -->
-      <div class="border-b border-gray-100 pb-4">
-        <h1 id="postTitle" class="text-lg md:text-2xl font-bold text-gray-800 mb-2"></h1>
-        <div class="flex items-center gap-3 text-xs text-gray-500">
-          <span>ရေးသားသူ - <strong id="postAuthor" class="text-indigo-600"></strong></span>
-          <span>•</span>
-          <span id="postDate"></span>
+      
+      <!-- ၁။ နိဒါန်းပိုင်း (Intro & Summary Section) - အခန်းဖတ်လျှင် ဖျောက်မည် -->
+      <div id="introSection" class="space-y-6">
+        <div class="border-b border-gray-100 pb-4">
+          <h1 id="postTitle" class="text-lg md:text-2xl font-bold text-gray-800 mb-2"></h1>
+          <div class="flex items-center gap-3 text-xs text-gray-500">
+            <span>ရေးသားသူ - <strong id="postAuthor" class="text-indigo-600"></strong></span>
+            <span>•</span>
+            <span id="postDate"></span>
+          </div>
         </div>
+
+        <div id="coverImageContainer" class="hidden text-center">
+          <img id="postCoverImage" class="max-h-80 mx-auto object-contain rounded-xl border border-gray-100 shadow-sm" src="" alt="Cover">
+        </div>
+
+        <div id="postContent" class="text-xs md:text-sm text-gray-700 leading-relaxed md:leading-loose space-y-4"></div>
       </div>
 
-      <!-- Cover Image -->
-      <div id="coverImageContainer" class="hidden text-center">
-        <img id="postCoverImage" class="max-h-80 mx-auto object-contain rounded-xl border border-gray-100 shadow-sm" src="" alt="Cover">
-      </div>
-
-      <!-- Main Content / Novel Summary -->
-      <div id="postContent" class="text-xs md:text-sm text-gray-700 leading-relaxed md:leading-loose space-y-4"></div>
-
-      <!-- Active Chapter Reading View (နှိပ်လိုက်သော အခန်းကို သီးခြားပြသပေးမည့် Box) -->
-      <div id="activeChapterBox" class="hidden bg-amber-50/50 border border-amber-200/80 rounded-2xl p-5 space-y-3 shadow-sm scroll-mt-20">
+      <!-- ၂။ အခန်းဖတ်ရန် သီးခြား Box (Active Chapter Reading Box) -->
+      <div id="activeChapterBox" class="hidden bg-amber-50/40 border border-amber-200/70 rounded-2xl p-4 md:p-6 space-y-4 shadow-sm scroll-mt-20">
         <div class="flex justify-between items-center border-b border-amber-200/60 pb-3">
           <h3 id="activeChapterTitle" class="font-bold text-sm md:text-base text-indigo-900"></h3>
-          <button onclick="closeChapterView()" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg font-bold transition">
+          <button onclick="closeChapterView()" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-lg font-bold transition">
             <i class="fa-solid fa-xmark mr-1"></i> ပိတ်မည်
           </button>
         </div>
-        <div id="activeChapterContent" class="text-xs md:text-sm text-gray-800 leading-relaxed md:leading-loose whitespace-pre-line pt-2"></div>
+        
+        <!-- အခန်း၏ စာသားနှင့် ပုံများ ပေါ်မည့်နေရာ -->
+        <div id="activeChapterContent" class="chapter-content text-xs md:text-sm text-gray-800 leading-relaxed md:leading-loose whitespace-pre-line pt-2"></div>
       </div>
 
-      <!-- Chapters List Section (အခန်းစာရင်း ခလုတ်များ) -->
+      <!-- ၃။ အခန်းများ စာရင်း (Chapters List) -->
       <div id="chaptersContainer" class="hidden space-y-4 border-t border-gray-100 pt-6">
         <h3 class="text-sm md:text-base font-bold text-indigo-900 flex items-center gap-2">
           <i class="fa-solid fa-list-ol text-amber-500"></i> အခန်းများ စာရင်း
         </h3>
         <div id="chaptersList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
       </div>
+
     </article>
   </main>
 
@@ -139,7 +154,6 @@
             const rawTitle = chVal.title || chVal.chapterTitle || chVal.name || '';
             const chTitle = rawTitle ? `အခန်း (${index + 1}) - ${rawTitle}` : `အခန်း (${index + 1})`;
 
-            // အခန်းများကို ခလုတ် List အဖြစ် ပြသမည်
             chaptersList.innerHTML += `
               <button onclick="readChapter('${chId}', '${chTitle.replace(/'/g, "\\'")}')" class="text-left bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-300 p-3.5 rounded-xl transition flex items-center justify-between group shadow-sm">
                 <span class="font-bold text-xs md:text-sm text-gray-800 group-hover:text-indigo-900">${chTitle}</span>
@@ -154,27 +168,34 @@
       });
     }
 
-    // အခန်းတစ်ခန်းကို နှိပ်လိုက်လျှင် သီးခြား Box ဖြင့် ပြပေးမည့် Function
+    // အခန်းတစ်ခန်းကို နှိပ်လိုက်လျှင် အထက်ပါ နိဒါန်းကို ဖျောက်ပြီး စာသားနှင့် ပုံများကို သီးခြားပြပေးမည့် Function
     window.readChapter = function(chId, chTitle) {
       const chapterData = globalChapters[chId];
       if (!chapterData) return;
+
+      // အပေါ်မှ နိဒါန်း (Intro Section) ကို ဖျောက်မည်
+      document.getElementById('introSection').classList.add('hidden');
 
       const activeBox = document.getElementById('activeChapterBox');
       const activeTitle = document.getElementById('activeChapterTitle');
       const activeContent = document.getElementById('activeChapterContent');
 
       activeTitle.innerText = chTitle;
-      activeContent.innerText = chapterData.content || chapterData.text || 'စာသား မရှိသေးပါ။';
+
+      // စာမူထဲက HTML ပုံများ/စာသားများ အမှန်တကယ် ပေါ်စေရန် innerHTML သုံးခြင်း
+      const contentText = chapterData.content || chapterData.text || 'စာသား မရှိသေးပါ။';
+      activeContent.innerHTML = contentText;
 
       activeBox.classList.remove('hidden');
       
-      // စာဖတ်သည့် Box ဆီသို့ အလိုအလျောက် Scroll ဆွဲပေးမည်
+      // စာဖတ်သည့် Box ဆီသို့ အပေါ်မှနေ၍ အလိုအလျောက် ရွှေ့ပေးမည်
       activeBox.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // အခန်းဖတ်သည့် Box ကို ပိတ်မည့် Function
+    // အခန်းဖတ်သည့် Box ကို ပိတ်လိုက်လျှင် အထက်ပါ နိဒါန်း ပြန်ပေါ်လာစေမည့် Function
     window.closeChapterView = function() {
       document.getElementById('activeChapterBox').classList.add('hidden');
+      document.getElementById('introSection').classList.remove('hidden');
     };
   </script>
 </body>
