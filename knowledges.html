@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="my">
 <head>
+  <style>
+    /* ပင်မ စာမျက်နှာရှိ Card Preview အတွင်းမှ စာမူ ပုံများကိုသာ ဖျောက်မည် */
+    .card-preview-text img {
+      display: none !important;
+    }
+  </style>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>သုတရသ - စာပေဥယျာဉ်</title>
@@ -20,7 +27,6 @@
       </a>
 
       <!-- search bar and Live Clock -->
-      
       <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
         <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
         <span id="dateDisplay" class="font-medium">00/00/0000</span>
@@ -32,7 +38,7 @@
       </button>
     </div>
 
-    <!-- Mobile Dropdown Menu Box (အောက်သို့ သီးသန့် ကျလာမည့် Box) -->
+    <!-- Mobile Dropdown Menu Box -->
     <div id="mobileMenu" class="hidden bg-indigo-950 border-t border-indigo-800 px-4 py-3 shadow-xl">
       <nav class="flex flex-col space-y-2 text-sm">
         <a href="index.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
@@ -89,6 +95,15 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+    // စာမူထဲမှ <img> tag များကို ဖယ်ရှားပေးမည့် function
+    function removeBodyImages(htmlContent) {
+        if (!htmlContent) return '';
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+        tempDiv.querySelectorAll('img').forEach(img => img.remove());
+        return tempDiv.innerHTML;
+    }
+
     const firebaseConfig = {
       apiKey: "AIzaSyAoDzQF0OUpI0EaHmoS_41bfBD3qyQIQp4",
       authDomain: "my-first-page-240a0.firebaseapp.com",
@@ -104,16 +119,24 @@
     const database = getDatabase(app);
     const postsContainer = document.getElementById('postsContainer');
 
-    // Menu Mobile Toggle
-    const menuBtn = document.getElementById('menuBtn');
-    const menuList = document.getElementById('menuList');
-    const menuIcon = document.getElementById('menuIcon');
-    if (menuBtn) {
-      menuBtn.onclick = () => {
-        menuList.classList.toggle('hidden');
-        menuIcon.className = menuList.classList.contains('hidden') ? "fa-solid fa-bars" : "fa-solid fa-xmark";
-      };
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+
+      const timeEl = document.getElementById('timeDisplay');
+      const dateEl = document.getElementById('dateDisplay');
+
+      if (timeEl) timeEl.textContent = `${hours}:${minutes}:${seconds}`;
+      if (dateEl) dateEl.textContent = `${day}/${month}/${year}`;
     }
+    setInterval(updateClock, 1000);
+    updateClock();
 
     let allPosts = [];
 
@@ -149,6 +172,9 @@
           ? `<img src="${post.image}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-gray-100" />`
           : `<div class="w-20 h-20 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 flex-shrink-0 border border-amber-100"><i class="fa-solid fa-lightbulb text-xl"></i></div>`;
 
+        // Card Preview အတွက် စာမူထဲက ပုံများကို ဖျောက်ထားသော စာသား
+        const cleanPreviewContent = removeBodyImages(post.content);
+
         postsContainer.innerHTML += `
           <div onclick="openModal('${post.id}')" class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition cursor-pointer flex gap-3.5 items-center">
             ${imageMarkup}
@@ -158,7 +184,7 @@
                 <span class="text-[11px] text-gray-400">${post.date}</span>
               </div>
               <h3 class="text-xs font-bold text-gray-800 truncate mb-1">${post.title}</h3>
-              <p class="text-[11px] text-gray-500 truncate mb-1">${post.content}</p>
+              <div class="text-[11px] text-gray-500 truncate mb-1 card-preview-text">${cleanPreviewContent}</div>
               <div class="flex items-center justify-between mt-1">
                 <span class="text-[10px] text-indigo-600 font-semibold">ရေးသားသူ - ${post.author}</span>
                 <div class="flex items-center gap-2 text-[10px] text-gray-400">
@@ -190,7 +216,7 @@
       const modalContent = document.getElementById('modalContent');
 
       const imageHtml = post.image 
-        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm"><img src="${post.image}" class="w-full h-auto max-h-64 object-cover" /></div>`
+        ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm"><img src="${post.image}" class="max-h-52 mx-auto object-contain rounded-lg" /></div>`
         : '';
 
       let commentsHtml = '';
@@ -234,6 +260,8 @@
 
           <div class="p-4 md:p-5 overflow-y-auto max-h-[70vh] space-y-4">
             ${imageHtml}
+            
+            <!-- Modal စာဖတ်သည့်နေရာတွင် မူရင်း post.content ကို သုံးထားသဖြင့် ပုံရော စာသားပါ မူရင်းအတိုင်း အပြည့်အစုံ ပြန်ပေါ်မည် -->
             <div class="bg-gray-50/70 p-4 rounded-xl border border-gray-100 text-xs md:text-sm text-gray-700 leading-relaxed space-y-3">
               <p class="whitespace-pre-line">${post.content}</p>
             </div>
@@ -305,10 +333,12 @@
         console.error("Like ပေး၍ မရပါ: ", err);
       }
     };
+
+    // Mobile Menu Toggle
     document.getElementById('menuToggleBtn').addEventListener('click', () => {
       const mobileMenu = document.getElementById('mobileMenu');
       const menuIcon = document.getElementById('menuIcon');
-    
+      
       mobileMenu.classList.toggle('hidden');
       menuIcon.classList.toggle('fa-bars');
       menuIcon.classList.toggle('fa-xmark');
