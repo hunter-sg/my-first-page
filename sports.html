@@ -96,10 +96,37 @@
   </footer>
 
   <script type="module">
+    // စာမူထဲက img tag များကို ဖယ်ရှားပေးမည့် function
+    function removeBodyImages(htmlContent) {
+        if (!htmlContent) return '';
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+    
+        // စာမူထဲပါသော <img> tag များကို ဖယ်ထုတ်ခြင်း
+        tempDiv.querySelectorAll('img').forEach(img => img.remove());
+    
+        return tempDiv.innerHTML;
+    }
    
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    // စာမူထဲက img များကို ဖျောက်ထားသည့် စာသား ရယူခြင်း
+    const cleanContent = removeBodyImages(post.content || post.fullContent);
 
+    // Cover Image ရှိမှသာ ပုံပြမည်
+    const coverImgHTML = post.coverImage 
+        ? `<img src="${post.coverImage}" class="cover-photo" alt="Cover">` 
+        : '';
+
+    // Card Preview ထဲတွင် ခေါ်သုံးခြင်း
+    const cardHTML = `
+        <div class="card">
+            ${coverImgHTML}
+            <h3>${post.title}</h3>
+            <div class="post-text">${cleanContent}</div>
+            <a href="read.html?id=${key}">ဖတ်ရန်</a>
+        </div>
+    `;
     const firebaseConfig = {
       apiKey: "AIzaSyAoDzQF0OUpI0EaHmoS_41bfBD3qyQIQp4",
       authDomain: "my-first-page-240a0.firebaseapp.com",
