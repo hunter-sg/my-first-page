@@ -53,12 +53,23 @@
       <!-- Main Content / Novel Summary -->
       <div id="postContent" class="text-xs md:text-sm text-gray-700 leading-relaxed md:leading-loose space-y-4"></div>
 
-      <!-- Chapters Section (သီးခြား Box များဖြင့် အစဉ်လိုက် ပြသမည်) -->
-      <div id="chaptersContainer" class="hidden space-y-6 border-t border-gray-100 pt-6">
-        <h3 class="text-sm md:text-base font-bold text-indigo-900 border-b pb-2 flex items-center gap-2">
-          <i class="fa-solid fa-list-ol text-amber-500"></i> အခန်းများ ဖတ်ရှုရန်
+      <!-- Active Chapter Reading View (နှိပ်လိုက်သော အခန်းကို သီးခြားပြသပေးမည့် Box) -->
+      <div id="activeChapterBox" class="hidden bg-amber-50/50 border border-amber-200/80 rounded-2xl p-5 space-y-3 shadow-sm scroll-mt-20">
+        <div class="flex justify-between items-center border-b border-amber-200/60 pb-3">
+          <h3 id="activeChapterTitle" class="font-bold text-sm md:text-base text-indigo-900"></h3>
+          <button onclick="closeChapterView()" class="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-lg font-bold transition">
+            <i class="fa-solid fa-xmark mr-1"></i> ပိတ်မည်
+          </button>
+        </div>
+        <div id="activeChapterContent" class="text-xs md:text-sm text-gray-800 leading-relaxed md:leading-loose whitespace-pre-line pt-2"></div>
+      </div>
+
+      <!-- Chapters List Section (အခန်းစာရင်း ခလုတ်များ) -->
+      <div id="chaptersContainer" class="hidden space-y-4 border-t border-gray-100 pt-6">
+        <h3 class="text-sm md:text-base font-bold text-indigo-900 flex items-center gap-2">
+          <i class="fa-solid fa-list-ol text-amber-500"></i> အခန်းများ စာရင်း
         </h3>
-        <div id="chaptersList" class="space-y-6"></div>
+        <div id="chaptersList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
       </div>
     </article>
   </main>
@@ -87,6 +98,8 @@
     const urlParams = new URLSearchParams(window.location.search);
     const postId = urlParams.get('id');
     const postType = urlParams.get('type') || 'novels';
+
+    let globalChapters = {};
 
     if (!postId) {
       alert("စာမူ လမ်းကြောင်း မှားယွင်းနေပါသည်။");
@@ -119,24 +132,19 @@
         const chaptersList = document.getElementById('chaptersList');
 
         if (post.chapters && Object.keys(post.chapters).length > 0) {
+          globalChapters = post.chapters;
           chaptersList.innerHTML = '';
+
           Object.entries(post.chapters).forEach(([chId, chVal], index) => {
-            
-            // ခေါင်းစဉ်အမျိုးမျိုး (title, chapterTitle, name) ထဲမှ ရှိရာကို ယူပါမည်
             const rawTitle = chVal.title || chVal.chapterTitle || chVal.name || '';
             const chTitle = rawTitle ? `အခန်း (${index + 1}) - ${rawTitle}` : `အခန်း (${index + 1})`;
-            const chContent = chVal.content || chVal.text || '';
 
-            // Dropdown (<details>) မသုံးဘဲ သီးခြား Box လေးများဖြင့် တန်းပြပါမည်
+            // အခန်းများကို ခလုတ် List အဖြစ် ပြသမည်
             chaptersList.innerHTML += `
-              <div class="bg-gray-50 border border-gray-200/80 rounded-xl p-4 md:p-5 space-y-3 shadow-sm">
-                <h4 class="font-bold text-sm md:text-base text-indigo-900 border-b border-gray-200 pb-2">
-                  ${chTitle}
-                </h4>
-                <div class="text-xs md:text-sm text-gray-700 leading-relaxed md:leading-loose whitespace-pre-line">
-                  ${chContent}
-                </div>
-              </div>
+              <button onclick="readChapter('${chId}', '${chTitle.replace(/'/g, "\\'")}')" class="text-left bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-300 p-3.5 rounded-xl transition flex items-center justify-between group shadow-sm">
+                <span class="font-bold text-xs md:text-sm text-gray-800 group-hover:text-indigo-900">${chTitle}</span>
+                <i class="fa-solid fa-book-open-reader text-xs text-indigo-500 opacity-60 group-hover:opacity-100"></i>
+              </button>
             `;
           });
           chaptersContainer.classList.remove('hidden');
@@ -145,6 +153,29 @@
         }
       });
     }
+
+    // အခန်းတစ်ခန်းကို နှိပ်လိုက်လျှင် သီးခြား Box ဖြင့် ပြပေးမည့် Function
+    window.readChapter = function(chId, chTitle) {
+      const chapterData = globalChapters[chId];
+      if (!chapterData) return;
+
+      const activeBox = document.getElementById('activeChapterBox');
+      const activeTitle = document.getElementById('activeChapterTitle');
+      const activeContent = document.getElementById('activeChapterContent');
+
+      activeTitle.innerText = chTitle;
+      activeContent.innerText = chapterData.content || chapterData.text || 'စာသား မရှိသေးပါ။';
+
+      activeBox.classList.remove('hidden');
+      
+      // စာဖတ်သည့် Box ဆီသို့ အလိုအလျောက် Scroll ဆွဲပေးမည်
+      activeBox.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // အခန်းဖတ်သည့် Box ကို ပိတ်မည့် Function
+    window.closeChapterView = function() {
+      document.getElementById('activeChapterBox').classList.add('hidden');
+    };
   </script>
 </body>
 </html>
