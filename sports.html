@@ -77,7 +77,7 @@
     </div>
   </main>
 
-  <!-- Detail Modal Popup -->
+  <!-- Detail Modal Popup Box -->
   <div id="postModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <div id="modalContent" class="w-full flex justify-center"></div>
   </div>
@@ -180,7 +180,7 @@
       });
     });
 
-    // Open Modal Function
+    // Open Modal Function (POP UP BOX)
     window.openModal = function(postId) {
       const post = sportsPosts.find(p => p.id === postId);
       if (!post) return;
@@ -222,6 +222,7 @@
         commentsHtml = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
       }
 
+      // Pop Up Box HTML
       modalContent.innerHTML = `
           <div class="bg-white rounded-2xl max-w-5xl w-full h-[90vh] flex flex-col overflow-hidden">
           
@@ -251,7 +252,7 @@
           <div class="p-4 md:p-5 overflow-y-auto max-h-[70vh] space-y-4">
             ${imageHtml}
             
-            <!-- Modal စာဖတ်သည့်နေရာတွင် မူရင်း post.content ကို သုံးထားသဖြင့် ပုံများ အပြည့်အစုံ ပြန်ပေါ်ပါမည် -->
+            <!-- Modal စာဖတ်သည့်နေရာတွင် မူရင်း post.content ကို သုံးထားသဖြင့် ပုံများ အပြည့်အစုံ ပြန်ပေါ်မည် -->
             <div class="bg-gray-50/70 p-4 rounded-xl border border-gray-100 text-xs md:text-sm text-gray-700 leading-relaxed space-y-3">
               ${post.content}
             </div>
