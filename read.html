@@ -76,14 +76,14 @@
     </article>
   </main>
 
-  <!-- Pop-up / Modal ပုံစံဖြင့် စာဖတ်ရန် Active Chapter Modal Box (ပိုကြီးအောင် ပြင်ဆင်ထားသည်) -->
+  <!-- Pop-up / Modal ပုံစံဖြင့် စာဖတ်ရန် Active Chapter Modal Box (အထပ်အောက် အမြင့် ၃ ပုံ ၁ ပုံခန့် ချုံ့ထားသည်) -->
   <div id="activeChapterBox" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 sm:p-4 transition-all">
     <div class="bg-white rounded-2xl w-full max-w-5xl h-[92vh] flex flex-col shadow-2xl border border-amber-200 overflow-hidden animate-in fade-in zoom-in duration-200">
       
-      <!-- Modal Header -->
-      <div class="flex justify-between items-center bg-indigo-900 text-white px-4 md:px-6 py-3 border-b border-indigo-800 shrink-0">
-        <h3 id="activeChapterTitle" class="font-bold text-sm md:text-lg text-amber-400 truncate pr-2"></h3>
-        <button onclick="closeChapterView()" class="text-xs bg-indigo-800 hover:bg-indigo-700 text-gray-200 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1 shrink-0">
+      <!-- Modal Header (အမြင့် ချုံ့ထားသည်) -->
+      <div class="flex justify-between items-center bg-indigo-900 text-white px-3 md:px-5 py-1.5 border-b border-indigo-800 shrink-0">
+        <h3 id="activeChapterTitle" class="font-bold text-xs md:text-sm text-amber-400 truncate pr-2"></h3>
+        <button onclick="closeChapterView()" class="text-[11px] bg-indigo-800 hover:bg-indigo-700 text-gray-200 px-2.5 py-1 rounded-md font-bold transition flex items-center gap-1 shrink-0">
           <i class="fa-solid fa-xmark"></i> ပိတ်မည်
         </button>
       </div>
@@ -93,21 +93,21 @@
         <div id="activeChapterContent" class="chapter-content text-sm md:text-base text-gray-800 leading-relaxed md:leading-loose whitespace-pre-line max-w-3xl mx-auto"></div>
       </div>
 
-      <!-- Modal Footer Navigation (Previous, Dropdown, Next) -->
-      <div class="bg-indigo-950 border-t border-indigo-900 px-3 md:px-6 py-3 flex items-center justify-between gap-2 shrink-0 text-white">
+      <!-- Modal Footer Navigation (အမြင့်နှင့် ခလုတ်အလိုက် ချုံ့ထားသည်) -->
+      <div class="bg-indigo-950 border-t border-indigo-900 px-3 md:px-5 py-1.5 flex items-center justify-between gap-2 shrink-0 text-white">
         <!-- Previous Button -->
-        <button id="prevChapterBtn" onclick="navigateChapter(-1)" class="text-xs md:text-sm bg-indigo-800 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-3 md:px-4 py-2 rounded-xl transition flex items-center gap-1 font-semibold">
+        <button id="prevChapterBtn" onclick="navigateChapter(-1)" class="text-xs bg-indigo-800 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-2.5 py-1 rounded-lg transition flex items-center gap-1 font-semibold">
           <i class="fa-solid fa-chevron-left"></i> <span class="hidden sm:inline">ယခင်အခန်း</span>
         </button>
 
         <!-- Chapter Select Dropdown -->
         <div class="flex-grow max-w-xs sm:max-w-md">
-          <select id="chapterSelect" onchange="onSelectChapter(this.value)" class="w-full bg-indigo-900 text-amber-300 border border-indigo-700 rounded-xl px-2 md:px-3 py-2 text-xs md:text-sm focus:outline-none focus:border-amber-400 text-center font-bold">
+          <select id="chapterSelect" onchange="onSelectChapter(this.value)" class="w-full bg-indigo-900 text-amber-300 border border-indigo-700 rounded-lg px-2 py-1 text-xs focus:outline-none focus:border-amber-400 text-center font-bold">
           </select>
         </div>
 
         <!-- Next Button -->
-        <button id="nextChapterBtn" onclick="navigateChapter(1)" class="text-xs md:text-sm bg-indigo-800 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-3 md:px-4 py-2 rounded-xl transition flex items-center gap-1 font-semibold">
+        <button id="nextChapterBtn" onclick="navigateChapter(1)" class="text-xs bg-indigo-800 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-2.5 py-1 rounded-lg transition flex items-center gap-1 font-semibold">
           <span class="hidden sm:inline">နောက်အခန်း</span> <i class="fa-solid fa-chevron-right"></i>
         </button>
       </div>
