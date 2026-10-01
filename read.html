@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>စာမူဖတ်ရန် - စာပေဥယျာဉ်</title>
+  <title>စာဖတ်ရန် - စာပေဥယျာဉ်</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -13,52 +13,98 @@
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col justify-between">
 
-  <!-- Header -->
+  <!-- Header Navigation -->
   <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-40">
-    <div class="container mx-auto px-4 py-2 flex items-center justify-between">
-      <a href="index.html" class="flex items-center gap-2">
+    <div class="container mx-auto px-4 py-2 flex items-center justify-between gap-2">
+      <a href="index.html" class="flex items-center gap-2 flex-shrink-0">
         <img src="photo_2026-09-07_21-25-15.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-amber-400/50 object-cover">
-        <h1 class="text-sm md:text-base font-bold">စာပေဥယျာဥ်</h1>
+        <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
       </a>
-      <button onclick="history.back()" class="text-amber-400 text-xs flex items-center gap-1 font-semibold hover:underline">
-        <i class="fa-solid fa-arrow-left"></i> နောက်သို့
-      </button>
+
+      <!-- Live Clock -->
+      <div class="bg-indigo-950/60 border border-indigo-800 text-amber-400 text-xs px-3 py-1.5 rounded-lg flex flex-col items-center justify-center leading-tight">
+        <span id="timeDisplay" class="font-bold text-amber-300">00:00:00</span>
+        <span id="dateDisplay" class="font-medium">00/00/0000</span>
+      </div>
+
+      <!-- Navigation Link -->
+      <nav class="flex items-center space-x-3 text-sm">
+        <button onclick="goBack()" class="text-amber-400 hover:underline flex items-center gap-1 text-xs md:text-sm cursor-pointer">
+          <i class="fa-solid fa-arrow-left"></i> နောက်သို့
+        </button>
+      </nav>
     </div>
   </header>
 
   <!-- Main Content Area -->
   <main class="container mx-auto my-6 px-4 flex-grow max-w-3xl">
-    <!-- Loading Spinner -->
-    <div id="loading" class="text-center py-20 text-gray-400 text-sm">
-      <i class="fa-solid fa-spinner fa-spin text-xl mr-2"></i> စာမူကို ရယူနေပါသည်...
-    </div>
+    
+    <div class="bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-100">
+      
+      <!-- Article Header -->
+      <div class="border-b border-gray-100 pb-4 mb-6">
+        <div class="flex items-center gap-2 mb-2">
+          <span id="postCategory" class="text-[10px] px-2 py-0.5 bg-indigo-100 text-indigo-800 font-bold rounded">
+            ...
+          </span>
+          <span id="postDate" class="text-[11px] text-gray-400">• ...</span>
+        </div>
+        
+        <h1 id="postTitle" class="text-lg md:text-2xl font-bold text-gray-800 leading-snug mb-2">
+          စာမူ ရယူနေသည်...
+        </h1>
+        
+        <p id="postAuthor" class="text-xs text-indigo-600 font-semibold">
+          ရေးသားသူ - ...
+        </p>
+      </div>
 
-    <!-- Post Details Article Container -->
-    <article id="postDetails" class="hidden bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-100 space-y-6">
-      <!-- Title & Author Header -->
-      <div class="border-b border-gray-100 pb-4">
-        <h1 id="postTitle" class="text-lg md:text-2xl font-bold text-gray-800 mb-2"></h1>
-        <div class="flex items-center gap-3 text-xs text-gray-500">
-          <span>ရေးသားသူ - <strong id="postAuthor" class="text-indigo-600"></strong></span>
-          <span>•</span>
-          <span id="postDate"></span>
+      <!-- Optional Cover Image -->
+      <div id="imageContainer" class="mb-6 hidden">
+        <img id="postImage" src="" class="w-full max-h-80 object-cover rounded-xl border border-gray-100" />
+      </div>
+
+      <!-- Article Content -->
+      <div id="postContent" class="text-lg md:text-xl text-black font-medium leading-relaxed md:leading-loose whitespace-pre-line tracking-wide">
+        <div class="text-center py-10 text-gray-400 text-xs">
+          <i class="fa-solid fa-spinner fa-spin mr-1"></i> စာမူကို ရယူနေပါသည်...
         </div>
       </div>
 
-      <!-- Cover Image (ခေါင်းစဉ်ပုံ တင်ထားပါက ပြသပေးမည်) -->
-      <div id="coverImageContainer" class="hidden text-center">
-        <img id="postCoverImage" class="max-h-80 mx-auto object-contain rounded-xl border border-gray-100 shadow-sm" src="" alt="Cover">
+      <!-- Like & View Counter Section -->
+      <div class="flex items-center justify-between text-xs px-3 py-2 bg-gray-50 rounded-xl border border-gray-100 mb-8">
+        <button id="likeBtn" class="flex items-center gap-1.5 text-red-500 font-bold hover:bg-red-50 px-3 py-1.5 rounded-lg transition">
+          <i class="fa-solid fa-heart"></i> ကြိုက်နှစ်သက်သူ (<span id="likesCount">0</span>)
+        </button>
+        <span class="flex items-center gap-1.5 text-indigo-600">
+          <i class="fa-solid fa-eye"></i> ကြည့်ရှုသူ (<span id="viewsCount">0</span>)
+        </span>
       </div>
 
-      <!-- Article Content (ဆောင်းပါး / ကဗျာ / သတင်း အပြည့်အစုံ) -->
-      <div id="postContent" class="text-xs md:text-sm text-gray-700 leading-relaxed md:leading-loose space-y-4"></div>
+      <!-- Comments Section -->
+      <div class="border-t border-gray-100 pt-6 space-y-4">
+        <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ
+        </h3>
 
-      <!-- Novel Chapters Container (ဝတ္ထုဖြစ်ပါက အခန်းများ ပြသပေးမည်) -->
-      <div id="chaptersContainer" class="hidden space-y-4 border-t border-gray-100 pt-4">
-        <h3 class="text-sm md:text-base font-bold text-indigo-900 border-b pb-2"><i class="fa-solid fa-list-ol mr-2"></i>အခန်းများ ဖတ်ရှုရန်</h3>
-        <div id="chaptersList" class="space-y-3"></div>
+        <!-- Add Comment Form -->
+        <div class="space-y-2 bg-indigo-50/40 p-3.5 rounded-xl border border-indigo-50">
+          <input type="text" id="commentName" placeholder="သင့်နာမည် ရေးပါ..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500">
+          <textarea id="commentText" rows="3" placeholder="မှတ်ချက် ရေးရန်..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+          <button id="submitCommentBtn" class="bg-indigo-900 text-white text-xs px-4 py-2 rounded-lg font-semibold hover:bg-indigo-800 transition float-right">
+            မှတ်ချက် ပို့မည်
+          </button>
+          <div class="clear-both"></div>
+        </div>
+
+        <!-- Comments List -->
+        <div id="commentsList" class="space-y-2 mt-4">
+          <p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>
+        </div>
       </div>
-    </article>
+
+    </div>
+
   </main>
 
   <footer class="bg-indigo-950 text-indigo-200 py-4 text-center text-xs mt-10">
@@ -67,7 +113,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, get, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAoDzQF0OUpI0EaHmoS_41bfBD3qyQIQp4",
@@ -76,75 +122,175 @@
       projectId: "my-first-page-240a0",
       storageBucket: "my-first-page-240a0.firebasestorage.app",
       messagingSenderId: "783682491493",
-      appId: "1:783682491493:web:27e1d4f925e14c60a2a28c"
+      appId: "1:783682491493:web:27e1d4f925e14c60a2a28c",
+      measurementId: "G-YS5QKB3DQ"
     };
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // URL Params မှ id နှင့် type ကို ရယူခြင်း
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+
+      document.getElementById('timeDisplay').textContent = `${hours}:${minutes}:${seconds}`;
+      document.getElementById('dateDisplay').textContent = `${day}/${month}/${year}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Get URL Parameters
     const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('cat');
     const postId = urlParams.get('id');
-    const postType = urlParams.get('type') || 'novels';
+    const bookId = urlParams.get('bookId');
+    const chapId = urlParams.get('chapId');
 
-    if (!postId) {
-      alert("စာမူ လမ်းကြောင်း မှားယွင်းနေပါသည်။");
-      window.location.href = "index.html";
-    } else {
-      // Firebase မှ $postType/$postId ကို သွားရောက် ရှာဖွေခြင်း
-      onValue(ref(database, `${postType}/${postId}`), (snapshot) => {
-        const post = snapshot.val();
-        document.getElementById('loading').classList.add('hidden');
+    let dbPath = '';
 
-        if (!post) {
+    // URL ကလာတဲ့ Parameter ပေါ်မူတည်ပြီး Path ခွဲခြားခြင်း
+    if (category === 'novels' && bookId && chapId) {
+      dbPath = `novels/${bookId}/chapters/${chapId}`;
+    } else if (category && postId) {
+      dbPath = `${category}/${postId}`;
+    }
+
+    async function loadReadContent() {
+      if (!dbPath) {
+        alert("စာမူ လမ်းကြောင်း မှားယွင်းနေပါသည်။");
+        window.location.href = "index.html";
+        return;
+      }
+
+      try {
+        const snapshot = await get(ref(database, dbPath));
+        if (!snapshot.exists()) {
           alert("စာမူ ရှာမတွေ့ပါ။");
+          window.location.href = "index.html";
           return;
         }
 
-        document.getElementById('postDetails').classList.remove('hidden');
-        document.getElementById('postTitle').innerText = post.title || post.bookTitle || 'ခေါင်းစဉ်မရှိ';
-        document.getElementById('postAuthor').innerText = post.author || 'မသိရပါ';
-        document.getElementById('postDate').innerText = post.date || '';
+        const data = snapshot.val();
 
-        // Cover Image တင်ထားပါက ပြသမည်
-        const coverImg = post.coverImage || post.image || post.imageUrl || post.img;
-        if (coverImg) {
-          document.getElementById('postCoverImage').src = coverImg;
-          document.getElementById('coverImageContainer').classList.remove('hidden');
-        }
+        // Increment View Count
+        const viewsRef = ref(database, `${dbPath}/views`);
+        runTransaction(viewsRef, (views) => (views || 0) + 1);
 
-        // 1. မူရင်း စာမူအပြည့်အစုံ သို့မဟုတ် အကျဉ်းချုပ် ပြသခြင်း
-        const mainContent = post.content || post.summary || '';
-        document.getElementById('postContent').innerHTML = mainContent ? `<p class="whitespace-pre-line">${mainContent}</p>` : '';
-
-        // 2. ဝတ္ထု အခန်းများ (Chapters) ရှိပါက ပြသပေးခြင်း
-        const chaptersContainer = document.getElementById('chaptersContainer');
-        const chaptersList = document.getElementById('chaptersList');
-
-        if (post.chapters && Object.keys(post.chapters).length > 0) {
-          chaptersList.innerHTML = '';
-          Object.entries(post.chapters).forEach(([chId, chVal], index) => {
-            const chTitle = chVal.title || `အခန်း (${index + 1})`;
-            const chContent = chVal.content || '';
-
-            chaptersList.innerHTML += `
-              <details class="bg-gray-50 border border-gray-200 rounded-xl p-3 md:p-4 cursor-pointer group">
-                <summary class="font-bold text-xs md:text-sm text-indigo-900 flex justify-between items-center select-none">
-                  <span>${chTitle}</span>
-                  <i class="fa-solid fa-chevron-down text-xs text-gray-400 group-open:rotate-180 transition-transform"></i>
-                </summary>
-                <div class="mt-3 text-xs md:text-sm text-gray-700 leading-relaxed pt-2 border-t border-gray-200/60 whitespace-pre-line">
-                  ${chContent}
-                </div>
-              </details>
-            `;
-          });
-          chaptersContainer.classList.remove('hidden');
+        // Render Article Header & Details
+        if (category === 'novels') {
+          // စာအုပ်ရဲ့ အမည်ကို ပြန်ဆွဲယူမည်
+          const bookSnapshot = await get(ref(database, `novels/${bookId}`));
+          const bookData = bookSnapshot.exists() ? bookSnapshot.val() : {};
+          
+          document.getElementById('postCategory').textContent = 'ဝတ္ထု';
+          document.getElementById('postTitle').textContent = `${bookData.title || ''} - ${data.chapterTitle || ''} ${data.subTitle ? '(' + data.subTitle + ')' : ''}`;
+          document.getElementById('postAuthor').textContent = `ရေးသားသူ - ${bookData.author || 'မသိရပါ'}`;
         } else {
-          chaptersContainer.classList.add('hidden');
+          document.getElementById('postCategory').textContent = getCategoryName(category);
+          document.getElementById('postTitle').textContent = data.title || 'ခေါင်းစဉ်မရှိ';
+          document.getElementById('postAuthor').textContent = `ရေးသားသူ - ${data.author || 'မသိရပါ'}`;
         }
-      });
+
+        document.getElementById('postDate').textContent = `• ${data.date || ''}`;
+        document.getElementById('postContent').textContent = data.content || '';
+        document.getElementById('likesCount').textContent = data.likes || 0;
+        document.getElementById('viewsCount').textContent = (data.views || 0) + 1;
+
+        // Image
+        if (data.image || data.imageUrl || data.img) {
+          const imgEl = document.getElementById('postImage');
+          imgEl.src = data.image || data.imageUrl || data.img;
+          document.getElementById('imageContainer').classList.remove('hidden');
+        }
+
+        // Render Comments
+        renderComments(data.comments);
+
+      } catch (err) {
+        console.error("Error loading content:", err);
+      }
     }
+
+    function getCategoryName(cat) {
+      switch(cat) {
+        case 'knowledges': return 'သုတရသ';
+        case 'sports': return 'အားကစား';
+        case 'poems': return 'ကဗျာ';
+        default: return 'အခြား';
+      }
+    }
+
+    function renderComments(comments) {
+      const listEl = document.getElementById('commentsList');
+      listEl.innerHTML = '';
+
+      if (comments && Object.keys(comments).length > 0) {
+        Object.values(comments).forEach(c => {
+          listEl.innerHTML += `
+            <div class="bg-gray-100/70 p-2.5 rounded-lg text-xs space-y-0.5">
+              <div class="flex justify-between font-bold text-indigo-950 text-[11px]">
+                <span>${c.name || 'ဧည့်သည်'}</span>
+                <span class="text-gray-400 text-[10px] font-normal">${c.date || ''}</span>
+              </div>
+              <p class="text-gray-700">${c.text}</p>
+            </div>
+          `;
+        });
+      } else {
+        listEl.innerHTML = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
+      }
+    }
+
+    // Like Action
+    document.getElementById('likeBtn').onclick = () => {
+      const likesRef = ref(database, `${dbPath}/likes`);
+      runTransaction(likesRef, (currentLikes) => {
+        const updated = (currentLikes || 0) + 1;
+        document.getElementById('likesCount').textContent = updated;
+        return updated;
+      });
+    };
+
+    // Submit Comment
+    document.getElementById('submitCommentBtn').onclick = async () => {
+      const nameInput = document.getElementById('commentName');
+      const textInput = document.getElementById('commentText');
+
+      if (!textInput.value.trim()) return alert("မှတ်ချက် စာသား ရေးပေးပါ!");
+
+      try {
+        await push(ref(database, `${dbPath}/comments`), {
+          name: nameInput.value.trim() || 'ဧည့်သည်',
+          text: textInput.value.trim(),
+          date: new Date().toLocaleDateString('en-GB')
+        });
+        alert("မှတ်ချက် တင်ပြီးပါပြီ!");
+        textInput.value = '';
+        
+        // Refresh comments list
+        const snap = await get(ref(database, `${dbPath}/comments`));
+        if (snap.exists()) renderComments(snap.val());
+      } catch (err) {
+        alert("မှတ်ချက် တင်၍ မရပါ: " + err.message);
+      }
+    };
+
+    // Back button behavior
+    window.goBack = function() {
+      if (document.referrer && document.referrer.includes(window.location.hostname)) {
+        window.history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    };
+
+    loadReadContent();
   </script>
 </body>
 </html>
