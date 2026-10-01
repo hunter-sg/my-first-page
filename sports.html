@@ -3,10 +3,15 @@
 <head>
   <style>
       /* စာသားအတွင်းရှိ img tag များကို မူရင်းစာမျက်နှာများတွင် ဖျောက်ထားမည် */
-    .post-content img,
-    .post-body img,
-    main img:not(.cover-img) {
-      display: none !important;
+    .post-content img, 
+    .post-description img {
+        display: none !important;
+    }
+
+    /* ခေါင်းစဉ်ပုံ (Featured/Cover Image) အတွက် Class ကို သီးသန့် သတ်မှတ်ပေးပါ */
+    .featured-image,
+    .cover-image {
+        display: block !important;
     }
   </style>
   <meta charset="UTF-8">
