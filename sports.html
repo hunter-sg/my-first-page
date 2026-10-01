@@ -2,15 +2,9 @@
 <html lang="my">
 <head>
   <style>
-    /* စာမူအကြောင်းအရာ ပြသသည့် နေရာအတွင်းရှိ ပုံများကိုသာ ဖျောက်မည် */
-    .card-body-text img,
-    .post-summary img {
+    /* စာမူအကြောင်းအရာ ပြသသည့် နေရာအတွင်းရှိ ပုံများကို မူရင်းစာမျက်နှာတွင် ဖျောက်မည် */
+    .post-content-body img {
       display: none !important;
-    }
-
-    /* Cover Image ကို ပုံမှန်အတိုင်း ပြသမည် */
-    .card-cover-img {
-      display: block !important;
     }
   </style>
   
@@ -32,17 +26,13 @@
         <h1 class="text-sm md:text-base font-bold tracking-wide">စာပေဥယျာဥ်</h1>
       </a>
 
-      <!-- search bar and Live Clock -->
-      
-      
-
       <!-- Mobile Menu Button -->
       <button id="menuToggleBtn" class="text-amber-400 text-lg p-1 focus:outline-none">
         <i class="fa-solid fa-bars" id="menuIcon"></i>
       </button>
     </div>
 
-    <!-- Mobile Dropdown Menu Box (အောက်သို့ သီးသန့် ကျလာမည့် Box) -->
+    <!-- Mobile Dropdown Menu Box -->
     <div id="mobileMenu" class="hidden bg-indigo-950 border-t border-indigo-800 px-4 py-3 shadow-xl">
       <nav class="flex flex-col space-y-2 text-sm">
         <a href="index.html" class="p-2 rounded-lg bg-indigo-900/60 text-amber-300 hover:bg-indigo-800 flex items-center gap-2">
@@ -96,20 +86,20 @@
   </footer>
 
   <script type="module">
-    // စာမူထဲက img tag များကို ဖယ်ရှားပေးမည့် function
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // စာမူထဲက img tag များကို ဖယ်ရှားပြီး စာသားသီးသန့် ရယူပေးမည့် function
     function removeBodyImages(htmlContent) {
         if (!htmlContent) return '';
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = htmlContent;
-    
-        // စာမူထဲပါသော <img> tag များကို ဖယ်ထုတ်ခြင်း
+        
+        // <img> tag အားလုံးကို ရှာပြီး ဖယ်ထုတ်ခြင်း
         tempDiv.querySelectorAll('img').forEach(img => img.remove());
-    
+        
         return tempDiv.innerHTML;
     }
-   
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     
     const firebaseConfig = {
       apiKey: "AIzaSyAoDzQF0OUpI0EaHmoS_41bfBD3qyQIQp4",
@@ -126,18 +116,6 @@
     const database = getDatabase(app);
 
     const postsContainer = document.getElementById('sportsPostsContainer');
-
-    // Navigation Logic
-    const menuBtn = document.getElementById('menuBtn');
-    const menuList = document.getElementById('menuList');
-    const menuIcon = document.getElementById('menuIcon');
-
-    if (menuBtn && menuList && menuIcon) {
-      menuBtn.onclick = () => {
-        menuList.classList.toggle('hidden');
-        menuIcon.className = menuList.classList.contains('hidden') ? "fa-solid fa-bars" : "fa-solid fa-xmark";
-      };
-    }
 
     let sportsPosts = [];
 
@@ -169,9 +147,13 @@
       sportsPosts.sort((a, b) => b.id.localeCompare(a.id));
 
       sportsPosts.forEach(post => {
+        // Cover Image ရှိမှသာ ဘေးက ခေါင်းစဉ်ပုံအဖြစ် ပြမည်
         const imageMarkup = post.image 
           ? `<img src="${post.image}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-gray-100" />`
           : `<div class="w-20 h-20 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 flex-shrink-0 border border-amber-100"><i class="fa-solid fa-newspaper text-xl"></i></div>`;
+
+        // စာမူထဲမှ ပုံများအားလုံးကို ရှင်းထုတ်ထားသည့် စာသား
+        const cleanContent = removeBodyImages(post.content);
 
         postsContainer.innerHTML += `
           <div onclick="openModal('${post.id}')" class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition cursor-pointer flex gap-3.5 items-center">
@@ -184,9 +166,9 @@
               <h3 class="text-xs font-bold text-gray-800 truncate mb-1">
                 ${post.title}
               </h3>
-              <p class="text-[11px] text-gray-500 truncate mb-1">
-                ${post.content}
-              </p>
+              <div class="text-[11px] text-gray-500 truncate mb-1 post-content-body">
+                ${cleanContent}
+              </div>
               <div class="flex items-center justify-between mt-1">
                 <span class="text-[10px] text-indigo-600 font-semibold">ရေးသားသူ - ${post.author}</span>
                 <div class="flex items-center gap-2 text-[10px] text-gray-400">
@@ -200,12 +182,12 @@
       });
     });
 
-    // Open Modal with Comment Box
+    // Open Modal Function
     window.openModal = function(postId) {
       const post = sportsPosts.find(p => p.id === postId);
       if (!post) return;
 
-      // Views အရေအတွက် တိုးရန်
+      // Views တိုးရန်
       const postRef = ref(database, `sports/${postId}`);
       runTransaction(postRef, (p) => {
         if (p) {
@@ -217,6 +199,7 @@
       const modalContainer = document.getElementById('postModal');
       const modalContent = document.getElementById('modalContent');
 
+      // Cover Image ပြသခြင်း
       const imageHtml = post.image 
         ? `<div class="mb-3 overflow-hidden rounded-xl border border-gray-100 shadow-sm">
              <img src="${post.image}" class="max-h-52 mx-auto object-contain rounded-lg" alt="Post">
@@ -241,6 +224,9 @@
         commentsHtml = `<p class="text-[11px] text-gray-400 text-center py-2">မှတ်ချက်များ မရှိသေးပါ။</p>`;
       }
 
+      // စာမူထဲမှ ပုံများ မပါသော စာသားကို Modal Preview ထဲတွင် သုံးမည်
+      const cleanModalContent = removeBodyImages(post.content);
+
       modalContent.innerHTML = `
           <div class="bg-white rounded-2xl max-w-5xl w-full h-[90vh] flex flex-col overflow-hidden">
           
@@ -254,7 +240,6 @@
               </div>
               <h2 class="text-sm md:text-base font-bold text-gray-800 leading-snug">${post.title}</h2>
               
-              <!-- Likes & Views Section -->
               <div class="flex items-center gap-4 text-xs text-gray-500 mt-2">
                 <span>👁️ <span id="viewCount">${(post.views || 0) + 1}</span> ကြည့်ရှုသူ</span>
                 <button onclick="likePost('${post.id}')" class="flex items-center gap-1 hover:text-red-500 text-red-600 font-semibold transition bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
@@ -270,8 +255,8 @@
           <!-- Body Content + Comments -->
           <div class="p-4 md:p-5 overflow-y-auto max-h-[70vh] space-y-4">
             ${imageHtml}
-            <div class="bg-gray-50/70 p-4 rounded-xl border border-gray-100 text-xs md:text-sm text-gray-700 leading-relaxed space-y-3">
-              <p class="whitespace-pre-line">${post.content}</p>
+            <div class="bg-gray-50/70 p-4 rounded-xl border border-gray-100 text-xs md:text-sm text-gray-700 leading-relaxed space-y-3 post-content-body">
+              ${cleanModalContent}
             </div>
 
             <!-- Comment Box Section -->
@@ -280,7 +265,6 @@
                 <i class="fa-regular fa-comments text-indigo-600"></i> မှတ်ချက်များ
               </h4>
 
-              <!-- Comment Input Form -->
               <div class="space-y-2 bg-indigo-50/40 p-3 rounded-xl border border-indigo-50">
                 <input type="text" id="commentName" placeholder="သင့်နာမည် ရေးပါ..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500">
                 <textarea id="commentText" rows="2" placeholder="မှတ်ချက် ရေးရန်..." class="w-full text-xs p-2 rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
@@ -290,7 +274,6 @@
                 <div class="clear-both"></div>
               </div>
 
-              <!-- Comment Display Area -->
               <div class="space-y-2 mt-2">
                 ${commentsHtml}
               </div>
@@ -365,10 +348,12 @@
         console.error("Like ပေး၍ မရပါ: ", err);
       }
     };
+
+    // Mobile Navigation Toggle
     document.getElementById('menuToggleBtn').addEventListener('click', () => {
       const mobileMenu = document.getElementById('mobileMenu');
       const menuIcon = document.getElementById('menuIcon');
-    
+      
       mobileMenu.classList.toggle('hidden');
       menuIcon.classList.toggle('fa-bars');
       menuIcon.classList.toggle('fa-xmark');
