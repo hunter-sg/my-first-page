@@ -184,7 +184,7 @@
                 <span class="truncate">ရေးသူ - ${novel.author || 'မသိရပါ'}</span>
                 <div class="flex items-center gap-2">
                   <span>👁️ ${viewsCount}</span>
-                  <span>❤️️ ${likesCount}</span>
+                  <span>❤ ${likesCount}</span>
                 </div>
               </div>
             </div>
@@ -250,18 +250,18 @@
             <div class="flex gap-4 items-start">
               ${coverHtml}
               <div class="space-y-2 flex-grow">
-                <!-- Modal Popup ထဲတွင် မူရင်း novel.summary ကို သုံးထားသဖြင့် ပုံရော စာသားပါ မူရင်းအတိုင်း ပြန်ပေါ်မည် -->
                 <div class="text-xs text-gray-600 leading-relaxed">
                   ${novel.summary || 'အကျဉ်းချုပ် မရှိသေးပါ။'}
                 </div>
                 <div class="flex items-center gap-4 text-xs text-gray-500 pt-2">
                   <span>👁️ <span id="viewCount">${(novel.views || 0) + 1}</span> ကြည့်ရှုသူ</span>
                   <button onclick="likeNovel('${novelId}')" class="flex items-center gap-1 hover:text-red-500 text-red-600 font-semibold transition bg-red-50 px-2 py-0.5 rounded-full border border-red-100">
-                    ❤️ <span id="likeCount">${novel.likes || 0}</span> သဘောကျသည်
+                    ❤️️ <span id="likeCount">${novel.likes || 0}</span> သဘောကျသည်
                   </button>
                 </div>
                 <div class="pt-2">
-                  <a href="read.html?id=${novelId}" class="inline-flex items-center gap-1.5 bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-4 py-2 rounded-lg font-bold transition">
+                  <!-- read.html သို့ တိုက်ရိုက်သွားရန် id နှင့် type=novels ထည့်သွင်းထားသည် -->
+                  <a href="read.html?id=${novelId}&type=novels" class="inline-flex items-center gap-1.5 bg-indigo-900 hover:bg-indigo-800 text-white text-xs px-4 py-2 rounded-lg font-bold transition">
                     <i class="fa-solid fa-book-open"></i> ဝတ္ထုဖတ်ရှုရန်
                   </a>
                 </div>
