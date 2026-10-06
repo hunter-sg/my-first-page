@@ -246,12 +246,54 @@
     // စာမူထဲ ပုံရွေးလိုက်ပါက စာသားကုဒ်မပေါ်ဘဲ ပုံ တိုက်ရိုက် ပေါ်လာစေသည့် Logic
     const inlineImageFile = document.getElementById('inlineImageFile');
     const postContent = document.getElementById('postContent');
-    // အပြင်မှ စာသားများ Copy/Paste လုပ်သည့်အခါ မလိုအပ်သော အရောင်ဒီဇိုင်းများ (Inline CSS) များကို ဖျက်ပစ်မည်
+    
+    // Clipboard (Copy/Paste) မှ ပုံများနှင့် စာသားများကို ဖတ်ယူ၍ ထည့်သွင်းပေးသည့် function
     if (postContent) {
-      postContent.addEventListener('paste', (e) => {
-        e.preventDefault();
-        const text = e.clipboardData.getData('text/plain');
-        document.execCommand('insertText', false, text);
+      postContent.addEventListener('paste', async (e) => {
+        const clipboardData = e.clipboardData || window.clipboardData;
+        if (!clipboardData) return;
+
+        const items = clipboardData.items;
+        let imageFile = null;
+
+        // Clipboard ထဲတွင် Image ဖိုင် ပါမပါ စစ်ဆေးခြင်း
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf('image') !== -1) {
+            imageFile = items[i].getAsFile();
+            break;
+          }
+        }
+
+        // ၁။ အကယ်၍ Paste လုပ်လိုက်သည့်အထဲတွင် ပုံပါလာပါက -
+        if (imageFile) {
+          e.preventDefault();
+          try {
+            // ပုံကို ချုံ့ပြီး Base64 ပြောင်းခြင်း
+            const base64Img = await convertAndCompressBase64(imageFile, 450, 0.6);
+        
+            const img = document.createElement('img');
+            img.src = base64Img;
+            img.className = 'max-w-[200px] w-full mx-auto rounded-lg my-3 cursor-pointer hover:opacity-90 transition block';
+
+            // Editor ထဲရှိ Cursor ရှိသည့်နေရာ သို့မဟုတ် အောက်ဆုံးတွင် ပုံထည့်ပေးခြင်း
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0 && postContent.contains(selection.anchorNode)) {
+              const range = selection.getRangeAt(0);
+              range.insertNode(img);
+              range.collapse(false);
+            } else {
+              postContent.appendChild(img);
+            }
+          } catch (err) {
+            alert('Paste လုပ်ထားသော ပုံကို ထည့်သွင်း၍ မရပါ: ' + err.message);
+          }
+        } 
+        // ၂။ ပုံမဟုတ်ဘဲ စာသားသန့်သန့် (Plain Text) ဖြစ်ပါက မလိုလားအပ်သော Background/Color များ မပါအောင် သန့်စင်ပြီး ထည့်ပေးခြင်း
+        else {
+          e.preventDefault();
+          const text = clipboardData.getData('text/plain');
+          document.execCommand('insertText', false, text);
+        }
       });
     }
     if (inlineImageFile && postContent) {
