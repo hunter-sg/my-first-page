@@ -95,13 +95,11 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // စာမူထဲမှ <img> tag များကို ဖယ်ရှားပေးမည့် function
-    function removeBodyImages(htmlContent) {
-        if (!htmlContent) return '';
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = htmlContent;
-        tempDiv.querySelectorAll('img').forEach(img => img.remove());
-        return tempDiv.innerHTML;
+    // HTML Tags များနှင့် Entity များကို ဖျောက်ပြီး စာသားသန့်သန့် ပြောင်းပေးသည့် function
+    function getPlainTextExcerpt(htmlContent) {
+      if (!htmlContent) return '';
+      const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
+      return doc.body.textContent || doc.body.innerText || '';
     }
 
     const firebaseConfig = {
@@ -173,7 +171,7 @@
           : `<div class="w-20 h-20 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 flex-shrink-0 border border-amber-100"><i class="fa-solid fa-lightbulb text-xl"></i></div>`;
 
         // Card Preview အတွက် စာမူထဲက ပုံများကို ဖျောက်ထားသော စာသား
-        const cleanPreviewContent = removeBodyImages(post.content);
+        const cleanPreviewContent = getPlainTextExcerpt(post.content);
 
         postsContainer.innerHTML += `
           <div onclick="openModal('${post.id}')" class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition cursor-pointer flex gap-3.5 items-center">
