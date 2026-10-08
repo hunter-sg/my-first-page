@@ -189,9 +189,9 @@
 
             // အခန်းများ စာရင်း ခလုတ်များ
             chaptersList.innerHTML += `
-              <button onclick="readChapterByIndex(${index})" class="text-left bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-300 p-3.5 rounded-xl transition flex items-center justify-between group shadow-sm">
-                <span class="font-bold text-xs md:text-sm text-gray-800 group-hover:text-indigo-900">${chTitle}</span>
-                <i class="fa-solid fa-book-open-reader text-xs text-indigo-500 opacity-60 group-hover:opacity-100"></i>
+              <button onclick="readChapterByIndex(${index})" class="p-3 bg-white hover:bg-indigo-50 rounded-xl border border-gray-100 shadow-sm cursor-pointer flex items-center justify-between text-gray-800 font-bold text-xs md:text-sm transition w-full">
+                <span class="font-bold text-xs md:text-sm text-gray-800">${chTitle}</span>
+                <i class="fa-solid fa-book-open-reader text-xs text-indigo-500"></i>
               </button>
             `;
 
