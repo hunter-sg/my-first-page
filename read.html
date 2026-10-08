@@ -185,7 +185,13 @@
           chapterKeysArray.forEach((chId, index) => {
             const chVal = globalChapters[chId];
             const rawTitle = chVal.title || chVal.chapterTitle || chVal.name || '';
-            const chTitle = rawTitle ? rawTitle : `အခန်း (${index + 1})`;
+            // Firebase ထဲက rawTitle ထဲမှာ 'အခန်း' ဆိုတဲ့ စာသား ပါမပါ စစ်ဆေးပြီး အနောက်က ခေါင်းစဉ်ကိုပဲ ဆွဲထုတ်ခြင်း
+            const cleanTitle = rawTitle.replace(/^အခန်း\s*\d+[\s\:\-]* /i, '').trim();
+
+            // ခေါင်းစဉ် ရှိလျှင် 'အခန်း (၁) - ခေါင်းစဉ်' ဟု ပြမည်၊ မရှိလျှင် 'အခန်း (၁)' ဟုသာ ပြမည်
+            const chTitle = cleanTitle 
+              ? `အခန်း (${index + 1}) - ${cleanTitle}` 
+              : `အခန်း (${index + 1})`;
 
             // အခန်းများ စာရင်း ခလုတ်များ
             chaptersList.innerHTML += `
