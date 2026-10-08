@@ -90,13 +90,21 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // ပင်မ စာမျက်နှာ Preview အတွက်သာ <img> tag ဖယ်ပေးမည့် function
-    function removeBodyImages(htmlContent) {
+    // HTML Tags များကို အကုန်ဖယ်ပြီး စာသား သန့်သန့်အတိုလေးပဲ ယူပေးမည့် function
+    function getCleanSummary(htmlContent, maxLength = 80) {
         if (!htmlContent) return '';
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = htmlContent;
-        tempDiv.querySelectorAll('img').forEach(img => img.remove());
-        return tempDiv.innerHTML;
+    
+        // HTML tags များအားလုံး ဖယ်ထုတ်ပြီး Plain text ပဲယူမည်
+        let plainText = tempDiv.textContent || tempDiv.innerText || '';
+        plainText = plainText.trim().replace(/\s+/g, ' '); // အပို space များ ရှင်းမည်
+
+        // စာလုံးရေ ရှည်ပါက ဖြတ်ပြီး ... ထည့်မည်
+        if (plainText.length > maxLength) {
+            return plainText.substring(0, maxLength) + '...';
+        }
+        return plainText;
     }
     
     const firebaseConfig = {
@@ -151,7 +159,7 @@
           : `<div class="w-20 h-20 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 flex-shrink-0 border border-amber-100"><i class="fa-solid fa-newspaper text-xl"></i></div>`;
 
         // စာမူထဲက ပုံများကို ဖျောက်ထားသော စာသားအကျဉ်းချုပ် (Preview အတွက်သာ)
-        const cleanPreviewContent = removeBodyImages(post.content);
+        const cleanPreviewContent = getCleanSummary(post.content, 70);
 
         postsContainer.innerHTML += `
           <div onclick="openModal('${post.id}')" class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition cursor-pointer flex gap-3.5 items-center">
@@ -164,7 +172,7 @@
               <h3 class="text-xs font-bold text-gray-800 truncate mb-1">
                 ${post.title}
               </h3>
-              <div class="text-[11px] text-gray-500 truncate mb-1 card-preview-text">
+              <div class="text-[11px] text-gray-500 line-clamp-2 mb-1">
                 ${cleanPreviewContent}
               </div>
               <div class="flex items-center justify-between mt-1">
