@@ -201,10 +201,11 @@
                 <i class="fa-solid fa-book-open-reader text-xs text-indigo-500"></i>
               </button>
             `;
-          });
+
             // Footer ရှိ Dropdown Options များ
             chapterSelect.innerHTML += `<option value="${index}">${chTitle}</option>`;
           });
+
           chaptersContainer.classList.remove('hidden');
         } else {
           chaptersContainer.classList.add('hidden');
