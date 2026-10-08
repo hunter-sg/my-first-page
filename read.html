@@ -185,7 +185,7 @@
           chapterKeysArray.forEach((chId, index) => {
             const chVal = globalChapters[chId];
             const rawTitle = chVal.title || chVal.chapterTitle || chVal.name || '';
-            const chTitle = rawTitle ? `အခန်း (${index + 1}) - ${rawTitle}` : `အခန်း (${index + 1})`;
+            const chTitle = rawTitle ? rawTitle : `အခန်း (${index + 1})`;
 
             // အခန်းများ စာရင်း ခလုတ်များ
             chaptersList.innerHTML += `
