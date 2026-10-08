@@ -186,7 +186,6 @@
             const chVal = globalChapters[chId];
             const rawTitle = chVal.title || chVal.chapterTitle || chVal.name || '';
             const chTitle = rawTitle ? rawTitle : `အခန်း (${index + 1})`;
-
             // အခန်းများ စာရင်း ခလုတ်များ
             chaptersList.innerHTML += `
               <button onclick="readChapterByIndex(${index})" class="p-3 bg-white hover:bg-indigo-50 rounded-xl border border-gray-100 shadow-sm cursor-pointer flex items-center justify-between text-gray-800 font-bold text-xs md:text-sm transition w-full">
