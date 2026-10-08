@@ -184,8 +184,16 @@
 
           chapterKeysArray.forEach((chId, index) => {
             const chVal = globalChapters[chId];
-            const rawTitle = chVal.title || chVal.chapterTitle || chVal.name || '';
-            const chTitle = rawTitle ? rawTitle : `အခန်း (${index + 1})`;
+
+            // submit.html မှ ပို့ပေးလိုက်သော subTitle နှင့် chapterTitle ကို ဖတ်ယူခြင်း
+            const subTitleText = chVal.subTitle || chVal.subtitle || chVal.title || '';
+            const chapterName = chVal.chapterTitle || chVal.chapterNo || chVal.chapter || `အခန်း (${index + 1})`;
+
+            // Sub-title ရှိပါက "အခန်း (၁) - နိဒါန်း" ဟု ပြမည်၊ မရှိပါက "အခန်း (၁)" ဟုသာ ပြမည်
+            const chTitle = subTitleText 
+              ? `${chapterName} - ${subTitleText}` 
+              : chapterName;
+
             // အခန်းများ စာရင်း ခလုတ်များ
             chaptersList.innerHTML += `
               <button onclick="readChapterByIndex(${index})" class="p-3 bg-white hover:bg-indigo-50 rounded-xl border border-gray-100 shadow-sm cursor-pointer flex items-center justify-between text-gray-800 font-bold text-xs md:text-sm transition w-full">
@@ -193,6 +201,7 @@
                 <i class="fa-solid fa-book-open-reader text-xs text-indigo-500"></i>
               </button>
             `;
+          });
 
             // Footer ရှိ Dropdown Options များ
             chapterSelect.innerHTML += `<option value="${index}">${chTitle}</option>`;
