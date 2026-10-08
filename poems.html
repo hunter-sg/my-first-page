@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="my">
 <head>
   <meta charset="UTF-8">
@@ -83,6 +83,22 @@
   </footer>
 
   <script type="module">
+    // HTML Tags များကို အကုန်ဖယ်ပြီး စာသား သန့်သန့်အတိုလေးပဲ ယူပေးမည့် function
+    function getCleanSummary(htmlContent, maxLength = 80) {
+        if (!htmlContent) return '';
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+    
+        // HTML tags များအားလုံး ဖယ်ထုတ်ပြီး Plain text ပဲယူမည်
+        let plainText = tempDiv.textContent || tempDiv.innerText || '';
+        plainText = plainText.trim().replace(/\s+/g, ' '); // အပို space များ ရှင်းမည်
+
+        // စာလုံးရေ ရှည်ပါက ဖြတ်ပြီး ... ထည့်မည်
+        if (plainText.length > maxLength) {
+            return plainText.substring(0, maxLength) + '...';
+        }
+        return plainText;
+    }
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
@@ -145,6 +161,7 @@
         const imageMarkup = post.image 
           ? `<img src="${post.image}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-gray-100" />`
           : `<div class="w-20 h-20 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 flex-shrink-0 border border-amber-100"><i class="fa-solid fa-feather text-xl"></i></div>`;
+        const cleanPreviewContent = getCleanSummary(post.content, 70);
 
         postsContainer.innerHTML += `
           <div onclick="openModal('${post.id}')" class="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-200 transition cursor-pointer flex gap-3.5 items-center">
@@ -155,7 +172,9 @@
                 <span class="text-[11px] text-gray-400">${post.date}</span>
               </div>
               <h3 class="text-xs font-bold text-gray-800 truncate mb-1">${post.title}</h3>
-              <p class="text-[11px] text-gray-500 truncate mb-1">${post.content}</p>
+              <div class="text-[11px] text-gray-500 line-clamp-2 mb-1">
+                ${cleanPreviewContent}
+              </div>
               <div class="flex items-center justify-between mt-1">
                 <span class="text-[10px] text-indigo-600 font-semibold">ရေးသားသူ - ${post.author}</span>
                 <div class="flex items-center gap-2 text-[10px] text-gray-400">
